@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler;
+namespace Conia\Boiler\Error;
 
 use \Exception;
 
