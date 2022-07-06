@@ -54,7 +54,9 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
 
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->array[$offset]);
+        // isset is significantly faster than array_key_exists but
+        // returns false when the value exists but is null.
+        return isset($this->array[$offset]) || array_key_exists($offset, $this->array);
     }
 
     public function offsetGet(mixed $offset): mixed

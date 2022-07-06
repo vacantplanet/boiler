@@ -40,6 +40,14 @@ test('Iteration', function () {
 });
 
 
+test('Null value', function () {
+    $arrval = new ArrayValue([1, null]);
+
+    expect($arrval[0])->toBe(1);
+    expect($arrval[1])->toBe(null);
+});
+
+
 test('Set value', function () {
     $arrval = new ArrayValue([1, 2, 3]);
     $arrval[3] = 44;
