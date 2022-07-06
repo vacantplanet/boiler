@@ -25,4 +25,4 @@ jobs:
         run: ./vendor/bin/psalm --output-format=github
 
       - name: Run PHP Code Sniffer
-        run: ./vendor/bin/phpcs -q --report=checkstyle | ./vendor/bin/cs2pr
+        run: ./vendor/bin/phpcs -q --report=checkstyle src tests | ./vendor/bin/cs2pr
