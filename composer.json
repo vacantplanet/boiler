@@ -1,0 +1,17 @@
+{
+    "name": "conia/boiler",
+    "description": "PHP template engine",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Conia\\Boiler\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ebene fünf GmbH"
+        }
+    ],
+    "require": {}
+}
