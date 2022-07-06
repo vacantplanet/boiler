@@ -13,5 +13,7 @@
             "name": "ebene fünf GmbH"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/html-sanitizer": "^6.1"
+    }
 }
