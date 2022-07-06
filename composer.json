@@ -15,5 +15,13 @@
     ],
     "require": {
         "symfony/html-sanitizer": "^6.1"
+    },
+    "require-dev": {
+        "pestphp/pest": "^1.21"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
