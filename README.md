@@ -3,6 +3,8 @@ Boiler
 
 Boiler is a native PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/).
 
+> :warning: **Note**: This template engine is under active development, some of the listed features are still experimental and subject to change. Large parts of the documentation are missing. 
+
 Notable differences:
 
 * It auto escapes strings and [Stringable](https://www.php.net/manual/en/class.stringable.php) values.
