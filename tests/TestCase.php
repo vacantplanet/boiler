@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+    const ROOT_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+    const DEFAULT_DIR = self::ROOT_DIR . 'default';
+
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -31,22 +34,20 @@ class TestCase extends BaseTestCase
 
     public function templates(array $templates = []): array
     {
-        return array_merge($templates, [
-            __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'default',
-        ]);
+        return array_merge($templates, [self::DEFAULT_DIR]);
     }
 
     public function namespaced(array $templates = []): array
     {
         return array_merge($templates, [
-            'namespace' => __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'default',
+            'namespace' => self::DEFAULT_DIR,
         ]);
     }
 
     public function additional(): array
     {
         return  [
-            'additional' => __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'additional',
+            'additional' => self::ROOT_DIR . 'additional',
         ];
     }
 

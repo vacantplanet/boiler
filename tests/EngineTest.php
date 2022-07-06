@@ -11,7 +11,7 @@ uses(TestCase::class);
 
 
 test('Simple rendering', function () {
-    $tpl = new Engine($this->templates(), ['obj' => $this->obj()]);
+    $tpl = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
     expect(
         $this->fullTrim($tpl->render('simple', ['text' => 'rocks']))
@@ -29,14 +29,14 @@ test('Simple rendering (namespaced)', function () {
 
 
 test('Extension given', function () {
-    $tpl = new Engine($this->templates(), ['obj' => $this->obj()]);
+    $tpl = new Engine(self::DEFAULT_DIR, ['obj' => $this->obj()]);
 
     expect($this->fullTrim($tpl->render('extension.tpl')))->toBe('<p></p>');
 });
 
 
 test('Raw rendering', function () {
-    $tpl = new Engine($this->templates());
+    $tpl = new Engine(self::DEFAULT_DIR);
 
     expect($tpl->render('raw', [
         'html' => '<b>boiler</b>',

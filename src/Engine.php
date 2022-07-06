@@ -11,13 +11,15 @@ use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
 
 class Engine
 {
+    protected readonly array $dirs;
     protected array $capture = [];
     protected array $sections = [];
 
     public function __construct(
-        protected readonly array $dirs,
+        string|array $dirs,
         protected readonly array $defaults = []
     ) {
+        $this->dirs = is_string($dirs) ? [$dirs] : $dirs;
     }
 
     public function render(string $moniker, array $context = []): string
