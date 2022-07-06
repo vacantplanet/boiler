@@ -1,0 +1,25 @@
+name: Application Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Setup PHP extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: curl, xml, zip
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install packages with composer
+        run: composer install
+
+      - name: Run tests
+        run: ./vendor/bin/pest --ci --coverage --min=100
+
+      - name: Run Psalm
+        run: ./vendor/bin/psalm --output-format=github
