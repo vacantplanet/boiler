@@ -13,7 +13,7 @@ use \Iterator;
  *
  * @template-covariant TKey
  * @template-covariant TValue
- * @template TIterator as \Traversable<TKey, TValue>
+ * @template           TIterator as \Traversable<TKey, TValue>
  *
  * @template-extends IteratorIterator<TKey, TValue, TIterator>
  */

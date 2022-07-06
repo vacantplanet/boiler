@@ -21,9 +21,12 @@ class Template
 
     public function context(array $values = []): array
     {
-        return array_map(function ($item): mixed {
-            return Wrapper::wrap($item);
-        }, array_merge($this->context, $values));
+        return array_map(
+            function ($item): mixed {
+                return Wrapper::wrap($item);
+            },
+            array_merge($this->context, $values)
+        );
     }
 
     public function escape(string $value): string

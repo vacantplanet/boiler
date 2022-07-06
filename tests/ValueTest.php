@@ -72,7 +72,9 @@ test('Stringable value :: setter throws', function () {
 
         public function __set(string $n, mixed $v): void
         {
-            if ($n && $v === null) throw new ValueError();
+            if ($n && $v === null) {
+                throw new ValueError();
+            }
         }
     };
     $value = new Value($stringable);
