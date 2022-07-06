@@ -14,8 +14,10 @@ class Engine
     protected array $capture = [];
     protected array $sections = [];
 
-    public function __construct(protected array $dirs, protected array $defaults = [])
-    {
+    public function __construct(
+        protected readonly array $dirs,
+        protected readonly array $defaults = []
+    ) {
     }
 
     public function render(string $moniker, array $context = []): string

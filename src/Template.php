@@ -13,9 +13,9 @@ class Template
     protected ?string $layout = null;
 
     public function __construct(
-        protected Engine $engine,
-        protected string $moniker,
-        protected array $context
+        protected readonly Engine $engine,
+        protected readonly string $moniker,
+        protected readonly array $context
     ) {
     }
 

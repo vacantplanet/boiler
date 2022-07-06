@@ -11,7 +11,7 @@ use Conia\Boiler\Error\{NoSuchMethod, NoSuchProperty};
 
 class Value implements ValueInterface
 {
-    public function __construct(protected mixed $value)
+    public function __construct(protected readonly mixed $value)
     {
     }
 
