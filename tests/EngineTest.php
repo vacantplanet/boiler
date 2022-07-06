@@ -215,6 +215,63 @@ test('Insert rendering', function () {
 });
 
 
+test('Template in sub directory', function () {
+    $tpl = new Engine($this->templates());
+
+    expect($this->fullTrim($tpl->render('sub/home', [
+        'text' => 'Boiler'
+    ])))->toBe('<h2>Boiler</h2>');
+});
+
+
+test('Additional template directories', function () {
+    $tpl = new Engine(
+        $this->templates($this->additional()),
+        ['obj' => $this->obj()]
+    );
+
+    expect($this->fullTrim($tpl->render('simple', [
+        'text' => 'rocks'
+    ])))->toBe('<h1>boiler</h1><p>rocks</p>');
+    expect($this->fullTrim($tpl->render('additional', [
+        'text' => 'Additional'
+    ])))->toBe('<span>Additional</span>');
+});
+
+
+test('Additional template directories namespaced', function () {
+    $tpl = new Engine($this->namespaced($this->additional()));
+
+    expect($this->fullTrim($tpl->render('namespace:sub/home', [
+        'text' => 'Boiler'
+    ])))->toBe('<h2>Boiler</h2>');
+    expect($this->fullTrim($tpl->render('additional:additional', [
+        'text' => 'Additional'
+    ])))->toBe('<span>Additional</span>');
+});
+
+
+test('Additional template directories shadowing', function () {
+    $tpl = new Engine($this->namespaced());
+
+    expect($this->fullTrim($tpl->render('sub/home', [
+        'text' => 'Boiler'
+    ])))->toBe('<h2>Boiler</h2>');
+
+    $tpl = new Engine($this->namespaced($this->additional()));
+
+    expect($this->fullTrim($tpl->render('sub/home', [
+        'text' => 'Boiler'
+    ])))->toBe('<h1>Sub Boiler</h1>');
+    expect($this->fullTrim($tpl->render('namespace:sub/home', [
+        'text' => 'Boiler'
+    ])))->toBe('<h2>Boiler</h2>');
+    expect($this->fullTrim($tpl->render('additional:sub/home', [
+        'text' => 'Boiler'
+    ])))->toBe('<h1>Sub Boiler</h1>');
+});
+
+
 test('Exists helper', function () {
     $tpl = new Engine($this->templates());
 

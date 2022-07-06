@@ -43,6 +43,13 @@ class TestCase extends BaseTestCase
         ]);
     }
 
+    public function additional(): array
+    {
+        return  [
+            'additional' => __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'additional',
+        ];
+    }
+
     public function obj(): object
     {
         return new class()
