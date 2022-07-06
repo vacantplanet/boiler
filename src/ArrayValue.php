@@ -4,37 +4,90 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \ArrayIterator;
+use \ArrayAccess;
+use \Iterator;
+use \Countable;
+use \ErrorException;
 
 
-/**
- * Copied from https://github.com/vimeo/psalm/blob/4.x/tests/Template/ClassTemplateExtendsTest.php
- *
- * @template TKey as array-key
- * @template TValue
- * @template-extends ArrayIterator<TKey, TValue>
- */
-class ArrayValue extends ArrayIterator implements ValueInterface
+class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
 {
-    private array $array;
+    private int $position;
+    private array $keys;
 
-    /** @param int-mask<0, ArrayIterator::STD_PROP_LIST, ArrayIterator::ARRAY_AS_PROPS> $flags */
-    public function __construct(array $array, int $flags = 0)
+    public function __construct(private array $array)
     {
-        parent::__construct($array, $flags);
-
         $this->array = $array;
-    }
-
-    public function current(): mixed
-    {
-        $value = parent::current();
-
-        return Wrapper::wrap($value);
+        $this->keys = array_keys($array);
+        $this->position = 0;
     }
 
     public function raw(): array
     {
         return $this->array;
+    }
+
+    function rewind(): void
+    {
+        $this->position = 0;
+    }
+
+    function current(): mixed
+    {
+        return Wrapper::wrap($this->array[$this->key()]);
+    }
+
+    function key(): mixed
+    {
+        return $this->keys[$this->position];
+    }
+
+    function next(): void
+    {
+        ++$this->position;
+    }
+
+    function valid(): bool
+    {
+        return isset($this->keys[$this->position]);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->array[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        if ($this->offsetExists($offset)) {
+            return Wrapper::wrap($this->array[$offset]);
+        } else {
+            if (is_numeric($offset)) {
+                $key = (string)$offset;
+            } else {
+                $key = "'$offset'";
+            }
+
+            throw new ErrorException("Undefined array key $key");
+        };
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if ($offset) {
+            $this->array[$offset] = $value;
+        } else {
+            $this->array[] = $value;
+        }
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->array[$offset]);
+    }
+
+    public function count(): int
+    {
+        return count($this->array);
     }
 }
