@@ -8,6 +8,11 @@
             "Conia\\Boiler\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Conia\\Boiler\\Tests\\": "tests"
+        }
+    },
     "authors": [
         {
             "name": "ebene fünf GmbH"
