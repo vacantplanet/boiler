@@ -12,6 +12,13 @@ test('Count', function () {
 });
 
 
+test('Raw', function () {
+    $arrval = new ArrayValue(['string', 2]);
+
+    expect($arrval->raw())->toBe(['string', 2]);
+});
+
+
 test('Array access', function () {
     $arrval = new ArrayValue([1, 2, 'key' => 3]);
 
