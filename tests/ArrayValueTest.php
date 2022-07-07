@@ -18,6 +18,22 @@ test('Unwrap', function () {
     expect($arrval->unwrap())->toBe(['string', 2]);
 });
 
+test('Helper ::exists', function () {
+    $arrval = new ArrayValue([1, 2]);
+
+    expect($arrval->exists(0))->toBe(true);
+    expect($arrval->exists(1))->toBe(true);
+    expect($arrval->exists(2))->toBe(false);
+    expect($arrval->exists('test'))->toBe(false);
+
+
+    $arrval = new ArrayValue([1, 'test' => 2]);
+
+    expect($arrval->exists(0))->toBe(true);
+    expect($arrval->exists(1))->toBe(false);
+    expect($arrval->exists(2))->toBe(false);
+    expect($arrval->exists('test'))->toBe(true);
+});
 
 test('Array access', function () {
     $arrval = new ArrayValue([1, 2, 'key' => 3]);

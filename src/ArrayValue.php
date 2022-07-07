@@ -92,4 +92,9 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
     {
         return count($this->array);
     }
+
+    public function exists(mixed $key): bool
+    {
+        return array_key_exists($key, $this->array);
+    }
 }
