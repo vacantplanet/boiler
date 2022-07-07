@@ -18,6 +18,7 @@ test('Unwrap', function () {
     expect($arrval->unwrap())->toBe(['string', 2]);
 });
 
+
 test('Helper ::exists', function () {
     $arrval = new ArrayValue([1, 2]);
 
@@ -34,6 +35,18 @@ test('Helper ::exists', function () {
     expect($arrval->exists(2))->toBe(false);
     expect($arrval->exists('test'))->toBe(true);
 });
+
+
+test('Helper ::merge', function () {
+    $arr1 = new ArrayValue([1, 2]);
+    $arr2 = new ArrayValue([3, 4]);
+
+    expect($arr1->merge($arr2)->unwrap())->toBe([1, 2, 3, 4]);
+    expect($arr1->merge([5, 6])->unwrap())->toBe([1, 2, 5, 6]);
+    expect($arr1->merge([5, 6])[3])->toBe(6);
+    expect($arr1->merge([5, 'string'])[3])->toBeInstanceOf(Value::class);
+});
+
 
 test('Array access', function () {
     $arrval = new ArrayValue([1, 2, 'key' => 3]);

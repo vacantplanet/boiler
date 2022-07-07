@@ -97,4 +97,12 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
     {
         return array_key_exists($key, $this->array);
     }
+
+    public function merge(array|self $array): self
+    {
+        return new self(array_merge(
+            $this->array,
+            $array instanceof self ? $array->unwrap() : $array
+        ));
+    }
 }
