@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Conia\Boiler;
 
 use \Traversable;
-use \Stringable;
 
 
 class Wrapper
@@ -23,10 +22,10 @@ class Wrapper
             return new ArrayValue($value);
         } elseif ($value instanceof Traversable) {
             return new IteratorValue($value);
-        } elseif ($value instanceof Stringable) {
-            return new Value($value);
-        } else {
+        } elseif (is_null($value)) {
             return $value;
+        } else {
+            return new Value($value);
         }
     }
 }

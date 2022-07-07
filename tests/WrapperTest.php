@@ -43,7 +43,7 @@ test('Object', function () {
     {
     };
 
-    expect(Wrapper::wrap($obj))->toBeInstanceOf($obj::class);
+    expect(Wrapper::wrap($obj))->toBeInstanceOf(Value::class);
 });
 
 

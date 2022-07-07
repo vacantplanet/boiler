@@ -1,7 +1,8 @@
 Boiler
 ======
 
-Boiler is a native PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/).
+Boiler is a native PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/), which
+uses PHP itself instead of a custom template language.
 
 > :warning: **Note**: This template engine is under active development, some of the listed features are still experimental and subject to change. Large parts of the documentation are missing. 
 

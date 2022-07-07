@@ -82,7 +82,7 @@ test('Wrapped array access', function () {
     $arrval = new ArrayValue(['string', $obj, $stringable, [1, 2], $iterator]);
 
     expect($arrval[0])->toBeInstanceOf(Value::class);
-    expect($arrval[1])->toBeInstanceOf($obj::class);
+    expect($arrval[1])->toBeInstanceOf(Value::class);
     expect($arrval[2])->toBeInstanceOf(Value::class);
     expect($arrval[3])->toBeInstanceOf(ArrayValue::class);
     expect($arrval[4])->toBeInstanceOf(IteratorValue::class);
@@ -113,7 +113,7 @@ test('Wrapped iteration', function () {
 
     expect($new)->toBe([
         Value::class,
-        $obj::class,
+        Value::class,
         Value::class,
         ArrayValue::class,
         IteratorValue::class,
