@@ -301,11 +301,18 @@ test('Render error :: missing template', function () {
 })->throws(TemplateNotFound::class, 'not found');
 
 
-test('Render error :: template outside root directory', function () {
+test('Render error :: template outside root directory 1', function () {
     $tpl = new Engine($this->templates());
 
     $tpl->render('.././../.././../etc/passwd');
 })->throws(TemplateNotFound::class, 'not found');
+
+
+test('Render error :: template outside root directory 2', function () {
+    $tpl = new Engine($this->templates());
+
+    $tpl->render('../unreachable');
+})->throws(TemplateNotFound::class, 'outside');
 
 
 test('Render error :: parse error', function () {

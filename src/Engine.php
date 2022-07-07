@@ -19,7 +19,16 @@ class Engine
         string|array $dirs,
         protected readonly array $defaults = []
     ) {
-        $this->dirs = is_string($dirs) ? [$dirs] : $dirs;
+        $this->dirs = $this->prepareDirs($dirs);
+    }
+
+    protected function prepareDirs(string|array $dirs): array
+    {
+        if (is_string($dirs)) {
+            return [$this->realpath($dirs)];
+        }
+
+        return array_map(fn ($dir) => $this->realpath($dir), $dirs);
     }
 
     public function render(string $moniker, array $context = []): string
@@ -117,7 +126,8 @@ class Engine
             1 => [null, $segments[0]],
             2 => [$segments[0], $segments[1]],
             default => throw new InvalidTemplateFormat(
-                "Invalid template format: '$template'. Use 'namespace:template/path or template/path'."
+                "Invalid template format: '$template'. " .
+                    "Use 'namespace:template/path or template/path'."
             ),
         };
 
@@ -141,6 +151,12 @@ class Engine
                 $path = $this->realpath($dir . $ds . $file . $ext);
 
                 if (is_file($path)) {
+                    if (!str_starts_with($path, $dir)) {
+                        throw new TemplateNotFound(
+                            'Template is outside of root directory: ' . $path
+                        );
+                    }
+
                     return $path;
                 }
             }
