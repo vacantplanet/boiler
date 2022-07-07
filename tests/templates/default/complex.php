@@ -11,7 +11,7 @@
                 <?php endforeach ?>
             </tr>
         <?php endforeach ?>
-    </table><?= $html->raw() ?>
+    </table><?= $html->unwrap() ?>
 </body>
 
 </html>

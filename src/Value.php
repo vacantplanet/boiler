@@ -15,7 +15,7 @@ class Value implements ValueInterface
     {
     }
 
-    public function raw(): mixed
+    public function unwrap(): mixed
     {
         return $this->value;
     }

@@ -47,7 +47,7 @@ class Template
         return Sanitizer::clean($value, $config, $removeEmptyLines);
     }
 
-    public function raw(string $name): mixed
+    public function unwrap(string $name): mixed
     {
         return $this->context[$name];
     }
@@ -92,7 +92,7 @@ class Template
      */
     public function body(): string
     {
-        return (string)$this->raw($this->engine->getBodyId($this->moniker));
+        return (string)$this->unwrap($this->engine->getBodyId($this->moniker));
     }
 
     /**

@@ -35,19 +35,19 @@ test('Extension given', function () {
 });
 
 
-test('Raw rendering', function () {
+test('Unwrap rendering', function () {
     $tpl = new Engine(self::DEFAULT_DIR);
 
-    expect($tpl->render('raw', [
+    expect($tpl->render('unwrap', [
         'html' => '<b>boiler</b>',
     ]))->toBe("&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>");
 });
 
 
-test('Raw rendering with Stringable', function () {
+test('Unwrap rendering with Stringable', function () {
     $tpl = new Engine($this->templates());
 
-    expect($tpl->render('raw', [
+    expect($tpl->render('unwrap', [
         'html' => new class()
         {
             public function __toString(): string

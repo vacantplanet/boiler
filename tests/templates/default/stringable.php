@@ -1,2 +1,2 @@
-<?= $html ?><?= $html->raw() ?><?= $html->test ?><?= $html->testMethod('mantas') ?>
+<?= $html ?><?= $html->unwrap() ?><?= $html->test ?><?= $html->testMethod('mantas') ?>
 

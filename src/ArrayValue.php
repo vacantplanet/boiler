@@ -22,7 +22,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         $this->position = 0;
     }
 
-    public function raw(): array
+    public function unwrap(): array
     {
         return $this->array;
     }

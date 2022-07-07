@@ -29,12 +29,12 @@ test('Wrapping', function () {
 });
 
 
-test('Raw', function () {
+test('Unwrap', function () {
     $iterator = (function () {
         yield 1;
     })();
 
     $iterval = new IteratorValue($iterator);
 
-    expect($iterval->raw())->toBe($iterator);
+    expect($iterval->unwrap())->toBe($iterator);
 });

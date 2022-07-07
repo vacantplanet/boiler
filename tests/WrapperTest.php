@@ -21,7 +21,7 @@ test('Array', function () {
 
     expect($warray)->toBeInstanceOf(ArrayValue::class);
     expect(is_array($warray))->toBe(false);
-    expect(is_array($warray->raw()))->toBe(true);
+    expect(is_array($warray->unwrap()))->toBe(true);
     expect(count($warray))->toBe(3);
 });
 
@@ -33,8 +33,8 @@ test('Iterator', function () {
     $witerator = Wrapper::wrap($iterator);
 
     expect($witerator)->toBeInstanceOf(IteratorValue::class);
-    expect($witerator->raw())->toBeInstanceOf(Traversable::class);
-    expect(is_iterable($witerator->raw()))->toBe(true);
+    expect($witerator->unwrap())->toBeInstanceOf(Traversable::class);
+    expect(is_iterable($witerator->unwrap()))->toBe(true);
 });
 
 
@@ -64,7 +64,7 @@ test('Nesting', function () {
     $value = new Value('string');
 
     expect(Wrapper::wrap($value))->toBeInstanceOf(Value::class);
-    expect(Wrapper::wrap($value)->raw())->toBe('string');
-    expect(is_string(Wrapper::wrap($value)->raw()))->toBe(true);
+    expect(Wrapper::wrap($value)->unwrap())->toBe('string');
+    expect(is_string(Wrapper::wrap($value)->unwrap()))->toBe(true);
     expect(Wrapper::wrap($value))->toBeInstanceOf(Value::class);
 });

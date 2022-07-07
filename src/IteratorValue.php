@@ -26,7 +26,7 @@ class IteratorValue extends IteratorIterator implements ValueInterface
         return Wrapper::wrap($value);
     }
 
-    public function raw(): Iterator
+    public function unwrap(): Iterator
     {
         return $this->getInnerIterator();
     }

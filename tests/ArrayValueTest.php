@@ -12,10 +12,10 @@ test('Count', function () {
 });
 
 
-test('Raw', function () {
+test('Unwrap', function () {
     $arrval = new ArrayValue(['string', 2]);
 
-    expect($arrval->raw())->toBe(['string', 2]);
+    expect($arrval->unwrap())->toBe(['string', 2]);
 });
 
 
@@ -53,7 +53,7 @@ test('Set value', function () {
     $arrval[3] = 44;
     $arrval[] = 55;
 
-    expect($arrval->raw())->toBe([1, 2, 3, 44, 55]);
+    expect($arrval->unwrap())->toBe([1, 2, 3, 44, 55]);
 });
 
 
@@ -61,7 +61,7 @@ test('Unset value', function () {
     $arrval = new ArrayValue([1, 2, 3]);
     unset($arrval[1]);
 
-    expect($arrval->raw())->toBe([0 => 1, 2 => 3]);
+    expect($arrval->unwrap())->toBe([0 => 1, 2 => 3]);
 });
 
 

@@ -6,8 +6,8 @@ use Conia\Boiler\Value;
 use Conia\Boiler\Error\{NoSuchMethod, NoSuchProperty};
 
 
-test('Value::raw', function () {
-    expect((new Value('<b>boiler</b>'))->raw())->toBe('<b>boiler</b>');
+test('Value::unwrap', function () {
+    expect((new Value('<b>boiler</b>'))->unwrap())->toBe('<b>boiler</b>');
 });
 
 
@@ -49,7 +49,7 @@ test('Stringable', function () {
     $value = new Value($stringable);
 
     expect((string)$value)->toBe('&lt;b&gt;boiler&lt;/b&gt;');
-    expect($value->raw())->toBe($stringable);
+    expect($value->unwrap())->toBe($stringable);
     expect($value->value)->toBeInstanceOf(Value::class);
     expect((string)$value->value)->toBe('test');
     $value->value = 'boiler';
