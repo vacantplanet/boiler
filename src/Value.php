@@ -64,4 +64,13 @@ class Value implements ValueInterface
 
         throw new NoSuchMethod('Method does not exists on the wrapped value');
     }
+
+    public function __invoke(mixed ...$args): mixed
+    {
+        if (is_callable($this->value)) {
+            return Wrapper::wrap(($this->value)(...$args));
+        }
+
+        throw new NoSuchMethod('The wrapped value is not callable');
+    }
 }
