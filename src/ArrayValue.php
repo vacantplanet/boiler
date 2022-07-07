@@ -8,6 +8,8 @@ use \ArrayAccess;
 use \Iterator;
 use \Countable;
 use \ErrorException;
+use \InvalidArgumentException;
+use \ValueError;
 
 
 class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
@@ -119,5 +121,46 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
     public function reduce(callable $callable, mixed $initial = null): mixed
     {
         return Wrapper::wrap(array_reduce($this->array, $callable, $initial));
+    }
+
+    protected function sort(array $array, string $mode): self
+    {
+        match ($mode) {
+            '' => sort($array),
+            'ar' => arsort($array),
+            'a' => asort($array),
+            'kr' => krsort($array),
+            'k' => ksort($array),
+            'r' => rsort($array),
+            default => throw new InvalidArgumentException("Sort mode '$mode' not supported"),
+        };
+
+        return new self($array);
+    }
+
+    protected function usort(array $array, string $mode, callable $callable): self
+    {
+        match ($mode) {
+            'ua' => uasort($array, $callable),
+            'u' => usort($array, $callable),
+            default => throw new InvalidArgumentException("Sort mode '$mode' not supported"),
+        };
+
+        return new self($array);
+    }
+
+    public function sorted(string $mode = '', ?callable $callable = null): self
+    {
+        $mode = strtolower(trim($mode));
+
+        if (str_starts_with($mode, 'u')) {
+            if (empty($callable)) {
+                throw new ValueError('No callable provided for user defined sorting');
+            }
+
+            return $this->usort($this->array, $mode, $callable);
+        }
+
+        return $this->sort($this->array, $mode);
     }
 }

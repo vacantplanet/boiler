@@ -73,6 +73,56 @@ test('Helper ::reduce', function () {
 });
 
 
+test('Helper ::sorted', function () {
+    $arrval = new ArrayValue([1, 3, 4, 2]);
+    expect($arrval->sorted()->unwrap())->toBe([1, 2, 3, 4]);
+
+    $arrval = new ArrayValue(['a' => 3, 'b' => 1, 'c' => 2]);
+    expect($arrval->sorted()->unwrap())->toBe([1, 2, 3]);
+    expect($arrval->sorted('  ')->unwrap())->toBe([1, 2, 3]);
+    expect($arrval->sorted('r')->unwrap())->toBe([3, 2, 1]);
+    expect($arrval->sorted('a')->unwrap())->toBe(['b' => 1, 'c' => 2, 'a' => 3]);
+    expect($arrval->sorted('ar')->unwrap())->toBe(['a' => 3, 'c' => 2, 'b' => 1]);
+    // Check if original value is preserved
+    expect($arrval->unwrap())->toBe(['a' => 3, 'b' => 1, 'c' => 2]);
+
+    $arrval = new ArrayValue(['b' => 3, 'c' => 1, 'a' => 2]);
+    expect($arrval->sorted('k')->unwrap())->toBe(['a' => 2, 'b' => 3, 'c' => 1]);
+    expect($arrval->sorted('kr')->unwrap())->toBe(['c' => 1, 'b' => 3, 'a' => 2]);
+});
+
+
+test('Helper ::sorted throws', function () {
+    $arrval = new ArrayValue(['B', 'a']);
+    $arrval->sorted('t');
+})->throws(InvalidArgumentException::class);
+
+
+test('Helper ::sorted userdefined', function () {
+    $arrval = new ArrayValue(['B', 'a', 'C', 'c', 'A', 'b']);
+    expect($arrval->sorted(
+        'u',
+        fn ($a, $b) => strtolower($a) > strtolower($b)
+    )->unwrap())->toBe(['a', 'A', 'B', 'b', 'C', 'c']);
+
+    expect($arrval->sorted(
+        'ua',
+        fn ($a, $b) => strtolower($a) > strtolower($b)
+    )->unwrap())->toBe([1 => 'a', 4 => 'A', 0 => 'B', 5 => 'b', 2 => 'C', 3 => 'c']);
+});
+
+
+test('Helper ::sorted userdefined throws', function () {
+    $arrval = new ArrayValue(['B', 'a']);
+    $arrval->sorted('ut', fn ($a, $b) => strtolower($a) > strtolower($b));
+})->throws(InvalidArgumentException::class);
+
+
+test('Helper ::sorted userdefined throws no callable', function () {
+    $arrval = new ArrayValue(['B', 'a']);
+    $arrval->sorted('u');
+})->throws(ValueError::class);
+
 test('Array access', function () {
     $arrval = new ArrayValue([1, 2, 'key' => 3]);
 
