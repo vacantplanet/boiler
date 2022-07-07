@@ -101,13 +101,13 @@ test('Closure', function () {
 });
 
 
-test('Getter throws 1', function () {
+test('Getter throws I', function () {
     $value = new Value('test');
     $value->test;
 })->throws(NoSuchProperty::class);
 
 
-test('Getter throws 2', function () {
+test('Getter throws II', function () {
     $obj = new class()
     {
     };
@@ -116,13 +116,13 @@ test('Getter throws 2', function () {
 })->throws(NoSuchProperty::class);
 
 
-test('Setter throws 1', function () {
+test('Setter throws I', function () {
     $value = new Value('test');
     $value->test = null;
 })->throws(NoSuchProperty::class);
 
 
-test('Setter throws 2', function () {
+test('Setter throws II', function () {
     $obj = new class()
     {
         public function __set(string $n, mixed $v): void

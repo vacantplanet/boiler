@@ -10,6 +10,16 @@ use Conia\Boiler\Tests\TestCase;
 uses(TestCase::class);
 
 
+test('Directory does not exist I', function () {
+    new Engine('./doesnotexist');
+})->throws(ValueError::class, 'doesnotexist');
+
+
+test('Directory does not exist II', function () {
+    new Engine([TestCase::DEFAULT_DIR, './doesnotexist']);
+})->throws(ValueError::class, 'doesnotexist');
+
+
 test('Simple rendering', function () {
     $tpl = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
@@ -291,7 +301,7 @@ test('Config error :: wrong template format II', function () {
     $tpl = new Engine($this->templates());
 
     $tpl->render('');
-})->throws(InvalidArgumentException::class, 'No template');
+})->throws(ValueError::class, 'No template');
 
 
 test('Render error :: missing template', function () {
@@ -301,14 +311,14 @@ test('Render error :: missing template', function () {
 })->throws(TemplateNotFound::class, 'not found');
 
 
-test('Render error :: template outside root directory 1', function () {
+test('Render error :: template outside root directory I', function () {
     $tpl = new Engine($this->templates());
 
     $tpl->render('.././../.././../etc/passwd');
 })->throws(TemplateNotFound::class, 'not found');
 
 
-test('Render error :: template outside root directory 2', function () {
+test('Render error :: template outside root directory II', function () {
     $tpl = new Engine($this->templates());
 
     $tpl->render('../unreachable');

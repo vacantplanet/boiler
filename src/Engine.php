@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \InvalidArgumentException;
+use \ValueError;
 use \Throwable;
 use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
 
@@ -25,16 +25,19 @@ class Engine
     protected function prepareDirs(string|array $dirs): array
     {
         if (is_string($dirs)) {
-            return [$this->realpath($dirs)];
+            return [realpath($dirs) ?: throw new ValueError('Directory does not exist ' . $dirs)];
         }
 
-        return array_map(fn ($dir) => $this->realpath($dir), $dirs);
+        return array_map(
+            fn ($dir) => realpath($dir) ?: throw new ValueError('Directory does not exist ' . $dir),
+            $dirs
+        );
     }
 
     public function render(string $moniker, array $context = []): string
     {
         if (empty($moniker)) {
-            throw new InvalidArgumentException('No template path given');
+            throw new ValueError('No template path given');
         }
 
         $error = null;
@@ -89,35 +92,6 @@ class Engine
         return hash('xxh3', $moniker);
     }
 
-    protected function realpath(string $path, string $separator = DIRECTORY_SEPARATOR): string
-    {
-        $path = strtr($path, '\\', '/');
-
-        do {
-            $path = str_replace('//', '/', $path);
-        } while (strpos($path, '//') !== false);
-
-        $path = strtr($path, '/', $separator);
-
-        $segments = explode($separator, $path);
-        $out = [];
-
-        foreach ($segments as $segment) {
-            if ($segment == '.') {
-                continue;
-            }
-
-            if ($segment == '..') {
-                array_pop($out);
-                continue;
-            }
-
-            $out[] = $segment;
-        }
-
-        return implode($separator, $out);
-    }
-
     protected function getPath(string $template): string
     {
         $segments = explode(':', $template);
@@ -141,16 +115,16 @@ class Engine
         $ds = DIRECTORY_SEPARATOR;
 
         if ($namespace) {
-            $path = $this->realpath($this->dirs[$namespace] . $ds . $file . $ext);
+            $path = realpath($this->dirs[$namespace] . $ds . $file . $ext);
 
             if (is_file($path)) {
                 return $path;
             }
         } else {
             foreach ($this->dirs as $dir) {
-                $path = $this->realpath($dir . $ds . $file . $ext);
+                $path = realpath($dir . $ds . $file . $ext);
 
-                if (is_file($path)) {
+                if ($path && is_file($path)) {
                     if (!str_starts_with($path, $dir)) {
                         throw new TemplateNotFound(
                             'Template is outside of root directory: ' . $path
