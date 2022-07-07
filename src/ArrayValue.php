@@ -105,4 +105,19 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
             $array instanceof self ? $array->unwrap() : $array
         ));
     }
+
+    public function map(callable $callable): self
+    {
+        return new self(array_map($callable, $this->array));
+    }
+
+    public function filter(callable $callable): self
+    {
+        return new self(array_filter($this->array, $callable));
+    }
+
+    public function reduce(callable $callable, mixed $initial = null): mixed
+    {
+        return Wrapper::wrap(array_reduce($this->array, $callable, $initial));
+    }
 }

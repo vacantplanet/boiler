@@ -38,13 +38,38 @@ test('Helper ::exists', function () {
 
 
 test('Helper ::merge', function () {
-    $arr1 = new ArrayValue([1, 2]);
-    $arr2 = new ArrayValue([3, 4]);
+    $arrval1 = new ArrayValue([1, 2]);
+    $arrval2 = new ArrayValue([3, 4]);
 
-    expect($arr1->merge($arr2)->unwrap())->toBe([1, 2, 3, 4]);
-    expect($arr1->merge([5, 6])->unwrap())->toBe([1, 2, 5, 6]);
-    expect($arr1->merge([5, 6])[3])->toBe(6);
-    expect($arr1->merge([5, 'string'])[3])->toBeInstanceOf(Value::class);
+    expect($arrval1->merge($arrval2)->unwrap())->toBe([1, 2, 3, 4]);
+    expect($arrval1->merge([5, 6])->unwrap())->toBe([1, 2, 5, 6]);
+    expect($arrval1->merge([5, 6])[3])->toBe(6);
+    expect($arrval1->merge([5, 'string'])[3])->toBeInstanceOf(Value::class);
+});
+
+
+test('Helper ::map', function () {
+    $arrval = new ArrayValue(['str1', 'str2']);
+
+    expect($arrval->map(fn ($v) => $v . 'plus')->unwrap())->toBe(['str1plus', 'str2plus']);
+});
+
+
+test('Helper ::filter', function () {
+    $arrval = new ArrayValue([1, 3, 4, 2]);
+
+    expect(array_values($arrval->filter(fn ($v) => $v < 3)->unwrap()))->toBe([1, 2]);
+});
+
+
+test('Helper ::reduce', function () {
+    $arrval = new ArrayValue([1, 3, 4, 2]);
+
+    expect($arrval->reduce(fn ($c, $v) => $c + $v, 0))->toBe(10);
+
+    $arrval = new ArrayValue(['a', 'b', 'c']);
+
+    expect($arrval->reduce(fn ($c, $v) => $c . $v, '')->unwrap())->toBe('abc');
 });
 
 
