@@ -6,18 +6,28 @@ use Conia\Boiler\Value;
 use Conia\Boiler\Error\{NoSuchMethod, NoSuchProperty};
 
 
+test('Value::raw', function () {
+    expect((new Value('<b>boiler</b>'))->raw())->toBe('<b>boiler</b>');
+});
+
+
+test('Value::clean', function () {
+    expect((new Value('<b onclick="function()">boiler</b>'))->clean())->toBe('<b>boiler</b>');
+});
+
+
+test('Value::empty', function () {
+    expect((new Value(''))->empty())->toBe(true);
+    expect((new Value('test'))->empty())->toBe(false);
+    expect((new Value(null))->empty())->toBe(true);
+});
+
+
 test('String', function () {
     $html = '<b onclick="func()">boiler</b>';
     $value = new Value($html);
 
     expect((string)$value)->toBe('&lt;b onclick=&quot;func()&quot;&gt;boiler&lt;/b&gt;');
-    expect($value->raw())->toBe($html);
-    expect($value->clean())->toBe('<b>boiler</b>');
-    expect($value->empty())->toBe(false);
-
-    $value = new Value('');
-
-    expect($value->empty())->toBe(true);
 });
 
 

@@ -29,7 +29,7 @@ class Value implements ValueInterface
 
     public function empty(): bool
     {
-        return empty((string)$this->value);
+        return empty($this->value);
     }
 
     public function __toString(): string
