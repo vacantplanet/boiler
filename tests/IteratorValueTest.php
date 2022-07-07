@@ -38,3 +38,15 @@ test('Unwrap', function () {
 
     expect($iterval->unwrap())->toBe($iterator);
 });
+
+
+test('To array', function () {
+    $iterator = (function () {
+        yield 1;
+        yield 2;
+    })();
+
+    $iterval = new IteratorValue($iterator);
+
+    expect($iterval->toArray()->unwrap())->toBe([1, 2]);
+});

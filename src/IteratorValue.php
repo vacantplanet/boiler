@@ -7,16 +7,7 @@ namespace Conia\Boiler;
 use \IteratorIterator;
 use \Iterator;
 
-/**
- * Copied from https://psalm.dev/r/ea5148ab32
- * Referenced in https://github.com/vimeo/psalm/issues/4513
- *
- * @template-covariant TKey
- * @template-covariant TValue
- * @template           TIterator as \Traversable<TKey, TValue>
- *
- * @template-extends IteratorIterator<TKey, TValue, TIterator>
- */
+
 class IteratorValue extends IteratorIterator implements ValueInterface
 {
     public function current(): mixed
@@ -29,5 +20,10 @@ class IteratorValue extends IteratorIterator implements ValueInterface
     public function unwrap(): Iterator
     {
         return $this->getInnerIterator();
+    }
+
+    public function toArray(): ArrayValue
+    {
+        return new ArrayValue(iterator_to_array($this->getInnerIterator()));
     }
 }
