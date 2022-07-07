@@ -94,18 +94,21 @@ class Engine
 
     protected function getPath(string $template): string
     {
-        $segments = explode(':', $template);
+        if (strpos($template, ':') === false) {
+            $namespace = null;
+            $file = $template;
+        } else {
+            $segments = explode(':', $template);
+            if (count($segments) == 2) {
+                [$namespace, $file] = [$segments[0], $segments[1]];
+            } else {
+                throw new InvalidTemplateFormat(
+                    "Invalid template format: '$template'. " .
+                        "Use 'namespace:template/path or template/path'."
+                );
+            }
+        }
 
-        [$namespace, $file] = match (count($segments)) {
-            1 => [null, $segments[0]],
-            2 => [$segments[0], $segments[1]],
-            default => throw new InvalidTemplateFormat(
-                "Invalid template format: '$template'. " .
-                    "Use 'namespace:template/path or template/path'."
-            ),
-        };
-
-        $file = trim(strtr($file, '\\', '/'), '/');
         $ext = '';
 
         if (empty(pathinfo($file, PATHINFO_EXTENSION))) {
