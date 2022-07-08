@@ -49,27 +49,24 @@ class Engine
 
         /** @var callable */
         $load = $load->bindTo($template);
-        $error = null;
-
-        ob_start();
+        $level = ob_get_level();
 
         try {
+            ob_start();
+
             $load(
                 $template->path,
                 $autoescape ? $template->context() : $template->context
             );
+
+            return ob_get_clean();
         } catch (Throwable $e) {
-            $error = $e;
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
         }
-
-        $content = ob_get_contents();
-        ob_end_clean();
-
-        if ($error !== null) {
-            throw $error;
-        }
-
-        return $content;
     }
 
     protected function renderTemplate(Template $template, bool $autoescape): string
