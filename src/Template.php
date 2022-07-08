@@ -125,4 +125,11 @@ class Template
     {
         return $this->engine->hasSection($name);
     }
+
+    public function __call(string $name, array $args): mixed
+    {
+        $callable = $this->engine->getMethods()->get($name);
+
+        return $callable(...$args);
+    }
 }

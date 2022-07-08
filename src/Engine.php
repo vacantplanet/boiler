@@ -16,6 +16,7 @@ class Engine
     protected array $capture = [];
     protected array $sections = [];
     protected SectionMode $sectionMode = SectionMode::Closed;
+    protected CustomMethods $customMethods;
 
     public function __construct(
         string|array $dirs,
@@ -23,6 +24,7 @@ class Engine
         protected readonly bool $autoescape = true,
     ) {
         $this->dirs = $this->prepareDirs($dirs);
+        $this->customMethods = new CustomMethods();
     }
 
     protected function prepareDirs(string|array $dirs): array
@@ -224,5 +226,15 @@ class Engine
     public function hasSection(string $name): bool
     {
         return isset($this->sections[$name]);
+    }
+
+    public function registerMethod(string $name, callable $callable): void
+    {
+        $this->customMethods->add($name, $callable);
+    }
+
+    public function getMethods(): CustomMethods
+    {
+        return $this->customMethods;
     }
 }
