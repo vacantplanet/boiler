@@ -11,14 +11,12 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 class Template
 {
     protected ?string $layout = null;
-    public readonly string $id;
 
     public function __construct(
         protected readonly Engine $engine,
-        protected readonly string $moniker,
-        protected readonly array $context
+        public readonly string $path,
+        protected readonly array $context,
     ) {
-        $this->id = hash('xxh3', $moniker);
     }
 
     public function context(array $values = []): array
@@ -47,11 +45,6 @@ class Template
         bool $removeEmptyLines = true,
     ): string {
         return Sanitizer::clean($value, $config, $removeEmptyLines);
-    }
-
-    public function unwrap(string $name): mixed
-    {
-        return $this->context[$name];
     }
 
     public function url(string $value): string
@@ -87,14 +80,6 @@ class Template
         }
 
         throw new RuntimeException('Template error: layout not set');
-    }
-
-    /**
-     * Used in the layout template to get the content of the wrapped template
-     */
-    public function body(): string
-    {
-        return (string)$this->unwrap($this->engine::BODY_PREFIX . $this->id);
     }
 
     /**

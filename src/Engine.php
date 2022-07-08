@@ -11,7 +11,6 @@ use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
 
 class Engine
 {
-    public const BODY_PREFIX = '__body__id__';
     protected readonly array $dirs;
     protected array $capture = [];
     protected array $sections = [];
@@ -35,15 +34,8 @@ class Engine
         );
     }
 
-    public function render(string $moniker, array $context = []): string
+    protected function renderTemplate(Template $template, array $context): string
     {
-        if (empty($moniker)) {
-            throw new ValueError('No template path given');
-        }
-
-        $error = null;
-        $path = $this->getPath($moniker);
-
         $load =  function (string $templatePath, array $context = []): void {
             // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
             $____template_path____ = $templatePath;
@@ -54,15 +46,14 @@ class Engine
             include $____template_path____;
         };
 
-        $template = $this->createTemplate($moniker, array_merge($this->defaults, $context));
-
         /** @var callable */
         $load = $load->bindTo($template);
+        $error = null;
 
         ob_start();
 
         try {
-            $load($path, $template->context());
+            $load($template->path, $template->context());
         } catch (Throwable $e) {
             $error = $e;
         }
@@ -75,31 +66,45 @@ class Engine
         }
 
         if ($template->hasLayout()) {
-            $layout = $template->getLayout();
-            $context[self::BODY_PREFIX . hash('xxh3', $layout)] = $content;
-            $content = $this->render($layout, $context);
+            $layout = new Layout(
+                $this,
+                $this->getPath($template->getLayout()),
+                $context,
+                $content
+            );
+            $content = $this->renderTemplate($layout, $context);
         }
 
         return $content;
     }
 
-    protected function createTemplate(string $moniker, array $context): Template
+    public function render(string $moniker, array $context = []): string
     {
-        return new Template($this, $moniker, $context);
+        if (empty($moniker)) {
+            throw new ValueError('No template path given');
+        }
+
+        $template =  new Template(
+            $this,
+            $this->getPath($moniker),
+            array_merge($this->defaults, $context),
+        );
+
+        return $this->renderTemplate($template, $context);
     }
 
-    protected function getPath(string $template): string
+    protected function getPath(string $moniker): string
     {
-        if (strpos($template, ':') === false) {
+        if (strpos($moniker, ':') === false) {
             $namespace = null;
-            $file = $template;
+            $file = $moniker;
         } else {
-            $segments = explode(':', $template);
+            $segments = explode(':', $moniker);
             if (count($segments) == 2) {
                 [$namespace, $file] = [$segments[0], $segments[1]];
             } else {
                 throw new InvalidTemplateFormat(
-                    "Invalid template format: '$template'. " .
+                    "Invalid template format: '$moniker'. " .
                         "Use 'namespace:template/path or template/path'."
                 );
             }
@@ -135,7 +140,7 @@ class Engine
             }
         }
 
-        throw new TemplateNotFound("Template '$template' not found");
+        throw new TemplateNotFound("Template '$moniker' not found");
     }
 
     public function exists(string $moniker): bool
