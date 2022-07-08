@@ -54,6 +54,26 @@ test('Unwrap rendering', function () {
 });
 
 
+test('Switch off autoescaping by default', function () {
+    $tpl = new Engine(self::DEFAULT_DIR, autoescape: false);
+
+    expect($tpl->render('noautoescape', [
+        'html' => '<b>noautoescape</b>',
+    ]))->toBe("<b>noautoescape</b>");
+});
+
+
+test('Switch off autoescaping when calling render', function () {
+    $tpl = new Engine(self::DEFAULT_DIR, autoescape: true);
+
+    expect($tpl->render(
+        'noautoescape',
+        ['html' => '<b>nodefaultautoescape</b>'],
+        autoescape: false,
+    ))->toBe("<b>nodefaultautoescape</b>");
+});
+
+
 test('Unwrap rendering with Stringable', function () {
     $tpl = new Engine($this->templates());
 

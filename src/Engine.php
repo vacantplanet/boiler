@@ -17,7 +17,8 @@ class Engine
 
     public function __construct(
         string|array $dirs,
-        protected readonly array $defaults = []
+        protected readonly array $defaults = [],
+        protected readonly bool $autoescape = true,
     ) {
         $this->dirs = $this->prepareDirs($dirs);
     }
@@ -34,7 +35,7 @@ class Engine
         );
     }
 
-    protected function getContent(Template $template): string
+    protected function getContent(Template $template, bool $autoescape): string
     {
         $load =  function (string $templatePath, array $context = []): void {
             // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
@@ -53,7 +54,10 @@ class Engine
         ob_start();
 
         try {
-            $load($template->path, $template->context());
+            $load(
+                $template->path,
+                $autoescape ? $template->context() : $template->context
+            );
         } catch (Throwable $e) {
             $error = $e;
         }
@@ -68,9 +72,9 @@ class Engine
         return $content;
     }
 
-    protected function renderTemplate(Template $template): string
+    protected function renderTemplate(Template $template, bool $autoescape): string
     {
-        $content = $this->getContent($template);
+        $content = $this->getContent($template, $autoescape);
 
         if ($template instanceof Layout) {
             return $content;
@@ -83,16 +87,24 @@ class Engine
                 $template->context,
                 $content
             );
-            $content = $this->renderTemplate($template);
+            $content = $this->renderTemplate($template, $autoescape);
         }
 
         return $content;
     }
 
-    public function render(string $moniker, array $context = []): string
-    {
+    public function render(
+        string $moniker,
+        array $context = [],
+        ?bool $autoescape = null
+    ): string {
         if (empty($moniker)) {
             throw new ValueError('No template path given');
+        }
+
+        if (is_null($autoescape)) {
+            // Use the engine's default value if nothing is passesd
+            $autoescape = $this->autoescape;
         }
 
         $template =  new Template(
@@ -101,7 +113,7 @@ class Engine
             array_merge($this->defaults, $context),
         );
 
-        return $this->renderTemplate($template);
+        return $this->renderTemplate($template, $autoescape);
     }
 
     protected function getPath(string $moniker): string
