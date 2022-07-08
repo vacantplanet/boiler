@@ -101,6 +101,16 @@ class Template
         $this->engine->beginSection($name);
     }
 
+    public function append(string $name): void
+    {
+        $this->engine->appendSection($name);
+    }
+
+    public function prepend(string $name): void
+    {
+        $this->engine->prependSection($name);
+    }
+
     public function end(): void
     {
         $this->engine->endSection();

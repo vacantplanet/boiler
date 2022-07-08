@@ -248,6 +248,33 @@ test('Section rendering', function () {
 });
 
 
+test('Append/prepend sections', function () {
+    $tpl = new Engine($this->templates());
+
+    expect($this->fullTrim($tpl->render('appendprepend', [
+        'path' => '/assign.js'
+    ])))->toBe(
+        '<script src="/prepend.js"></script>' .
+            '<script src="/assign.js"></script>' .
+            '<script src="/append.js"></script>'
+    );
+});
+
+
+test('Nested sections error', function () {
+    $tpl = new Engine($this->templates());
+
+    $tpl->render('nestedsections');
+})->throws(LogicException::class);
+
+
+test('Closing unopened section error', function () {
+    $tpl = new Engine($this->templates());
+
+    $tpl->render('closeunopened');
+})->throws(LogicException::class);
+
+
 test('Missing section rendering', function () {
     $tpl = new Engine($this->templates());
 
