@@ -11,6 +11,7 @@ use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
 
 class Engine
 {
+    public const BODY_PREFIX = '__body__id__';
     protected readonly array $dirs;
     protected array $capture = [];
     protected array $sections = [];
@@ -75,7 +76,7 @@ class Engine
 
         if ($template->hasLayout()) {
             $layout = $template->getLayout();
-            $context[$this->getBodyId($layout)] = $content;
+            $context[self::BODY_PREFIX . hash('xxh3', $layout)] = $content;
             $content = $this->render($layout, $context);
         }
 
@@ -85,11 +86,6 @@ class Engine
     protected function createTemplate(string $moniker, array $context): Template
     {
         return new Template($this, $moniker, $context);
-    }
-
-    public function getBodyId(string $moniker): string
-    {
-        return hash('xxh3', $moniker);
     }
 
     protected function getPath(string $template): string

@@ -11,12 +11,14 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 class Template
 {
     protected ?string $layout = null;
+    public readonly string $id;
 
     public function __construct(
         protected readonly Engine $engine,
         protected readonly string $moniker,
         protected readonly array $context
     ) {
+        $this->id = hash('xxh3', $moniker);
     }
 
     public function context(array $values = []): array
@@ -92,7 +94,7 @@ class Template
      */
     public function body(): string
     {
-        return (string)$this->unwrap($this->engine->getBodyId($this->moniker));
+        return (string)$this->unwrap($this->engine::BODY_PREFIX . $this->id);
     }
 
     /**
