@@ -1,1 +1,3 @@
-<div><?= $this->body() ?><?= $this->text ?></div>
+<body>
+    <?= $this->body() ?><p><?= $text ?></p>
+</body>

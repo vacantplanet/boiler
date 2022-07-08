@@ -187,12 +187,33 @@ test('Complex nested rendering', function () {
 });
 
 
-test('Multilple layout error', function () {
+test('Single layout', function () {
+    $tpl = new Engine($this->templates());
+
+    expect($this->fullTrim($tpl->render('uselayout', [
+        'text' => 'boiler'
+    ])))->toBe('<body><p>boiler</p><p>boiler</p></body>');
+});
+
+
+test('Stacked layout', function () {
+    $tpl = new Engine($this->templates());
+
+    expect($this->fullTrim($tpl->render('usestacked', [
+        'text' => 'boiler'
+    ])))->toBe(
+        '<body><div class="stackedsecond"><div class="stackedfirst">' .
+            '<p>boiler</p></div></div><p>boiler</p></body>'
+    );
+});
+
+
+test('Multilple layouts error', function () {
     (new Engine($this->templates()))->render('multilayout');
 })->throws(RuntimeException::class, 'layout already set');
 
 
-test('Get nonexistent layout error', function () {
+test('Nonexistent layout error', function () {
     $engine = new Engine($this->templates());
     (new Template($engine, 'moniker', []))->getLayout('nonexistent');
 })->throws(RuntimeException::class, 'layout not set');

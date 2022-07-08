@@ -65,14 +65,18 @@ class Engine
             throw $error;
         }
 
-        if ($template->hasLayout()) {
-            $layout = new Layout(
+        if ($template instanceof Layout) {
+            return $content;
+        }
+
+        while ($template->hasLayout()) {
+            $template = new Layout(
                 $this,
                 $this->getPath($template->getLayout()),
                 $context,
                 $content
             );
-            $content = $this->renderTemplate($layout, $context);
+            $content = $this->renderTemplate($template, $context);
         }
 
         return $content;
