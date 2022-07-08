@@ -15,7 +15,7 @@ class Template
     public function __construct(
         protected readonly Engine $engine,
         public readonly string $path,
-        protected readonly array $context,
+        public readonly array $context,
     ) {
     }
 

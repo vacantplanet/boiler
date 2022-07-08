@@ -34,7 +34,7 @@ class Engine
         );
     }
 
-    protected function renderTemplate(Template $template, array $context): string
+    protected function getContent(Template $template): string
     {
         $load =  function (string $templatePath, array $context = []): void {
             // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
@@ -65,6 +65,13 @@ class Engine
             throw $error;
         }
 
+        return $content;
+    }
+
+    protected function renderTemplate(Template $template): string
+    {
+        $content = $this->getContent($template);
+
         if ($template instanceof Layout) {
             return $content;
         }
@@ -73,10 +80,10 @@ class Engine
             $template = new Layout(
                 $this,
                 $this->getPath($template->getLayout()),
-                $context,
+                $template->context,
                 $content
             );
-            $content = $this->renderTemplate($template, $context);
+            $content = $this->renderTemplate($template);
         }
 
         return $content;
@@ -94,7 +101,7 @@ class Engine
             array_merge($this->defaults, $context),
         );
 
-        return $this->renderTemplate($template, $context);
+        return $this->renderTemplate($template);
     }
 
     protected function getPath(string $moniker): string
