@@ -1,8 +1,21 @@
 {
     "name": "conia/boiler",
-    "description": "PHP template engine",
+    "description": "A PHP template engine that doesn't require you to learn a new syntax",
     "type": "library",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "ebene fünf GmbH",
+            "email": "conia@ebenefuenf.de",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://conia.dev/boiler",
+    "keywords": [
+        "conia",
+        "templating",
+        "templates"
+    ],
     "autoload": {
         "psr-4": {
             "Conia\\Boiler\\": "src/"
@@ -13,11 +26,6 @@
             "Conia\\Boiler\\Tests\\": "tests"
         }
     },
-    "authors": [
-        {
-            "name": "ebene fünf GmbH"
-        }
-    ],
     "require": {
         "php": ">=8.1",
         "symfony/html-sanitizer": "^6.1"
