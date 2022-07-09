@@ -1,0 +1,7 @@
+site_name: Conia Boiler
+copyright: © 2022 ebene fünf GmbH
+theme:
+    name: conia
+repo_url: https://github.com/coniadev/boiler
+extra:
+    project: Boiler
