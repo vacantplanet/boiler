@@ -95,16 +95,16 @@ class Engine
             }
         } else {
             foreach ($this->dirs as $dir) {
-                $path = realpath($dir . $ds . $file . $ext);
+                $templatePath = realpath($dir . $ds . $file . $ext);
 
-                if ($path && is_file($path)) {
-                    if (!str_starts_with($path, $dir)) {
+                if ($templatePath && is_file($templatePath)) {
+                    if (!str_starts_with($templatePath, $dir)) {
                         throw new TemplateNotFound(
-                            'Template is outside of root directory: ' . $path
+                            'Template is outside of root directory: ' . $templatePath
                         );
                     }
 
-                    return $path;
+                    return $templatePath;
                 }
             }
         }

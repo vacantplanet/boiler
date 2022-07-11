@@ -6,7 +6,7 @@ namespace Conia\Boiler;
 
 use \RuntimeException;
 use \Throwable;
-use \ValueError;
+use Conia\Boiler\Error\TemplateNotFound;
 
 
 class Template
@@ -14,8 +14,9 @@ class Template
     use RegistersMethod;
 
     protected ?string $layout = null;
-    protected CustomMethods $customMethods;
     public readonly Sections $sections;
+    /** @psalm-suppress PropertyNotSetInConstructor */
+    protected CustomMethods $customMethods;
 
     public function __construct(
         public readonly string $path,
@@ -39,16 +40,16 @@ class Template
         // and therefore try to locate the file relative to this template.
 
         if (empty(pathinfo($path, PATHINFO_EXTENSION))) {
-            $path += '.php';
+            $path .= '.php';
         }
 
-        $path = realpath(dirname($this->path) . DIRECTORY_SEPARATOR . $path);
+        $includePath = realpath(dirname($this->path) . DIRECTORY_SEPARATOR . $path);
 
-        if ($path) {
-            return $path;
+        if ($includePath) {
+            return $includePath;
         }
 
-        throw new ValueError('Included template not found: ' . $path);
+        throw new TemplateNotFound('Included template not found: ' . $path);
     }
 
     protected function boundTemplate(array $context, bool $autoescape): BoundTemplate
@@ -105,6 +106,12 @@ class Template
         $template = $this;
 
         while ($template->hasLayout()) {
+            /**
+             * Psalm reports that $template->layout is possibly null
+             * which is already checked via $template->hasLayout().
+             *
+             * @psalm-suppress PossiblyNullArgument
+             * */
             $template = new Layout(
                 $template->getIncludePath($template->layout),
                 $content,

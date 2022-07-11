@@ -149,6 +149,17 @@ test('Empty helper method', function () {
 });
 
 
+test('Escape already wrapped Value', function () {
+    $engine = new Engine($this->templates());
+
+    expect($this->fullTrim($engine->render('escapevalue', [
+        'wrapped' => '<b>wrapped</b>',
+    ])))->toBe(
+        '<p>&lt;b&gt;wrapped&lt;/b&gt;</p>'
+    );
+});
+
+
 test('Iterator rendering', function () {
     $engine = new Engine($this->templates());
 
@@ -214,6 +225,13 @@ test('Single layout', function () {
         'text' => 'boiler'
     ])))->toBe('<body><p>boiler</p><p>boiler</p></body>');
 });
+
+
+test('Non-existent layout', function () {
+    $engine = new Engine($this->templates());
+
+    $engine->render('nonexistentlayout');
+})->throws(TemplateNotFound::class, 'doesnotexist');
 
 
 test('Stacked layout', function () {

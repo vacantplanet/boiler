@@ -7,10 +7,12 @@ namespace Conia\Boiler\Tests;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 
+
 class TestCase extends BaseTestCase
 {
     const ROOT_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
     const DEFAULT_DIR = self::ROOT_DIR . 'default';
+    const DS = DIRECTORY_SEPARATOR;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {

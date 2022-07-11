@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \RuntimeException;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 
@@ -43,7 +42,7 @@ class BoundTemplate
     }
 
     public function escape(
-        string $value,
+        string|Value $value,
         int $flags = self::ESCAPE_FLAGS,
         string $encoding = self::ESCAPE_ENCODING,
     ): string {
