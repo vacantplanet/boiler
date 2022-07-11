@@ -4,65 +4,169 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
+use \LogicException;
 use \RuntimeException;
-use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use \Throwable;
+use \ValueError;
 
 
 class Template
 {
-    private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
-    private const ESCAPE_ENCODING = 'UTF-8';
+    use RegistersMethod;
 
+    protected array $capture = [];
+    protected array $sections = [];
     protected ?string $layout = null;
 
+    protected SectionMode $sectionMode = SectionMode::Closed;
+    protected CustomMethods $customMethods;
+
     public function __construct(
-        protected readonly Engine $engine,
         public readonly string $path,
-        public readonly array $context,
+        public readonly ?Engine $engine = null
     ) {
     }
 
-    public function context(array $values = []): array
+    public function getIncludePath(string $path): string
     {
-        return array_map(
-            function ($value): mixed {
-                return Wrapper::wrap($value);
-            },
-            array_merge($this->context, $values)
-        );
-    }
-
-    public function e(
-        string|Value $value,
-        int $flags = self::ESCAPE_FLAGS,
-        string $encoding = self::ESCAPE_ENCODING,
-    ): string {
-        if ($value instanceof Value) {
-            return htmlspecialchars($value->unwrap(), $flags, $encoding);
+        if ($this->engine) {
+            return $this->engine->getFile($path);
         }
 
-        return htmlspecialchars($value, $flags, $encoding);
+        if (is_file($path)) {
+            return $path;
+        }
+
+        // Without engine we cannot use the template lookup functionality
+        // and therefore try to locate the file relative to this template.
+
+        if (empty(pathinfo($path, PATHINFO_EXTENSION))) {
+            $path += '.php';
+        }
+
+        $path = realpath(dirname($this->path) . DIRECTORY_SEPARATOR . $path);
+
+        if ($path) {
+            return $path;
+        }
+
+        throw new ValueError('Included template not found: ' . $path);
     }
 
-    public function escape(
-        string $value,
-        int $flags = self::ESCAPE_FLAGS,
-        string $encoding = self::ESCAPE_ENCODING,
-    ): string {
-        return $this->e($value, $flags, $encoding);
-    }
-
-    public function clean(
-        string $value,
-        HtmlSanitizerConfig $config = null,
-        bool $removeEmptyLines = true,
-    ): string {
-        return Sanitizer::clean($value, $config, $removeEmptyLines);
-    }
-
-    public function url(string $value): string
+    protected function boundTemplate(array $context, bool $autoescape): BoundTemplate
     {
-        return filter_var($value, FILTER_SANITIZE_URL);
+        return new BoundTemplate($this, $context, $autoescape);
+    }
+
+    protected function getContent(array $context, bool $autoescape): string
+    {
+        $bound = $this->boundTemplate($context, $autoescape);
+
+        $load =  function (string $templatePath, array $context = []): void {
+            // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
+            $____template_path____ = $templatePath;
+
+            extract($context);
+
+            /** @psalm-suppress UnresolvableInclude */
+            include $____template_path____;
+        };
+
+        /** @var callable */
+        $load = $load->bindTo($bound);
+        $level = ob_get_level();
+
+        try {
+            ob_start();
+
+            $load(
+                $this->path,
+                $autoescape ?
+                    $bound->context() :
+                    $context
+            );
+
+            return ob_get_clean();
+        } catch (Throwable $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        }
+    }
+
+    public function render(array $context = [], bool $autoescape = true): string
+    {
+        $content = $this->getContent($context, $autoescape);
+
+        if ($this instanceof Layout) {
+            return $content;
+        }
+
+        $template = $this;
+
+        while ($template->hasLayout()) {
+            $template = new Layout(
+                $template->getIncludePath($template->layout),
+                $content,
+                $template->engine,
+            );
+            $content = $template->render($context, $autoescape);
+        }
+
+        return $content;
+    }
+
+    protected function openSection(string $name, SectionMode $mode): void
+    {
+        if ($this->sectionMode !== SectionMode::Closed) {
+            throw new LogicException('Nested sections are not allowed');
+        }
+
+        $this->sectionMode = $mode;
+        $this->capture[] = $name;
+        ob_start();
+    }
+
+    public function beginSection(string $name): void
+    {
+        $this->openSection($name, SectionMode::Assign);
+    }
+
+    public function appendSection(string $name): void
+    {
+        $this->openSection($name, SectionMode::Append);
+    }
+
+    public function prependSection(string $name): void
+    {
+        $this->openSection($name, SectionMode::Prepend);
+    }
+
+    public function endSection(): void
+    {
+        $content = ob_get_clean();
+        $name = array_pop($this->capture);
+
+        $this->sections[$name] = match ($this->sectionMode) {
+            SectionMode::Assign => $content,
+            SectionMode::Append => ($this->sections[$name] ?? '') . $content,
+            SectionMode::Prepend => $content . ($this->sections[$name] ?? ''),
+            SectionMode::Closed => throw new LogicException('No section started'),
+        };
+
+        $this->sectionMode = SectionMode::Closed;
+    }
+
+    public function getSection(string $name): string
+    {
+        return $this->sections[$name];
+    }
+
+    public function hasSection(string $name): bool
+    {
+        return isset($this->sections[$name]);
     }
 
     /**
@@ -70,10 +174,10 @@ class Template
      *
      * Typically it’s placed at the top of the file.
      */
-    public function layout(string $moniker): void
+    public function setLayout(string $path): void
     {
         if ($this->layout === null) {
-            $this->layout = $moniker;
+            $this->layout = $path;
 
             return;
         } else {
@@ -86,63 +190,8 @@ class Template
         return $this->layout !== null;
     }
 
-    public function getLayout(): string
+    public function setCustomMethods(CustomMethods $customMethods): void
     {
-        if ($this->layout !== null) {
-            return $this->layout;
-        }
-
-        throw new RuntimeException('Template error: layout not set');
-    }
-
-    /**
-     * Includes another template into the current template
-     *
-     * If no context is passed it shares the context of the calling template.
-     */
-    public function insert(string $moniker, array $context = []): void
-    {
-        if (func_num_args() > 1) {
-            echo $this->engine->render($moniker, $context);
-        } else {
-            echo $this->engine->render($moniker, $this->context);
-        }
-    }
-
-    public function begin(string $name): void
-    {
-        $this->engine->beginSection($name);
-    }
-
-    public function append(string $name): void
-    {
-        $this->engine->appendSection($name);
-    }
-
-    public function prepend(string $name): void
-    {
-        $this->engine->prependSection($name);
-    }
-
-    public function end(): void
-    {
-        $this->engine->endSection();
-    }
-
-    public function section(string $name): string
-    {
-        return $this->engine->getSection($name);
-    }
-
-    public function hasSection(string $name): bool
-    {
-        return $this->engine->hasSection($name);
-    }
-
-    public function __call(string $name, array $args): mixed
-    {
-        $callable = $this->engine->getMethods()->get($name);
-
-        return $callable(...$args);
+        $this->customMethods = $customMethods;
     }
 }

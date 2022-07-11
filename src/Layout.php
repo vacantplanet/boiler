@@ -8,12 +8,16 @@ namespace Conia\Boiler;
 class Layout extends Template
 {
     public function __construct(
-        Engine $engine,
         string $path,
-        array $context,
         protected readonly string $body,
+        ?Engine $engine = null,
     ) {
-        parent::__construct($engine, $path, $context);
+        parent::__construct($path, $engine);
+    }
+
+    protected function boundTemplate(array $context, bool $autoescape): BoundLayout
+    {
+        return new BoundLayout($this, $context, $autoescape);
     }
 
     /**

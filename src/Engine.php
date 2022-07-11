@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \LogicException;
-use \Throwable;
 use \ValueError;
 use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
 
 
 class Engine
 {
+    use RegistersMethod;
+
     protected readonly array $dirs;
-    protected array $capture = [];
-    protected array $sections = [];
-    protected SectionMode $sectionMode = SectionMode::Closed;
-    protected CustomMethods $customMethods;
 
     public function __construct(
         string|array $dirs,
@@ -39,96 +35,45 @@ class Engine
         );
     }
 
-    protected function getContent(Template $template, bool $autoescape): string
+    public function template(string $path): Template
     {
-        $load =  function (string $templatePath, array $context = []): void {
-            // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
-            $____template_path____ = $templatePath;
-
-            extract($context);
-
-            /** @psalm-suppress UnresolvableInclude */
-            include $____template_path____;
-        };
-
-        /** @var callable */
-        $load = $load->bindTo($template);
-        $level = ob_get_level();
-
-        try {
-            ob_start();
-
-            $load(
-                $template->path,
-                $autoescape ? $template->context() : $template->context
-            );
-
-            return ob_get_clean();
-        } catch (Throwable $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-
-            throw $e;
-        }
-    }
-
-    protected function renderTemplate(Template $template, bool $autoescape): string
-    {
-        $content = $this->getContent($template, $autoescape);
-
-        if ($template instanceof Layout) {
-            return $content;
-        }
-
-        while ($template->hasLayout()) {
-            $template = new Layout(
-                $this,
-                $this->getPath($template->getLayout()),
-                $template->context,
-                $content
-            );
-            $content = $this->renderTemplate($template, $autoescape);
-        }
-
-        return $content;
-    }
-
-    public function render(
-        string $moniker,
-        array $context = [],
-        ?bool $autoescape = null
-    ): string {
-        if (empty($moniker)) {
+        if (empty($path)) {
             throw new ValueError('No template path given');
         }
 
+        $template = new Template($this->getFile($path), $this);
+        $template->setCustomMethods($this->customMethods);
+
+        return $template;
+    }
+
+    public function render(
+        string $path,
+        array $context = [],
+        ?bool $autoescape = null
+    ): string {
         if (is_null($autoescape)) {
-            // Use the engine's default value if nothing is passesd
+            // Use the engine's default value if nothing is passed
             $autoescape = $this->autoescape;
         }
 
-        $template =  new Template(
-            $this,
-            $this->getPath($moniker),
-            array_merge($this->defaults, $context),
-        );
+        $template = $this->template($path);
 
-        return $this->renderTemplate($template, $autoescape);
+        return $template->render(array_merge($this->defaults, $context), $autoescape);
     }
 
-    protected function getPath(string $moniker): string
+    public function getFile(string $path): string
     {
-        if (strpos($moniker, ':') === false) {
+        if (strpos($path, ':') === false) {
             $namespace = null;
-            $file = $moniker;
+            $file = $path;
         } else {
-            $segments = explode(':', $moniker);
+            $segments = explode(':', $path);
             if (count($segments) == 2) {
                 [$namespace, $file] = [$segments[0], $segments[1]];
             } else {
                 throw new InvalidTemplateFormat(
-                    "Invalid template format: '$moniker'. " .
+                    "Invalid template format: '$path'. " .
                         "Use 'namespace:template/path or template/path'."
                 );
             }
@@ -164,77 +109,16 @@ class Engine
             }
         }
 
-        throw new TemplateNotFound("Template '$moniker' not found");
+        throw new TemplateNotFound("Template '$path' not found");
     }
 
-    public function exists(string $moniker): bool
+    public function exists(string $path): bool
     {
         try {
-            $this->getPath($moniker);
+            $this->getFile($path);
             return true;
         } catch (TemplateNotFound) {
             return false;
         }
-    }
-
-    protected function openSection(string $name, SectionMode $mode): void
-    {
-        if ($this->sectionMode !== SectionMode::Closed) {
-            throw new LogicException('Nested sections are not allowed');
-        }
-
-        $this->sectionMode = $mode;
-        $this->capture[] = $name;
-        ob_start();
-    }
-
-    public function beginSection(string $name): void
-    {
-        $this->openSection($name, SectionMode::Assign);
-    }
-
-    public function appendSection(string $name): void
-    {
-        $this->openSection($name, SectionMode::Append);
-    }
-
-    public function prependSection(string $name): void
-    {
-        $this->openSection($name, SectionMode::Prepend);
-    }
-
-    public function endSection(): void
-    {
-        $content = ob_get_clean();
-        $name = array_pop($this->capture);
-
-        $this->sections[$name] = match ($this->sectionMode) {
-            SectionMode::Assign => $content,
-            SectionMode::Append => ($this->sections[$name] ?? '') . $content,
-            SectionMode::Prepend => $content . ($this->sections[$name] ?? ''),
-            SectionMode::Closed => throw new LogicException('No section started'),
-        };
-
-        $this->sectionMode = SectionMode::Closed;
-    }
-
-    public function getSection(string $name): string
-    {
-        return $this->sections[$name];
-    }
-
-    public function hasSection(string $name): bool
-    {
-        return isset($this->sections[$name]);
-    }
-
-    public function registerMethod(string $name, callable $callable): void
-    {
-        $this->customMethods->add($name, $callable);
-    }
-
-    public function getMethods(): CustomMethods
-    {
-        return $this->customMethods;
     }
 }

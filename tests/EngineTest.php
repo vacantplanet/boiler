@@ -258,7 +258,7 @@ test('Append/prepend sections', function () {
             '<script src="/assign.js"></script>' .
             '<script src="/append.js"></script>'
     );
-});
+})->only();
 
 
 test('Nested sections error', function () {
