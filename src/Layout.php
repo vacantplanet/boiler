@@ -10,9 +10,10 @@ class Layout extends Template
     public function __construct(
         string $path,
         protected readonly string $body,
+        Sections $sections,
         ?Engine $engine = null,
     ) {
-        parent::__construct($path, $engine);
+        parent::__construct($path, $sections, $engine);
     }
 
     protected function boundTemplate(array $context, bool $autoescape): BoundLayout

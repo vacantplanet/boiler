@@ -41,7 +41,7 @@ class Engine
             throw new ValueError('No template path given');
         }
 
-        $template = new Template($this->getFile($path), $this);
+        $template = new Template($this->getFile($path), new Sections(), $this);
         $template->setCustomMethods($this->customMethods);
 
         return $template;

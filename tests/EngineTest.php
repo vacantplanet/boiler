@@ -233,12 +233,6 @@ test('Multilple layouts error', function () {
 })->throws(RuntimeException::class, 'layout already set');
 
 
-test('Nonexistent layout error', function () {
-    $engine = new Engine($this->templates());
-    (new Template($engine, 'moniker', []))->getLayout('nonexistent');
-})->throws(RuntimeException::class, 'layout not set');
-
-
 test('Section rendering', function () {
     $engine = new Engine($this->templates());
 
@@ -258,7 +252,7 @@ test('Append/prepend sections', function () {
             '<script src="/assign.js"></script>' .
             '<script src="/append.js"></script>'
     );
-})->only();
+});
 
 
 test('Nested sections error', function () {

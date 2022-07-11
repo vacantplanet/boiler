@@ -18,7 +18,6 @@ class BoundTemplate
         public readonly array $context,
         public readonly bool $autoescape,
     ) {
-        error_log($template->path);
     }
 
     public function context(array $values = []): array
@@ -69,15 +68,6 @@ class BoundTemplate
         $this->template->setLayout($path);
     }
 
-    public function getLayout(): string
-    {
-        if ($this->layout !== null) {
-            return $this->layout;
-        }
-
-        throw new RuntimeException('Template error: layout not set');
-    }
-
     /**
      * Includes another template into the current template
      *
@@ -86,7 +76,11 @@ class BoundTemplate
     public function insert(string $path, array $context = []): void
     {
         $path = $this->template->getIncludePath($path);
-        $template = new Template($path, $this->template->engine);
+        $template = new Template(
+            $path,
+            sections: $this->template->sections,
+            engine: $this->template->engine,
+        );
 
         if (func_num_args() > 1) {
             echo $template->render($context, $this->autoescape);
@@ -97,32 +91,32 @@ class BoundTemplate
 
     public function begin(string $name): void
     {
-        $this->template->beginSection($name);
+        $this->template->sections->begin($name);
     }
 
     public function append(string $name): void
     {
-        $this->template->appendSection($name);
+        $this->template->sections->append($name);
     }
 
     public function prepend(string $name): void
     {
-        $this->template->prependSection($name);
+        $this->template->sections->prepend($name);
     }
 
     public function end(): void
     {
-        $this->template->endSection();
+        $this->template->sections->end();
     }
 
     public function section(string $name): string
     {
-        return $this->template->getSection($name);
+        return $this->template->sections->get($name);
     }
 
-    public function hasSection(string $name): bool
+    public function has(string $name): bool
     {
-        return $this->template->hasSection($name);
+        return $this->template->sections->has($name);
     }
 
     public function __call(string $name, array $args): mixed
