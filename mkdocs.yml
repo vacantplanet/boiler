@@ -1,5 +1,13 @@
 site_name: Conia Boiler
 copyright: © 2022 ebene fünf GmbH
+nav:
+  - index.md
+  - engine.md
+  - values.md
+  - layouts.md
+  - inserts.md
+  - sections.md
+  - template.md
 theme:
     name: conia
 repo_url: https://github.com/coniadev/boiler

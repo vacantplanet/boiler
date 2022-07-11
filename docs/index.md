@@ -1,5 +1,5 @@
-Boiler Template Engine
-======================
+Boiler Templates for PHP
+========================
 
 Boiler is a native PHP 8.1 template engine in the vein of *[Plates](https://platesphp.com/)*,
 from which it is heavily inspired. Like Plates, it also does not introduce a new template 
@@ -18,6 +18,7 @@ The main differences to *Plates* are:
 * A simple API. Only one class, the [Engine](engine.md), is needed.
 * Template [inheritance](layouts.md) and [inclusion](inserts.md).
 * You use plain PHP in your templates. No need to learn another syntax.
+* Fully unit tested.
 * Reasonable performance.
 
 ## Installation
