@@ -10,6 +10,9 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Template
 {
+    private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
+    private const ESCAPE_ENCODING = 'UTF-8';
+
     protected ?string $layout = null;
 
     public function __construct(
@@ -29,14 +32,24 @@ class Template
         );
     }
 
-    public function escape(string $value): string
-    {
-        return htmlspecialchars($value);
+    public function e(
+        string|Value $value,
+        int $flags = self::ESCAPE_FLAGS,
+        string $encoding = self::ESCAPE_ENCODING,
+    ): string {
+        if ($value instanceof Value) {
+            return htmlspecialchars($value->unwrap(), $flags, $encoding);
+        }
+
+        return htmlspecialchars($value, $flags, $encoding);
     }
 
-    public function e(string $value): string
-    {
-        return htmlspecialchars($value);
+    public function escape(
+        string $value,
+        int $flags = self::ESCAPE_FLAGS,
+        string $encoding = self::ESCAPE_ENCODING,
+    ): string {
+        return $this->e($value, $flags, $encoding);
     }
 
     public function clean(
