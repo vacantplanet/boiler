@@ -34,7 +34,11 @@ class Value implements ValueInterface
 
     public function __toString(): string
     {
-        return htmlspecialchars((string)$this->value);
+        return htmlspecialchars(
+            (string)$this->value,
+            ENT_QUOTES | ENT_SUBSTITUTE,
+            'UTF-8',
+        );
     }
 
     public function __get(string $name): mixed
