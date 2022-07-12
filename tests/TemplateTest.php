@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Error\TemplateNotFound;
+use Conia\Boiler\Error\{DirectoryNotFound, TemplateNotFound};
 use Conia\Boiler\{Template, Value};
 use Conia\Boiler\Tests\TestCase;
 
@@ -37,12 +37,18 @@ test('Standalone with layout', function () {
 });
 
 
-test('Non-existent layout', function () {
+test('Non-existent layout without extension', function () {
     $template = new Template($this->templates . 'nonexistentlayout.php');
 
     $template->render();
 })->throws(TemplateNotFound::class, 'doesnotexist');
 
+
+test('Non-existent layout with extension', function () {
+    $template = new Template($this->templates . 'nonexistentlayoutext.php');
+
+    $template->render();
+})->throws(TemplateNotFound::class, 'doesnotexist');
 
 
 test('Custom template method', function () {
@@ -55,3 +61,17 @@ test('Custom template method', function () {
         'text' => 'Boiler'
     ])))->toBe('<h2>BOILER</h2>');
 });
+
+
+test('Non-existent template without extention', function () {
+    $template = new Template($this->templates . 'nonexistent');
+
+    $template->render();
+})->throws(TemplateNotFound::class, 'nonexistent');
+
+
+test('Directory not found', function () {
+    $template = new Template('/__nonexistent_boiler_dir__/template.php');
+
+    $template->render();
+})->throws(DirectoryNotFound::class, 'nonexistent');

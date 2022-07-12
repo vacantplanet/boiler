@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
+use Conia\Boiler\Error\{
+    DirectoryNotFound,
+    InvalidTemplateFormat,
+    TemplateNotFound
+};
 use Conia\Boiler\{Engine, Value};
 use Conia\Boiler\Tests\TestCase;
 
@@ -12,12 +16,12 @@ uses(TestCase::class);
 
 test('Directory does not exist I', function () {
     new Engine('./doesnotexist');
-})->throws(ValueError::class, 'doesnotexist');
+})->throws(DirectoryNotFound::class, 'doesnotexist');
 
 
 test('Directory does not exist II', function () {
     new Engine([TestCase::DEFAULT_DIR, './doesnotexist']);
-})->throws(ValueError::class, 'doesnotexist');
+})->throws(DirectoryNotFound::class, 'doesnotexist');
 
 
 test('Simple rendering', function () {
@@ -227,10 +231,17 @@ test('Single layout', function () {
 });
 
 
-test('Non-existent layout', function () {
+test('Non-existent layout without extension', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nonexistentlayout');
+})->throws(TemplateNotFound::class, 'doesnotexist');
+
+
+test('Non-existent layout with extension', function () {
+    $engine = new Engine($this->templates());
+
+    $engine->render('nonexistentlayoutext');
 })->throws(TemplateNotFound::class, 'doesnotexist');
 
 

@@ -6,6 +6,7 @@ namespace Conia\Boiler;
 
 use \RuntimeException;
 use \Throwable;
+use Conia\Boiler\Error\TemplateNotFound;
 
 
 class Template
@@ -25,6 +26,10 @@ class Template
     ) {
         $this->sections = $sections ?: new Sections();
         $this->engine = $engine ?: new Engine(dirname($path));
+
+        if (!$engine && !is_file($path)) {
+            throw new TemplateNotFound('Template not found: ' . $path);
+        }
     }
 
     protected function templateContext(array $context, bool $autoescape): TemplateContext
