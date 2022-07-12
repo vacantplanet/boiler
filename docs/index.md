@@ -2,13 +2,13 @@ Boiler Templates for PHP
 ========================
 
 Boiler is a native PHP 8.1 template engine in the vein of *[Plates](https://platesphp.com/)*,
-from which it is heavily inspired. Like Plates, it also does not introduce a new template 
+by which it is heavily inspired. Like *Plates*, Boiler does not introduce a new template 
 language and instead uses PHP itself. You simply use the PHP statements you already know.
 
 The main differences to *Plates* are:
 
 * It automatically escapes strings and [Stringable](https://www.php.net/manual/en/class.stringable.php) values. This is optional. You can turn it off globally or for single render calls.
-* The template context is global. That means all values passed to the main template are 
+* The template context is global by default. That means all values passed to the main template are 
   available in all included parts, like [sections](sections.md), [inserts](inserts.md) or
   [layouts](layouts.md).
 

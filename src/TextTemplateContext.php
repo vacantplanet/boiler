@@ -9,7 +9,7 @@ use Conia\Boiler\Error\MethodNotAllowed;
 
 class TextTemplateContext extends TemplateContext
 {
-    public function layout(string $path): void
+    public function layout(string $path, ?array $context = null): void
     {
         throw new MethodNotAllowed('Layouts are not allowed in text templates');
     }

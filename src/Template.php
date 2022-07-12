@@ -15,7 +15,7 @@ class Template
 
     public readonly Engine $engine;
     public readonly Sections $sections;
-    protected ?string $layout = null;
+    protected ?LayoutValue $layout = null;
     /** @psalm-suppress PropertyNotSetInConstructor */
     protected CustomMethods $customMethods;
 
@@ -86,21 +86,16 @@ class Template
         string $content,
         bool $autoescape
     ): string {
-        while ($template->hasLayout()) {
-            /**
-             * Psalm reports that $template->layout is possibly null
-             * which is already checked via $template->hasLayout().
-             *
-             * @psalm-suppress PossiblyNullArgument
-             * */
+        while ($layout = $template->layout()) {
+            $file = $template->engine->getFile($layout->layout);
             $template = new Layout(
-                $template->engine->getFile($template->layout),
+                $file,
                 $content,
                 $this->sections,
                 $template->engine,
             );
 
-            $content = $template->render($context, $autoescape);
+            $content = $template->render($layout->context ?: $context, $autoescape);
         }
 
         return $content;
@@ -122,10 +117,10 @@ class Template
      *
      * Typically it’s placed at the top of the file.
      */
-    public function setLayout(string $path): void
+    public function setLayout(LayoutValue $layout): void
     {
         if ($this->layout === null) {
-            $this->layout = $path;
+            $this->layout = $layout;
 
             return;
         } else {
@@ -133,9 +128,9 @@ class Template
         }
     }
 
-    public function hasLayout(): bool
+    public function layout(): ?LayoutValue
     {
-        return $this->layout !== null;
+        return $this->layout;
     }
 
     public function setCustomMethods(CustomMethods $customMethods): void

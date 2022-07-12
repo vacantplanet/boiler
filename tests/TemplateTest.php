@@ -63,6 +63,23 @@ test('Custom template method', function () {
 });
 
 
+test('Overwrite layout context I', function () {
+    $template = new Template($this->templates . 'overridelayoutcontext.php');
+
+    expect($this->fullTrim($template->render([
+        'text' => 'Boiler 1',
+        'text2' => 'Boiler 2',
+    ])))->toBe('<body><p>Boiler 1</p><p>Boiler 2</p><p>Boiler 2</p></body>');
+});
+
+
+test('Overwrite layout context II', function () {
+    $template = new Template($this->templates . 'overridelayouterror.php');
+
+    $template->render(['text' => 'Boiler 1', 'text2' => 'Boiler 2']);
+})->throws(ErrorException::class, 'Undefined variable');
+
+
 test('Non-existent template without extention', function () {
     $template = new Template($this->templates . 'nonexistent');
 

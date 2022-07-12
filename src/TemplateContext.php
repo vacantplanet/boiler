@@ -62,9 +62,9 @@ class TemplateContext
         return filter_var($value, FILTER_SANITIZE_URL);
     }
 
-    public function layout(string $path): void
+    public function layout(string $path, ?array $context = null): void
     {
-        $this->template->setLayout($path);
+        $this->template->setLayout(new LayoutValue($path, $context));
     }
 
     /**
