@@ -1,23 +1,111 @@
 ---
 title: The Engine
 ---
-Engine
-======
+The Engine
+==========
 
 The `Engine` is the Boiler's central object and usually the only one you have to 
-manually instatiate. 
+manually instatiate. It is used to locate and load templates from the file system.
 
-Throughout the doucmentation we assume the following directory structure:
+Throughout this document we assume the following directory structure:
 
 ```text
 path
 `-- to
     |-- templates
-    |   |-- layout.php
-    |   |-- more.php
-    |   `-- page.php
     `-- additional
-        |-- subdir
-        |   `-- subtemplate.php
-        `-- template.php
 ```
+
+## Creating the `Engine` instance
+
+When you can create the engine object, you can pass a single one or multiple template directories. 
+You can pass default values and you can switch off the autoescaping feature globally.
+
+### Using a single template directory
+
+The only required parameter of the constructor is the path to a directory where your templates reside:
+
+    $engine = new \Conia\Boiler\Engine('/path/to/templates');
+
+If the directory does not exists, Boiler throws a `\Conia\Boiler\Error\DirectoryNotFound`
+exception.
+
+### Using multiple directories
+
+If you have multiple directories, pass them in an array:
+
+    $engine = new \Conia\Boiler\Engine(['/path/to/templates', '/path/to/additional']);
+
+**Note**: The directories are searched in order. 
+
+Using the example above: If a template cannot be located 
+in `/path/to/additional`, Boiler tries to find it in `/path/to/additional` and so on. 
+
+### Using namespaces
+
+You can use namespaces to address a specific directory.
+Check the section [*Rendering Templates*](rendering.md) to see it in action.
+
+    $engine = new \Conia\Boiler\Engine([
+        'first' => '/path/to/templates', 
+        'second' => '/path/to/additional'
+    ]);
+
+### Adding default values
+
+You can assign default values which are available in all templates:
+
+    $engine = new \Conia\Boiler\Engine('/path/to/dir', ['value' => 'default value']);
+
+### Turning off autoescaping
+
+If you don't want to use the autoescaping feature, e. g. to improve the performance of your application,
+you can turn it off globally:
+
+    $engine = new \Conia\Boiler\Engine('/path/to/dir', [], false);
+    
+    // better:
+    $engine = new \Conia\Boiler\Engine('/path/to/dir', autoescape: false);
+
+## Rendering Templates
+
+You simplic call the `render` method and pass the name/path of the template and optionally
+an array of values (the context) which will be available as variables in the template.
+
+    $engine->render('template');
+
+    // with context
+    $engine->render('template', ['value1' => 1, 'value2' => 2]);
+
+See [*Rendering Templates*](rendering.md) for more information.
+
+## Adding custom template methods
+
+Custom methods can be accessed in templates using `$this` (See [*Rendering Templates*](rendering.md)).
+To a add a method you pass a[`Closure` or anonymous function](https://www.php.net/manual/en/functions.anonymous.php) to `registerMethod`:
+
+    $engine->registerMethod('upper', function (string $value): string {
+        return strtoupper($value);
+    });
+
+## Other useful Engine methods
+
+### Check if a template exists
+
+To check if a template exists before rendering it, use the method `exists`:
+
+    if ($engine->exists('template')) {
+        $engine->render('template');
+    }
+
+
+### Get the file system path of a template
+
+    $filePath = $engine->getFile('template');
+
+
+### Get a template instance without rendering it
+
+    $template = $engine->template('template');
+
+    assert($template instanceof \Conia\Boiler\Template);

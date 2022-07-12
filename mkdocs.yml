@@ -2,7 +2,9 @@ site_name: Conia Boiler
 copyright: © 2022 ebene fünf GmbH
 nav:
   - index.md
+  - quickstart.md
   - engine.md
+  - rendering.md
   - values.md
   - layouts.md
   - inserts.md
