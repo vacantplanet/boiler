@@ -37,16 +37,6 @@ test('Standalone with layout', function () {
 });
 
 
-test('Standalone with absolute layout', function () {
-    $path =  $this->templates . 'absolutelayout.php';
-    $template = new Template($path);
-
-    expect($this->fullTrim($template->render([
-        'text' => 'absolute'
-    ])))->toBe('<body><abs>absolute</abs><p>absolute</p></body>');
-});
-
-
 test('Non-existent layout', function () {
     $template = new Template($this->templates . 'nonexistentlayout.php');
 

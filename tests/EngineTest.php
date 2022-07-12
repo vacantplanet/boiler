@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Conia\Boiler\Error\{InvalidTemplateFormat, TemplateNotFound};
-use Conia\Boiler\{Engine, Template, Value};
+use Conia\Boiler\{Engine, Value};
 use Conia\Boiler\Tests\TestCase;
 
 

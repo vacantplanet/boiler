@@ -74,7 +74,7 @@ class TemplateContext
      */
     public function insert(string $path, array $context = []): void
     {
-        $path = $this->template->getIncludePath($path);
+        $path = $this->template->engine->getFile($path);
         $template = new Template(
             $path,
             sections: $this->template->sections,
