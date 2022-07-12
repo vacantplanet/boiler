@@ -68,31 +68,24 @@ class Engine
 
     protected function validateFile(string $dir, string $file): string|false
     {
-        $path = $dir . DIRECTORY_SEPARATOR . str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $file);
-        $realpath = realpath($path);
+        $path = $dir . DIRECTORY_SEPARATOR . $file;
 
-        if ($realpath) {
+        if ($realpath = realpath($path . '.php')) {
             return $realpath;
         }
 
-        if (empty(pathinfo($path, PATHINFO_EXTENSION))) {
-            $ext = '.php';
-
-            return realpath($path . $ext);
-        }
-
-        return false;
+        return realpath($path);
     }
 
-    public function getFile(string $path): string
+    protected function getSegments(string $path): array
     {
         if (strpos($path, ':') === false) {
-            $namespace = null;
-            $file = $path;
+            return [null, $path];
         } else {
             $segments = explode(':', $path);
+
             if (count($segments) == 2) {
-                [$namespace, $file] = [$segments[0], $segments[1]];
+                return [$segments[0], $segments[1]];
             } else {
                 throw new InvalidTemplateFormat(
                     "Invalid template format: '$path'. " .
@@ -100,6 +93,11 @@ class Engine
                 );
             }
         }
+    }
+
+    public function getFile(string $path): string
+    {
+        [$namespace, $file] = $this->getSegments($path);
 
         if ($namespace) {
             $dir = $this->dirs[$namespace];
@@ -108,9 +106,7 @@ class Engine
             $templatePath = false;
 
             foreach ($this->dirs as $dir) {
-                $templatePath = $this->validateFile($dir, $file);
-
-                if ($templatePath) {
+                if ($templatePath = $this->validateFile($dir, $file)) {
                     break;
                 }
             }

@@ -25,10 +25,15 @@ class Template
         ?Engine $engine = null,
     ) {
         $this->sections = $sections ?: new Sections();
-        $this->engine = $engine ?: new Engine(dirname($path));
 
-        if (!$engine && !is_file($path)) {
-            throw new TemplateNotFound('Template not found: ' . $path);
+        if ($engine === null) {
+            $this->engine = new Engine(dirname($path));
+
+            if (!is_file($path)) {
+                throw new TemplateNotFound('Template not found: ' . $path);
+            }
+        } else {
+            $this->engine = $engine;
         }
     }
 
