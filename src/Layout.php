@@ -16,9 +16,9 @@ class Layout extends Template
         parent::__construct($path, $sections, $engine);
     }
 
-    protected function boundTemplate(array $context, bool $autoescape): BoundLayout
+    protected function templateContext(array $context, bool $autoescape): LayoutContext
     {
-        return new BoundLayout($this, $context, $autoescape);
+        return new LayoutContext($this, $context, $autoescape);
     }
 
     /**

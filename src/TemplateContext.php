@@ -7,7 +7,7 @@ namespace Conia\Boiler;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 
-class BoundTemplate
+class TemplateContext
 {
     private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
     private const ESCAPE_ENCODING = 'UTF-8';

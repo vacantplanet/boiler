@@ -52,14 +52,14 @@ class Template
         throw new TemplateNotFound('Included template not found: ' . $path);
     }
 
-    protected function boundTemplate(array $context, bool $autoescape): BoundTemplate
+    protected function templateContext(array $context, bool $autoescape): TemplateContext
     {
-        return new BoundTemplate($this, $context, $autoescape);
+        return new TemplateContext($this, $context, $autoescape);
     }
 
     protected function getContent(array $context, bool $autoescape): string
     {
-        $bound = $this->boundTemplate($context, $autoescape);
+        $templateContext = $this->templateContext($context, $autoescape);
 
         $load =  function (string $templatePath, array $context = []): void {
             // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
@@ -72,7 +72,7 @@ class Template
         };
 
         /** @var callable */
-        $load = $load->bindTo($bound);
+        $load = $load->bindTo($templateContext);
         $level = ob_get_level();
 
         try {
@@ -81,7 +81,7 @@ class Template
             $load(
                 $this->path,
                 $autoescape ?
-                    $bound->context() :
+                    $templateContext->context() :
                     $context
             );
 

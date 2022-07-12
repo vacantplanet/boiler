@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Boiler;
 
 
-class BoundLayout extends BoundTemplate
+class LayoutContext extends TemplateContext
 {
     protected Layout $layout;
 
