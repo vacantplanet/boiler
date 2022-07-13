@@ -7,7 +7,7 @@ The Engine
 The `Engine` is the Boiler's central object and usually the only one you have to 
 manually instatiate. It is used to locate and load templates from the file system.
 
-Throughout this document we assume the following directory structure:
+Throughout this page we assume the following directory structure:
 
 ```text
 path
@@ -18,8 +18,10 @@ path
 
 ## Creating the `Engine` instance
 
-When you can create the engine object, you can pass a single one or multiple template directories. 
-You can pass default values and you can switch off the autoescaping feature globally.
+To create an Engine instance, you simply pass one or more paths to directories 
+where your templates are located. Additionally, you can optionally set default values
+that are available for all your templates, or you can globally disable the autoescaping
+feature.
 
 ### Using a single template directory
 
@@ -43,13 +45,15 @@ in `/path/to/additional`, Boiler tries to find it in `/path/to/additional` and s
 
 ### Using namespaces
 
-You can use namespaces to address a specific directory.
-Check the section [*Rendering Templates*](rendering.md) to see it in action.
+You can use namespaces to later be able to address a specific directory. Pass the list of
+directories as associative array where the keys serve as namespaces:
 
     $engine = new \Conia\Boiler\Engine([
         'first' => '/path/to/templates', 
         'second' => '/path/to/additional'
     ]);
+
+Check [*Rendering Templates*](rendering.md) to see it in action.
 
 ### Adding default values
 
