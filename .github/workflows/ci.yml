@@ -1,10 +1,13 @@
-name: Application Test
+name: CI
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Setup PHP extensions
         uses: shivammathur/setup-php@v2
@@ -26,3 +29,14 @@ jobs:
 
       - name: Run PHP Code Sniffer
         run: ./vendor/bin/phpcs -q --report=checkstyle src tests | ./vendor/bin/cs2pr
+
+  docs:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs-conia
+      - run: mkdocs gh-deploy --force
