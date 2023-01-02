@@ -196,7 +196,7 @@ test('Complex nested rendering', function () {
     $context = [
         'title' => 'Boiler App',
         'headline' => 'Boiler App',
-        'url' => 'https://example.com/boiler     /app    ',
+        'url' => 'https://example.com/boiler  /app  ',
         'array' => [
             '<b>sanitize</b>' => [
                 1, "String", new class()
@@ -213,7 +213,7 @@ test('Complex nested rendering', function () {
     ];
     $result = $this->fullTrim($engine->render('complex', $context));
     $compare = '<!DOCTYPE html><html lang="en"><head><title>Boiler App</title><link rel="stylesheet" ' .
-        'href="https://example.com/boiler/app"><meta name="keywords" content="boiler"></head><body>' .
+        'href="https://example.com/boiler++/app++"><meta name="keywords" content="boiler"></head><body>' .
         '<h1>Boiler App</h1><table><tr><td>&lt;b&gt;sanitize&lt;/b&gt;</td><td>1</td><td>String</td>' .
         '<td>&lt;p&gt;Object&lt;/p&gt;</td></tr><tr><td>666</td><td>13.73</td><td>String II</td>' .
         '<td>1</td></tr></table><p>HTML</p></body></html>';

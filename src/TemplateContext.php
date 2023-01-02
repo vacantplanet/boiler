@@ -35,7 +35,7 @@ class TemplateContext
         string $encoding = self::ESCAPE_ENCODING,
     ): string {
         if ($value instanceof Value) {
-            return htmlspecialchars($value->unwrap(), $flags, $encoding);
+            return htmlspecialchars((string)$value->unwrap(), $flags, $encoding);
         }
 
         return htmlspecialchars($value, $flags, $encoding);
@@ -57,9 +57,9 @@ class TemplateContext
         return Sanitizer::clean($value, $config, $removeEmptyLines);
     }
 
-    public function url(string $value): string
+    public function url(string|Value $value): string
     {
-        return filter_var($value, FILTER_SANITIZE_URL);
+        return Url::clean($value instanceof Value ? (string)$value->unwrap() : $value);
     }
 
     public function layout(string $path, ?array $context = null): void

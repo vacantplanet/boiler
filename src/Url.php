@@ -6,7 +6,7 @@ namespace Conia\Boiler;
 
 use Conia\Boiler\Error\RuntimeException;
 
-class URL
+class Url
 {
     public static function clean(string $url): string
     {
@@ -16,8 +16,6 @@ class URL
             throw new RuntimeException('Invalid Url');
         }
 
-        $path = '';
-        $query = '';
 
         $path = empty($parsed['scheme']) ? '' : $parsed['scheme'] . '://';
         $path .= rawurlencode($parsed['user'] ?? '');
@@ -33,17 +31,18 @@ class URL
         }
 
         $path .= implode('/', $segments);
+        $query = '';
 
         if (!empty($parsed['query'])) {
             parse_str($parsed['query'], $array);
 
             if (count($array) > 0) {
-                $query .= empty($parsed['query']) ? '' : '?' . http_build_query($array);
+                $query .= '?' . http_build_query($array);
             }
         }
 
         $query .= empty($parsed['fragment']) ? '' : '#' . rawurlencode($parsed['fragment']);
 
-        return filter_var($path . $query, FILTER_SANITIZE_URL);
+        return $path . $query;
     }
 }
