@@ -31,7 +31,13 @@ class Template
         $this->customMethods = new CustomMethods();
 
         if ($engine === null) {
-            $this->engine = new Engine(dirname($path));
+            $dir = dirname($path);
+
+            if (empty($dir) || empty($path)) {
+                throw new LookupException('No directory given or empty path');
+            }
+
+            $this->engine = new Engine($dir);
 
             if (!is_file($path)) {
                 throw new LookupException('Template not found: ' . $path);
@@ -113,7 +119,13 @@ class Template
             return $content;
         }
 
-        return $this->renderLayouts($this, $context, $content, $autoescape);
+        try {
+            return $this->renderLayouts($this, $context, $content, $autoescape);
+        } catch (LookupException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new RuntimeException('Render error: ' . $e->getMessage(), 0, $e);
+        }
     }
 
     /**

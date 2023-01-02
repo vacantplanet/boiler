@@ -77,7 +77,7 @@ test('Overwrite layout context II', function () {
     $template = new Template($this->templates . 'overridelayouterror.php');
 
     $template->render(['text' => 'Boiler 1', 'text2' => 'Boiler 2']);
-})->throws(ErrorException::class, 'Undefined variable');
+})->throws(RuntimeException::class, 'Undefined variable');
 
 
 test('Non-existent template without extension', function () {
@@ -92,3 +92,10 @@ test('Directory not found', function () {
 
     $template->render();
 })->throws(LookupException::class, 'Template directory does not exist');
+
+
+test('Empty path', function () {
+    $template = new Template('');
+
+    $template->render();
+})->throws(LookupException::class, 'No directory given or');
