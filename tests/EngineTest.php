@@ -389,6 +389,21 @@ test('Config error :: wrong template format I', function () {
 test('Config error :: wrong template format II', function () {
     $engine = new Engine($this->templates());
 
+    $engine->render(':default.php');
+})->throws(LookupException::class, 'Invalid template format');
+
+
+test('Config error :: wrong template format III', function () {
+    $engine = new Engine($this->templates());
+
+    $engine->render('default.php:');
+})->throws(LookupException::class, 'Invalid template format');
+
+
+
+test('Config error :: wrong template format IV', function () {
+    $engine = new Engine($this->templates());
+
     $engine->render('');
 })->throws(UnexpectedValueException::class, 'No template');
 

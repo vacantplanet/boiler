@@ -7,6 +7,9 @@ namespace Conia\Boiler;
 
 class Layout extends Template
 {
+    /**
+     * @psalm-param non-empty-string $path
+     */
     public function __construct(
         string $path,
         protected readonly string $body,

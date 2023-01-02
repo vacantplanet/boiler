@@ -7,15 +7,19 @@ namespace Conia\Boiler;
 use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Error\UnexpectedValueException;
 
+/**
+ * @psalm-type DirsInput = non-empty-string|list<non-empty-string>|array<non-empty-string, non-empty-string>
+ * @psalm-type Dirs = list<string>|array<non-empty-string, non-empty-string>
+ */
 class Engine
 {
     use RegistersMethod;
 
-    /** @var list<string> */
+    /** @var Dirs */
     protected readonly array $dirs;
 
     /**
-     * @psalm-param non-empty-string|list<string> $dirs
+     * @psalm-param DirsInput $dirs
      */
     public function __construct(
         string|array $dirs,
@@ -27,7 +31,8 @@ class Engine
     }
 
     /**
-     * @psalm-param non-empty-string|list<string> $dirs
+     * @psalm-param DirsInput $dirs
+     * @return Dirs
      */
     protected function prepareDirs(string|array $dirs): array
     {
@@ -42,7 +47,7 @@ class Engine
     }
 
     /**
-     * @psalm-param non-empty-string|list<string> $dirs
+     * @psalm-param non-empty-string|Dirs $dirs
      */
     public function template(string $path): Template
     {
@@ -82,15 +87,27 @@ class Engine
         return realpath($path);
     }
 
+    /** @return list{non-empty-string|null, non-empty-string} */
     protected function getSegments(string $path): array
     {
         if (strpos($path, ':') === false) {
+            $path = trim($path);
+            assert(!empty($path));
+
             return [null, $path];
         } else {
-            $segments = explode(':', $path);
+            $segments = array_map(fn ($s) => trim($s), explode(':', $path));
 
             if (count($segments) == 2) {
-                return [$segments[0], $segments[1]];
+
+                if (!empty($segments[0]) && !empty($segments[1])) {
+                    return [$segments[0], $segments[1]];
+                }
+
+                throw new LookupException(
+                    "Invalid template format: '$path'. " .
+                        "Use 'namespace:template/path or template/path'."
+                );
             } else {
                 throw new LookupException(
                     "Invalid template format: '$path'. " .
@@ -109,7 +126,7 @@ class Engine
         [$namespace, $file] = $this->getSegments($path);
 
         if ($namespace) {
-            $dir = $this->dirs[$namespace];
+            $dir = $this->dirs[$namespace] ?? '';
             $templatePath = $this->validateFile($this->dirs[$namespace], $file);
         } else {
             $templatePath = false;
@@ -122,7 +139,7 @@ class Engine
         }
 
         if (isset($dir) && $templatePath && is_file($templatePath)) {
-            if (!str_starts_with($templatePath, $dir)) {
+            if (!str_starts_with($templatePath, (string)$dir)) {
                 throw new LookupException(
                     'Template resides outside of root directory: ' . $templatePath
                 );
@@ -134,6 +151,9 @@ class Engine
         throw new LookupException("Template not found: " . $path);
     }
 
+    /**
+     * @psalm-param non-empty-string $path
+     */
     public function exists(string $path): bool
     {
         try {

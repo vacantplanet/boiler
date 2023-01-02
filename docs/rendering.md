@@ -100,7 +100,7 @@ namespaces. See the next section on how this is accomplished.
 
 In our engine instantiation example above we pass an associative array with
 the template directories to the constructor. The keys of the array serve as namespaces.
-To render a template from a specific namespace, address it using the
+To render a template from a specific namespace, locate it using the
 namespace followed bei a colon followed by the template name:
 
     $html = $engine->render('templates:blog', ['value' =>  13]);
