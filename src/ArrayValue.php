@@ -12,6 +12,13 @@ use Conia\Boiler\Error\RuntimeException;
 use Conia\Boiler\Error\UnexpectedValueException;
 
 
+/**
+ * @psalm-type ArrayCallable = callable(mixed, mixed):int
+ * @template-implements ArrayAccess<array-key, mixed>
+ * @template-implements Iterator<mixed>
+ *
+ * @psalm-suppress MixedArrayOffset -- ArrayValue is meant to hold mixed values accessed by mixed keys
+ */
 class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
 {
     private int $position;
@@ -54,6 +61,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return isset($this->keys[$this->position]);
     }
 
+    /** @param array-key $offset */
     public function offsetExists(mixed $offset): bool
     {
         // isset is significantly faster than array_key_exists but
@@ -61,6 +69,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return isset($this->array[$offset]) || array_key_exists($offset, $this->array);
     }
 
+    /** @param array-key $offset */
     public function offsetGet(mixed $offset): mixed
     {
         if ($this->offsetExists($offset)) {
@@ -95,6 +104,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return count($this->array);
     }
 
+    /** @param array-key $key */
     public function exists(mixed $key): bool
     {
         return array_key_exists($key, $this->array);
@@ -108,16 +118,19 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         ));
     }
 
+    /** @psalm-param ArrayCallable $callable */
     public function map(callable $callable): self
     {
         return new self(array_map($callable, $this->array));
     }
 
+    /** @psalm-param ArrayCallable $callable */
     public function filter(callable $callable): self
     {
         return new self(array_filter($this->array, $callable));
     }
 
+    /** @psalm-param ArrayCallable $callable */
     public function reduce(callable $callable, mixed $initial = null): mixed
     {
         return Wrapper::wrap(array_reduce($this->array, $callable, $initial));
@@ -138,6 +151,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return new self($array);
     }
 
+    /** @psalm-param ArrayCallable $callable */
     protected function usort(array $array, string $mode, callable $callable): self
     {
         match ($mode) {
@@ -149,6 +163,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return new self($array);
     }
 
+    /** @psalm-param ArrayCallable $callable */
     public function sorted(string $mode = '', ?callable $callable = null): self
     {
         $mode = strtolower(trim($mode));
