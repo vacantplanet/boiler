@@ -39,6 +39,12 @@ Now create a `Engine` instance and render the template:
 
     assert($html == '<p>ID 13</p>');
 
+## Run the tests
+
+    pest --coverage && \
+        psalm --no-cache --show-info=true && \
+        phpcs -s -p --ignore=tests/templates src tests
+
 
 ## License
 
