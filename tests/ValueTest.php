@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Conia\Boiler\Value;
-use Conia\Boiler\Error\{NoSuchMethod, NoSuchProperty};
+use Conia\Boiler\Error\RuntimeException;
 
 
 test('Value::unwrap', function () {
@@ -87,7 +87,7 @@ test('Object :: not invokable', function () {
     $value = new Value($object);
 
     $value();
-})->throws(NoSuchMethod::class, 'not callable');
+})->throws(RuntimeException::class, 'No such method');
 
 
 test('Closure', function () {
@@ -104,7 +104,7 @@ test('Closure', function () {
 test('Getter throws I', function () {
     $value = new Value('test');
     $value->test;
-})->throws(NoSuchProperty::class);
+})->throws(RuntimeException::class, 'No such property');
 
 
 test('Getter throws II', function () {
@@ -113,13 +113,13 @@ test('Getter throws II', function () {
     };
     $value = new Value($obj);
     $value->test;
-})->throws(NoSuchProperty::class);
+})->throws(RuntimeException::class, 'No such property');
 
 
 test('Setter throws I', function () {
     $value = new Value('test');
     $value->test = null;
-})->throws(NoSuchProperty::class);
+})->throws(RuntimeException::class, 'No such property');
 
 
 test('Setter throws II', function () {
@@ -134,10 +134,10 @@ test('Setter throws II', function () {
     };
     $value = new Value($obj);
     $value->test = null;
-})->throws(NoSuchProperty::class);
+})->throws(RuntimeException::class, 'No such property');
 
 
 test('Method call throws', function () {
     $value = new Value('test');
     $value->test();
-})->throws(NoSuchMethod::class);
+})->throws(RuntimeException::class, 'No such method');

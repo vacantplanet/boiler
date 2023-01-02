@@ -6,7 +6,7 @@ namespace Conia\Boiler;
 
 use \Throwable;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
-use Conia\Boiler\Error\{NoSuchMethod, NoSuchProperty};
+use Conia\Boiler\Error\RuntimeException;
 
 
 class Value implements ValueInterface
@@ -46,7 +46,7 @@ class Value implements ValueInterface
         try {
             return Wrapper::wrap($this->value->{$name});
         } catch (Throwable) {
-            throw new NoSuchProperty('Property does not exists on the wrapped value');
+            throw new RuntimeException('No such property');
         }
     }
 
@@ -56,7 +56,7 @@ class Value implements ValueInterface
             $this->value->{$name} = $value;
             return;
         } catch (Throwable) {
-            throw new NoSuchProperty('Property does not exists on the wrapped value');
+            throw new RuntimeException('No such property');
         }
     }
 
@@ -66,7 +66,7 @@ class Value implements ValueInterface
             return Wrapper::wrap($this->value->$name(...$args));
         }
 
-        throw new NoSuchMethod('Method does not exists on the wrapped value');
+        throw new RuntimeException('No such method');
     }
 
     public function __invoke(mixed ...$args): mixed
@@ -75,6 +75,6 @@ class Value implements ValueInterface
             return Wrapper::wrap(($this->value)(...$args));
         }
 
-        throw new NoSuchMethod('The wrapped value is not callable');
+        throw new RuntimeException('No such method');
     }
 }
