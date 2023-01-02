@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \ValueError;
+use Conia\Boiler\Error\UnexpectedValueException;
 
 
 class CustomMethods
@@ -20,6 +20,6 @@ class CustomMethods
     {
         return array_key_exists($name, $this->methods) ?
             $this->methods[$name] :
-            throw new ValueError("Custom method '$name' does not exist");
+            throw new UnexpectedValueException("Custom method '$name' does not exist");
     }
 }

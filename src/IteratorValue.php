@@ -7,7 +7,13 @@ namespace Conia\Boiler;
 use \IteratorIterator;
 use \Iterator;
 
-
+/**
+ * @template-covariant TKey
+ * @template-covariant TValue
+ * @template TIterator as \Traversable<TKey, TValue>
+ *
+ * @template-extends IteratorIterator<TKey, TValue, TIterator>
+ */
 class IteratorValue extends IteratorIterator implements ValueInterface
 {
     public function current(): mixed

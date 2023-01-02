@@ -6,8 +6,6 @@ namespace Conia\Boiler\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
-
-
 class TestCase extends BaseTestCase
 {
     const ROOT_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Error\{DirectoryNotFound, TemplateNotFound};
+use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\{Template, Value};
 use Conia\Boiler\Tests\TestCase;
 
@@ -41,14 +41,14 @@ test('Non-existent layout without extension', function () {
     $template = new Template($this->templates . 'nonexistentlayout.php');
 
     $template->render();
-})->throws(TemplateNotFound::class, 'doesnotexist');
+})->throws(LookupException::class, 'Template not found: doesnotexist');
 
 
 test('Non-existent layout with extension', function () {
     $template = new Template($this->templates . 'nonexistentlayoutext.php');
 
     $template->render();
-})->throws(TemplateNotFound::class, 'doesnotexist');
+})->throws(LookupException::class, 'Template not found: doesnotexist.php');
 
 
 test('Custom template method', function () {
@@ -80,15 +80,15 @@ test('Overwrite layout context II', function () {
 })->throws(ErrorException::class, 'Undefined variable');
 
 
-test('Non-existent template without extention', function () {
+test('Non-existent template without extension', function () {
     $template = new Template($this->templates . 'nonexistent');
 
     $template->render();
-})->throws(TemplateNotFound::class, 'nonexistent');
+})->throws(LookupException::class, 'Template not found');
 
 
 test('Directory not found', function () {
     $template = new Template('/__nonexistent_boiler_dir__/template.php');
 
     $template->render();
-})->throws(DirectoryNotFound::class, 'nonexistent');
+})->throws(LookupException::class, 'Template directory does not exist');

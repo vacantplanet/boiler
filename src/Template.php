@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \RuntimeException;
 use \Throwable;
-use Conia\Boiler\Error\TemplateNotFound;
+use Conia\Boiler\Error\LookupException;
+use Conia\Boiler\Error\RuntimeException;
 
 
 class Template
@@ -19,18 +19,22 @@ class Template
     /** @psalm-suppress PropertyNotSetInConstructor */
     protected CustomMethods $customMethods;
 
+    /**
+     * @psalm-param non-empty-string $path
+     */
     public function __construct(
         public readonly string $path,
         ?Sections $sections = null,
         ?Engine $engine = null,
     ) {
         $this->sections = $sections ?: new Sections();
+        $this->customMethods = new CustomMethods();
 
         if ($engine === null) {
             $this->engine = new Engine(dirname($path));
 
             if (!is_file($path)) {
-                throw new TemplateNotFound('Template not found: ' . $path);
+                throw new LookupException('Template not found: ' . $path);
             }
         } else {
             $this->engine = $engine;

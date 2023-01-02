@@ -3,25 +3,23 @@
 declare(strict_types=1);
 
 use Conia\Boiler\Error\{
-    DirectoryNotFound,
-    InvalidTemplateFormat,
-    TemplateNotFound
+    LookupException,
+    UnexpectedValueException,
 };
 use Conia\Boiler\{Engine, Value};
 use Conia\Boiler\Tests\TestCase;
-
 
 uses(TestCase::class);
 
 
 test('Directory does not exist I', function () {
     new Engine('./doesnotexist');
-})->throws(DirectoryNotFound::class, 'doesnotexist');
+})->throws(LookupException::class, 'doesnotexist');
 
 
 test('Directory does not exist II', function () {
     new Engine([TestCase::DEFAULT_DIR, './doesnotexist']);
-})->throws(DirectoryNotFound::class, 'doesnotexist');
+})->throws(LookupException::class, 'doesnotexist');
 
 
 test('Simple rendering', function () {
@@ -235,14 +233,14 @@ test('Non-existent layout without extension', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nonexistentlayout');
-})->throws(TemplateNotFound::class, 'doesnotexist');
+})->throws(LookupException::class, 'doesnotexist');
 
 
 test('Non-existent layout with extension', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nonexistentlayoutext');
-})->throws(TemplateNotFound::class, 'doesnotexist');
+})->throws(LookupException::class, 'doesnotexist');
 
 
 test('Stacked layout', function () {
@@ -385,35 +383,35 @@ test('Config error :: wrong template format I', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('default:sub:index');
-})->throws(InvalidTemplateFormat::class, 'Invalid template format');
+})->throws(LookupException::class, 'Invalid template format');
 
 
 test('Config error :: wrong template format II', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('');
-})->throws(ValueError::class, 'No template');
+})->throws(UnexpectedValueException::class, 'No template');
 
 
 test('Render error :: missing template', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nonexistent');
-})->throws(TemplateNotFound::class, 'not found');
+})->throws(LookupException::class, 'not found');
 
 
 test('Render error :: template outside root directory I', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('.././../.././../etc/passwd');
-})->throws(TemplateNotFound::class, 'not found');
+})->throws(LookupException::class, 'not found');
 
 
 test('Render error :: template outside root directory II', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('../unreachable');
-})->throws(TemplateNotFound::class, 'outside');
+})->throws(LookupException::class, 'outside');
 
 
 test('Render error :: parse error', function () {
@@ -439,4 +437,4 @@ test('Unknown custom method', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('unknownmethod');
-})->throws(ValueError::class, 'upper');
+})->throws(UnexpectedValueException::class, 'upper');

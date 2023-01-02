@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use Conia\Boiler\{ArrayValue, IteratorValue, Value};
+use Conia\Boiler\Error\OutOfBoundsException;
+use Conia\Boiler\Error\RuntimeException;
+use Conia\Boiler\Error\UnexpectedValueException;
 
 
 test('Count', function () {
@@ -95,7 +98,7 @@ test('Helper ::sorted', function () {
 test('Helper ::sorted throws', function () {
     $arrval = new ArrayValue(['B', 'a']);
     $arrval->sorted('t');
-})->throws(InvalidArgumentException::class);
+})->throws(UnexpectedValueException::class);
 
 
 test('Helper ::sorted userdefined', function () {
@@ -115,13 +118,13 @@ test('Helper ::sorted userdefined', function () {
 test('Helper ::sorted userdefined throws', function () {
     $arrval = new ArrayValue(['B', 'a']);
     $arrval->sorted('ut', fn ($a, $b) => strtolower($a) > strtolower($b));
-})->throws(InvalidArgumentException::class);
+})->throws(UnexpectedValueException::class);
 
 
 test('Helper ::sorted userdefined throws no callable', function () {
     $arrval = new ArrayValue(['B', 'a']);
     $arrval->sorted('u');
-})->throws(ValueError::class);
+})->throws(RuntimeException::class);
 
 test('Array access', function () {
     $arrval = new ArrayValue([1, 2, 'key' => 3]);
@@ -239,10 +242,10 @@ test('Nested', function () {
 test('Undefined numeric key', function () {
     $arrval = new ArrayValue([1, 2, 3]);
     $arrval[4];
-})->throws(ErrorException::class, 'Undefined array key 4');
+})->throws(OutOfBoundsException::class, 'Undefined array key 4');
 
 
 test('Undefined array key', function () {
     $arrval = new ArrayValue([1, 2, 3]);
     $arrval['key'];
-})->throws(ErrorException::class, "Undefined array key 'key'");
+})->throws(OutOfBoundsException::class, "Undefined array key 'key'");

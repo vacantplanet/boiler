@@ -7,9 +7,9 @@ namespace Conia\Boiler;
 use \ArrayAccess;
 use \Iterator;
 use \Countable;
-use \ErrorException;
-use \InvalidArgumentException;
-use \ValueError;
+use Conia\Boiler\Error\OutOfBoundsException;
+use Conia\Boiler\Error\RuntimeException;
+use Conia\Boiler\Error\UnexpectedValueException;
 
 
 class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
@@ -72,7 +72,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
                 $key = "'$offset'";
             }
 
-            throw new ErrorException("Undefined array key $key");
+            throw new OutOfBoundsException("Undefined array key $key");
         };
     }
 
@@ -132,7 +132,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
             'kr' => krsort($array),
             'k' => ksort($array),
             'r' => rsort($array),
-            default => throw new InvalidArgumentException("Sort mode '$mode' not supported"),
+            default => throw new UnexpectedValueException("Sort mode '$mode' not supported"),
         };
 
         return new self($array);
@@ -143,7 +143,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         match ($mode) {
             'ua' => uasort($array, $callable),
             'u' => usort($array, $callable),
-            default => throw new InvalidArgumentException("Sort mode '$mode' not supported"),
+            default => throw new UnexpectedValueException("Sort mode '$mode' not supported"),
         };
 
         return new self($array);
@@ -155,7 +155,7 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
 
         if (str_starts_with($mode, 'u')) {
             if (empty($callable)) {
-                throw new ValueError('No callable provided for user defined sorting');
+                throw new RuntimeException('No callable provided for user defined sorting');
             }
 
             return $this->usort($this->array, $mode, $callable);

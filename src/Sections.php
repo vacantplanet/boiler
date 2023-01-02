@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \LogicException;
+use Conia\Boiler\Error\LogicException;
 
 class Sections
 {

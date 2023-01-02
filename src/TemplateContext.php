@@ -62,6 +62,9 @@ class TemplateContext
         return Url::clean($value instanceof Value ? (string)$value->unwrap() : $value);
     }
 
+    /**
+     * @psalm-param non-empty-string $path
+     */
     public function layout(string $path, ?array $context = null): void
     {
         $this->template->setLayout(new LayoutValue($path, $context));
@@ -71,6 +74,8 @@ class TemplateContext
      * Includes another template into the current template
      *
      * If no context is passed it shares the context of the calling template.
+     *
+     * @psalm-param non-empty-string $path
      */
     public function insert(string $path, array $context = []): void
     {
