@@ -46,9 +46,7 @@ class Engine
         );
     }
 
-    /**
-     * @psalm-param non-empty-string|Dirs $dirs
-     */
+    /** @psalm-param non-empty-string|Dirs $dirs */
     public function template(string $path): Template
     {
         if (empty($path)) {
@@ -151,9 +149,7 @@ class Engine
         throw new LookupException("Template not found: " . $path);
     }
 
-    /**
-     * @psalm-param non-empty-string $path
-     */
+    /** @psalm-param non-empty-string $path */
     public function exists(string $path): bool
     {
         try {
