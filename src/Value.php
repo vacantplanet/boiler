@@ -44,6 +44,11 @@ class Value implements ValueInterface
     public function __get(string $name): mixed
     {
         try {
+            /**
+             * @psalm-suppress MixedPropertyFetch
+             *
+             * Wrapper::wrap checks types
+             */
             return Wrapper::wrap($this->value->{$name});
         } catch (Throwable) {
             throw new RuntimeException('No such property');

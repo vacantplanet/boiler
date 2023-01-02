@@ -8,6 +8,7 @@ use \LogicException;
 
 class Sections
 {
+    /** @var array<string, string> */
     protected array $sections = [];
     protected array $capture = [];
     protected SectionMode $sectionMode = SectionMode::Closed;
@@ -41,7 +42,7 @@ class Sections
     public function end(): void
     {
         $content = ob_get_clean();
-        $name = array_pop($this->capture);
+        $name = (string)array_pop($this->capture);
 
         $this->sections[$name] = match ($this->sectionMode) {
             SectionMode::Assign => $content,
