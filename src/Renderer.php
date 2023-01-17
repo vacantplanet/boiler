@@ -12,8 +12,12 @@ use Conia\Chuck\Response;
 use Throwable;
 use Traversable;
 
+/**
+ * @psalm-import-type DirsInput from \Conia\Boiler\Engine
+ */
 class Renderer implements RendererInterface
 {
+    /** @psalm-param DirsInput $dirs */
     public function __construct(
         protected string|array $dirs,
         protected Factory $factory,
@@ -34,6 +38,7 @@ class Renderer implements RendererInterface
 
         try {
             $templateName = (string)$args[0];
+            assert(!empty($templateName));
         } catch (Throwable) {
             throw new RendererException('The template must be passed to the renderer');
         }
@@ -41,7 +46,7 @@ class Renderer implements RendererInterface
         if (is_string($this->dirs)) {
             $this->dirs = [$this->dirs];
         } else {
-            if (!is_array($this->dirs) || count($this->dirs) === 0) {
+            if (count($this->dirs) === 0) {
                 throw new RendererException('T');
             }
         }
@@ -59,13 +64,13 @@ class Renderer implements RendererInterface
         ), $this->factory);
 
         return $response
-            ->header('Content-Type', (string)(($args['contentType'] ?? null) ?: 'text/html'), true)
+            ->header('Content-Type', (string)(($args['contentType'] ?? null) ?: 'text/html'))
             ->body($this->render($data, ...$args));
     }
 
-    protected function createEngine(array $dirs): Engine
+    /** @psalm-param DirsInput $dirs */
+    protected function createEngine(string|array $dirs): Engine
     {
-        /** @var array<non-empty-string, non-empty-string>|list<string> $dirs */
         return new Engine($dirs, defaults: $this->defaults);
     }
 }

@@ -18,9 +18,7 @@ class Engine
     /** @var Dirs */
     protected readonly array $dirs;
 
-    /**
-     * @psalm-param DirsInput $dirs
-     */
+    /** @psalm-param DirsInput $dirs */
     public function __construct(
         string|array $dirs,
         protected readonly array $defaults = [],
