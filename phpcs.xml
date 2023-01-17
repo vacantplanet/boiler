@@ -8,4 +8,5 @@
             <property name="absoluteLineLimit" value="0"/>
         </properties>
     </rule>
+    <exclude-pattern>tests/templates/</exclude-pattern>
 </ruleset>
