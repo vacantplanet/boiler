@@ -30,27 +30,11 @@ class Engine
         $this->customMethods = new CustomMethods();
     }
 
-    /**
-     * @psalm-param DirsInput $dirs
-     * @return Dirs
-     */
-    protected function prepareDirs(string|array $dirs): array
-    {
-        if (is_string($dirs)) {
-            return [realpath($dirs) ?: throw new LookupException('Template directory does not exist ' . $dirs)];
-        }
-
-        return array_map(
-            fn ($dir) => realpath($dir) ?: throw new LookupException('Template directory does not exist ' . $dir),
-            $dirs
-        );
-    }
-
     /** @psalm-param non-empty-string|Dirs $dirs */
     public function template(string $path): Template
     {
-        if (empty($path)) {
-            throw new UnexpectedValueException('No template path given');
+        if (!preg_match('/^[\\w\\.\/:_-]+$/u', $path)) {
+            throw new UnexpectedValueException('The template path is invalid or empty');
         }
 
         $template = new Template($this->getFile($path), new Sections(), $this);
@@ -74,49 +58,9 @@ class Engine
         return $template->render(array_merge($this->defaults, $context), $autoescape);
     }
 
-    protected function validateFile(string $dir, string $file): string|false
-    {
-        $path = $dir . DIRECTORY_SEPARATOR . $file;
-
-        if ($realpath = realpath($path . '.php')) {
-            return $realpath;
-        }
-
-        return realpath($path);
-    }
-
-    /** @return list{non-empty-string|null, non-empty-string} */
-    protected function getSegments(string $path): array
-    {
-        if (strpos($path, ':') === false) {
-            $path = trim($path);
-            assert(!empty($path));
-
-            return [null, $path];
-        } else {
-            $segments = array_map(fn ($s) => trim($s), explode(':', $path));
-
-            if (count($segments) == 2) {
-
-                if (!empty($segments[0]) && !empty($segments[1])) {
-                    return [$segments[0], $segments[1]];
-                }
-
-                throw new LookupException(
-                    "Invalid template format: '$path'. " .
-                        "Use 'namespace:template/path or template/path'."
-                );
-            } else {
-                throw new LookupException(
-                    "Invalid template format: '$path'. " .
-                        "Use 'namespace:template/path or template/path'."
-                );
-            }
-        }
-    }
-
     /**
      * @psalm-param non-empty-string $path
+     *
      * @psalm-return non-empty-string
      */
     public function getFile(string $path): string
@@ -146,7 +90,7 @@ class Engine
             return $templatePath;
         }
 
-        throw new LookupException("Template not found: " . $path);
+        throw new LookupException('Template not found: ' . $path);
     }
 
     /** @psalm-param non-empty-string $path */
@@ -154,9 +98,66 @@ class Engine
     {
         try {
             $this->getFile($path);
+
             return true;
         } catch (LookupException) {
             return false;
+        }
+    }
+
+    /**
+     * @psalm-param DirsInput $dirs
+     *
+     * @return Dirs
+     */
+    protected function prepareDirs(string|array $dirs): array
+    {
+        if (is_string($dirs)) {
+            return [realpath($dirs) ?: throw new LookupException('Template directory does not exist ' . $dirs)];
+        }
+
+        return array_map(
+            fn ($dir) => realpath($dir) ?: throw new LookupException('Template directory does not exist ' . $dir),
+            $dirs
+        );
+    }
+
+    protected function validateFile(string $dir, string $file): string|false
+    {
+        $path = $dir . DIRECTORY_SEPARATOR . $file;
+
+        if ($realpath = realpath($path . '.php')) {
+            return $realpath;
+        }
+
+        return realpath($path);
+    }
+
+    /** @return list{non-empty-string|null, non-empty-string} */
+    protected function getSegments(string $path): array
+    {
+        if (strpos($path, ':') === false) {
+            $path = trim($path);
+            assert(!empty($path));
+
+            return [null, $path];
+        }
+        $segments = array_map(fn ($s) => trim($s), explode(':', $path));
+
+        if (count($segments) == 2) {
+            if (!empty($segments[0]) && !empty($segments[1])) {
+                return [$segments[0], $segments[1]];
+            }
+
+            throw new LookupException(
+                "Invalid template format: '{$path}'. " .
+                    "Use 'namespace:template/path or template/path'."
+            );
+        } else {
+            throw new LookupException(
+                "Invalid template format: '{$path}'. " .
+                    "Use 'namespace:template/path or template/path'."
+            );
         }
     }
 }

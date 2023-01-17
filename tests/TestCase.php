@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Conia\Boiler\Tests;
 
+use Conia\Chuck\Psr\Nyholm;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class TestCase extends BaseTestCase
 {
-    const ROOT_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
-    const DEFAULT_DIR = self::ROOT_DIR . 'default';
-    const DS = DIRECTORY_SEPARATOR;
+    public const ROOT_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+    public const DEFAULT_DIR = self::ROOT_DIR . 'default';
+    public const DS = DIRECTORY_SEPARATOR;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
@@ -32,6 +38,11 @@ class TestCase extends BaseTestCase
         );
     }
 
+    public function factory(): Nyholm
+    {
+        return new Nyholm();
+    }
+
     public function templates(array $templates = []): array
     {
         return array_merge($templates, [self::DEFAULT_DIR]);
@@ -46,15 +57,14 @@ class TestCase extends BaseTestCase
 
     public function additional(): array
     {
-        return  [
+        return [
             'additional' => self::ROOT_DIR . 'additional',
         ];
     }
 
     public function obj(): object
     {
-        return new class()
-        {
+        return new class () {
             public function name(): string
             {
                 return 'boiler';

@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Error\{
-    LookupException,
-    UnexpectedValueException,
-};
-use Conia\Boiler\{Engine, Value};
+use Conia\Boiler\Engine;
+use Conia\Boiler\Error\LookupException;
+use Conia\Boiler\Error\UnexpectedValueException;
 use Conia\Boiler\Tests\TestCase;
+use Conia\Boiler\Value;
 
 uses(TestCase::class);
 
@@ -52,7 +51,7 @@ test('Unwrap rendering', function () {
 
     expect($engine->render('unwrap', [
         'html' => '<b>boiler</b>',
-    ]))->toBe("&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>");
+    ]))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>');
 });
 
 
@@ -61,7 +60,7 @@ test('Switch off autoescaping by default', function () {
 
     expect($engine->render('noautoescape', [
         'html' => '<b>noautoescape</b>',
-    ]))->toBe("<b>noautoescape</b>");
+    ]))->toBe('<b>noautoescape</b>');
 });
 
 
@@ -72,7 +71,7 @@ test('Switch off autoescaping when calling render', function () {
         'noautoescape',
         ['html' => '<b>nodefaultautoescape</b>'],
         autoescape: false,
-    ))->toBe("<b>nodefaultautoescape</b>");
+    ))->toBe('<b>nodefaultautoescape</b>');
 });
 
 
@@ -80,21 +79,19 @@ test('Unwrap rendering with Stringable', function () {
     $engine = new Engine($this->templates());
 
     expect($engine->render('unwrap', [
-        'html' => new class()
-        {
+        'html' => new class () {
             public function __toString(): string
             {
                 return '<b>boiler</b>';
             }
         },
-    ]))->toBe("&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>");
+    ]))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>');
 });
 
 
 test('Rendering with Stringable', function () {
     $engine = new Engine($this->templates());
-    $stringable = new class()
-    {
+    $stringable = new class () {
         public string $test = 'test';
 
         public function __toString(): string
@@ -110,7 +107,7 @@ test('Rendering with Stringable', function () {
 
     expect($this->fullTrim($engine->render('stringable', [
         'html' => $stringable,
-    ])))->toBe("&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>testmantasmantas");
+    ])))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>testmantasmantas');
 });
 
 
@@ -119,7 +116,7 @@ test('Clean rendering', function () {
 
     expect($engine->render('clean', [
         'html' => '<script src="/evil.js"></script><b>boiler</b>',
-    ]))->toBe("<b>boiler</b>");
+    ]))->toBe('<b>boiler</b>');
 });
 
 
@@ -127,7 +124,7 @@ test('Array rendering', function () {
     $engine = new Engine($this->templates());
 
     expect(trim($engine->render('iter', [
-        'arr' => ['<b>1</b>', '<b>2</b>', '<b>3</b>']
+        'arr' => ['<b>1</b>', '<b>2</b>', '<b>3</b>'],
     ])))->toBe('&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;');
 });
 
@@ -173,7 +170,7 @@ test('Iterator rendering', function () {
     };
 
     expect(trim($engine->render('iter', [
-        'arr' => $iter()
+        'arr' => $iter(),
     ])))->toBe('&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;b&gt;4&lt;/b&gt;');
 });
 
@@ -185,7 +182,7 @@ test('Complex nested rendering', function () {
     );
 
     $iter = function () {
-        $a = [13.73, "String II", 1];
+        $a = [13.73, 'String II', 1];
         foreach ($a as $i) {
             yield $i;
         }
@@ -197,13 +194,12 @@ test('Complex nested rendering', function () {
         'url' => 'https://example.com/boiler  /app  ',
         'array' => [
             '<b>sanitize</b>' => [
-                1, "String", new class()
-                {
+                1, 'String', new class () {
                     public function __toString(): string
                     {
                         return '<p>Object</p>';
                     }
-                }
+                },
             ],
             666 => $iter(),
         ],
@@ -224,7 +220,7 @@ test('Single layout', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('uselayout', [
-        'text' => 'boiler'
+        'text' => 'boiler',
     ])))->toBe('<body><p>boiler</p><p>boiler</p></body>');
 });
 
@@ -247,7 +243,7 @@ test('Stacked layout', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('usestacked', [
-        'text' => 'boiler'
+        'text' => 'boiler',
     ])))->toBe(
         '<body><div class="stackedsecond"><div class="stackedfirst">' .
             '<p>boiler</p></div></div><p>boiler</p></body>'
@@ -264,7 +260,7 @@ test('Section rendering', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('addsection', [
-        'text' => 'boiler'
+        'text' => 'boiler',
     ])))->toBe('<div><p>boiler</p>boiler</div><ul><li>boiler</li></ul>');
 });
 
@@ -273,7 +269,7 @@ test('Append/prepend sections', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('appendprepend', [
-        'path' => '/assign.js'
+        'path' => '/assign.js',
     ])))->toBe(
         '<script src="/prepend.js"></script>' .
             '<script src="/assign.js"></script>' .
@@ -300,7 +296,7 @@ test('Missing section rendering', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('nosection', [
-        'text' => 'boiler'
+        'text' => 'boiler',
     ])))->toBe('<div><p>boiler</p>boiler</div><p>no list</p>');
 });
 
@@ -309,7 +305,7 @@ test('Insert rendering', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('insert', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<p>Boiler</p><p>Templates</p>');
 });
 
@@ -318,7 +314,7 @@ test('Template in sub directory', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('sub/home', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h2>Boiler</h2>');
 });
 
@@ -330,10 +326,10 @@ test('Additional template directories', function () {
     );
 
     expect($this->fullTrim($engine->render('simple', [
-        'text' => 'rocks'
+        'text' => 'rocks',
     ])))->toBe('<h1>boiler</h1><p>rocks</p>');
     expect($this->fullTrim($engine->render('additional', [
-        'text' => 'Additional'
+        'text' => 'Additional',
     ])))->toBe('<span>Additional</span>');
 });
 
@@ -342,10 +338,10 @@ test('Additional template directories namespaced', function () {
     $engine = new Engine($this->namespaced($this->additional()));
 
     expect($this->fullTrim($engine->render('namespace:sub/home', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h2>Boiler</h2>');
     expect($this->fullTrim($engine->render('additional:additional', [
-        'text' => 'Additional'
+        'text' => 'Additional',
     ])))->toBe('<span>Additional</span>');
 });
 
@@ -354,19 +350,19 @@ test('Additional template directories shadowing', function () {
     $engine = new Engine($this->namespaced());
 
     expect($this->fullTrim($engine->render('sub/home', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h2>Boiler</h2>');
 
     $engine = new Engine($this->namespaced($this->additional()));
 
     expect($this->fullTrim($engine->render('sub/home', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h1>Sub Boiler</h1>');
     expect($this->fullTrim($engine->render('namespace:sub/home', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h2>Boiler</h2>');
     expect($this->fullTrim($engine->render('additional:sub/home', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h1>Sub Boiler</h1>');
 });
 
@@ -405,7 +401,14 @@ test('Config error :: wrong template format IV', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('');
-})->throws(UnexpectedValueException::class, 'No template');
+})->throws(UnexpectedValueException::class, 'invalid or empty');
+
+
+test('Config error :: wrong template format V', function () {
+    $engine = new Engine($this->templates());
+
+    $engine->render("\0");
+})->throws(UnexpectedValueException::class, 'invalid or empty');
 
 
 test('Render error :: missing template', function () {
@@ -443,7 +446,7 @@ test('Custom template method', function () {
     });
 
     expect($this->fullTrim($engine->render('method', [
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h2>BOILER</h2>');
 });
 
