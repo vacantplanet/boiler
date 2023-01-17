@@ -30,7 +30,7 @@ class Engine
         $this->customMethods = new CustomMethods();
     }
 
-    /** @psalm-param non-empty-string|Dirs $dirs */
+    /** @psalm-param non-empty-string $path */
     public function template(string $path): Template
     {
         if (!preg_match('/^[\\w\\.\/:_-]+$/u', $path)) {
@@ -43,6 +43,7 @@ class Engine
         return $template;
     }
 
+    /** @psalm-param non-empty-string $path */
     public function render(
         string $path,
         array $context = [],
