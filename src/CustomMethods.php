@@ -6,7 +6,6 @@ namespace Conia\Boiler;
 
 use Conia\Boiler\Error\UnexpectedValueException;
 
-
 class CustomMethods
 {
     /** @psalm-var array<non-empty-string, callable> */
@@ -22,6 +21,6 @@ class CustomMethods
     {
         return array_key_exists($name, $this->methods) ?
             $this->methods[$name] :
-            throw new UnexpectedValueException("Custom method '$name' does not exist");
+            throw new UnexpectedValueException("Custom method '{$name}' does not exist");
     }
 }

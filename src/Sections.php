@@ -13,17 +13,6 @@ class Sections
     protected array $capture = [];
     protected SectionMode $sectionMode = SectionMode::Closed;
 
-    protected function open(string $name, SectionMode $mode): void
-    {
-        if ($this->sectionMode !== SectionMode::Closed) {
-            throw new LogicException('Nested sections are not allowed');
-        }
-
-        $this->sectionMode = $mode;
-        $this->capture[] = $name;
-        ob_start();
-    }
-
     public function begin(string $name): void
     {
         $this->open($name, SectionMode::Assign);
@@ -62,5 +51,16 @@ class Sections
     public function has(string $name): bool
     {
         return isset($this->sections[$name]);
+    }
+
+    protected function open(string $name, SectionMode $mode): void
+    {
+        if ($this->sectionMode !== SectionMode::Closed) {
+            throw new LogicException('Nested sections are not allowed');
+        }
+
+        $this->sectionMode = $mode;
+        $this->capture[] = $name;
+        ob_start();
     }
 }

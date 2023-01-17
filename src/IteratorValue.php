@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \IteratorIterator;
-use \Iterator;
+use Iterator;
+use IteratorIterator;
 
 /**
  * @template-covariant TKey
  * @template-covariant TValue
+ *
  * @template TIterator as \Traversable<TKey, TValue>
  *
  * @template-extends IteratorIterator<TKey, TValue, TIterator>

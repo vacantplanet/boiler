@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \Throwable;
 use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Error\RuntimeException;
-
+use Throwable;
 
 class Template
 {
@@ -16,6 +15,7 @@ class Template
     public readonly Engine $engine;
     public readonly Sections $sections;
     protected ?LayoutValue $layout = null;
+
     /** @psalm-suppress PropertyNotSetInConstructor */
     protected CustomMethods $customMethods;
 
@@ -47,6 +47,49 @@ class Template
         }
     }
 
+    public function render(array $context = [], bool $autoescape = true): string
+    {
+        $content = $this->getContent($context, $autoescape);
+
+        if ($this instanceof Layout) {
+            return $content;
+        }
+
+        try {
+            return $this->renderLayouts($this, $context, $content, $autoescape);
+        } catch (LookupException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new RuntimeException('Render error: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * Defines a layout template that will be wrapped around this instance.
+     *
+     * Typically it’s placed at the top of the file.
+     */
+    public function setLayout(LayoutValue $layout): void
+    {
+        if ($this->layout === null) {
+            $this->layout = $layout;
+
+            return;
+        }
+
+        throw new RuntimeException('Template error: layout already set');
+    }
+
+    public function layout(): ?LayoutValue
+    {
+        return $this->layout;
+    }
+
+    public function setCustomMethods(CustomMethods $customMethods): void
+    {
+        $this->customMethods = $customMethods;
+    }
+
     protected function templateContext(array $context, bool $autoescape): TemplateContext
     {
         return new TemplateContext($this, $context, $autoescape);
@@ -56,7 +99,7 @@ class Template
     {
         $templateContext = $this->templateContext($context, $autoescape);
 
-        $load =  function (string $templatePath, array $context = []): void {
+        $load = function (string $templatePath, array $context = []): void {
             // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
             $____template_path____ = $templatePath;
 
@@ -109,48 +152,5 @@ class Template
         }
 
         return $content;
-    }
-
-    public function render(array $context = [], bool $autoescape = true): string
-    {
-        $content = $this->getContent($context, $autoescape);
-
-        if ($this instanceof Layout) {
-            return $content;
-        }
-
-        try {
-            return $this->renderLayouts($this, $context, $content, $autoescape);
-        } catch (LookupException $e) {
-            throw $e;
-        } catch (Throwable $e) {
-            throw new RuntimeException('Render error: ' . $e->getMessage(), 0, $e);
-        }
-    }
-
-    /**
-     * Defines a layout template that will be wrapped around this instance.
-     *
-     * Typically it’s placed at the top of the file.
-     */
-    public function setLayout(LayoutValue $layout): void
-    {
-        if ($this->layout === null) {
-            $this->layout = $layout;
-
-            return;
-        } else {
-            throw new RuntimeException('Template error: layout already set');
-        }
-    }
-
-    public function layout(): ?LayoutValue
-    {
-        return $this->layout;
-    }
-
-    public function setCustomMethods(CustomMethods $customMethods): void
-    {
-        $this->customMethods = $customMethods;
     }
 }

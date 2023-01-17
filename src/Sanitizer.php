@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use Symfony\Component\HtmlSanitizer\{
-    HtmlSanitizer,
-    HtmlSanitizerConfig,
-};
-
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Sanitizer
 {
@@ -26,7 +23,7 @@ class Sanitizer
 
         // also remove empty lines
         return $removeEmptyLines ?
-            preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", PHP_EOL, $result) :
+            preg_replace("/(^[\r\n]*|[\r\n]+)[\\s\t]*[\r\n]+/", PHP_EOL, $result) :
             $result;
     }
 }

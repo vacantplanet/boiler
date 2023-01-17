@@ -6,7 +6,6 @@ namespace Conia\Boiler;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
-
 class TemplateContext
 {
     private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
@@ -17,6 +16,13 @@ class TemplateContext
         public readonly array $context,
         public readonly bool $autoescape,
     ) {
+    }
+
+    public function __call(string $name, array $args): mixed
+    {
+        $callable = $this->template->getMethods()->get($name);
+
+        return $callable(...$args);
     }
 
     public function context(array $values = []): array
@@ -71,7 +77,7 @@ class TemplateContext
     }
 
     /**
-     * Includes another template into the current template
+     * Includes another template into the current template.
      *
      * If no context is passed it shares the context of the calling template.
      *
@@ -121,12 +127,5 @@ class TemplateContext
     public function has(string $name): bool
     {
         return $this->template->sections->has($name);
-    }
-
-    public function __call(string $name, array $args): mixed
-    {
-        $callable = $this->template->getMethods()->get($name);
-
-        return $callable(...$args);
     }
 }

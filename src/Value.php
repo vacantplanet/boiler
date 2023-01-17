@@ -4,32 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \Throwable;
-use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Conia\Boiler\Error\RuntimeException;
-
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Throwable;
 
 class Value implements ValueInterface
 {
     public function __construct(protected readonly mixed $value)
     {
-    }
-
-    public function unwrap(): mixed
-    {
-        return $this->value;
-    }
-
-    public function clean(
-        HtmlSanitizerConfig $config = null,
-        bool $removeEmptyLines = true
-    ): string {
-        return Sanitizer::clean((string)$this->value, $config, $removeEmptyLines);
-    }
-
-    public function empty(): bool
-    {
-        return empty($this->value);
     }
 
     public function __toString(): string
@@ -59,6 +41,7 @@ class Value implements ValueInterface
     {
         try {
             $this->value->{$name} = $value;
+
             return;
         } catch (Throwable) {
             throw new RuntimeException('No such property');
@@ -68,7 +51,7 @@ class Value implements ValueInterface
     public function __call(string $name, array $args): mixed
     {
         if (is_callable([$this->value, $name])) {
-            return Wrapper::wrap($this->value->$name(...$args));
+            return Wrapper::wrap($this->value->{$name}(...$args));
         }
 
         throw new RuntimeException('No such method');
@@ -81,5 +64,22 @@ class Value implements ValueInterface
         }
 
         throw new RuntimeException('No such method');
+    }
+
+    public function unwrap(): mixed
+    {
+        return $this->value;
+    }
+
+    public function clean(
+        HtmlSanitizerConfig $config = null,
+        bool $removeEmptyLines = true
+    ): string {
+        return Sanitizer::clean((string)$this->value, $config, $removeEmptyLines);
+    }
+
+    public function empty(): bool
+    {
+        return empty($this->value);
     }
 }

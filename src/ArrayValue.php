@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use \ArrayAccess;
-use \Iterator;
-use \Countable;
+use ArrayAccess;
 use Conia\Boiler\Error\OutOfBoundsException;
 use Conia\Boiler\Error\RuntimeException;
 use Conia\Boiler\Error\UnexpectedValueException;
-
+use Countable;
+use Iterator;
 
 /**
  * @psalm-type ArrayCallable = callable(mixed, mixed):int
+ *
  * @template-implements ArrayAccess<array-key, mixed>
  * @template-implements Iterator<mixed>
  *
@@ -36,27 +36,27 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return $this->array;
     }
 
-    function rewind(): void
+    public function rewind(): void
     {
         $this->position = 0;
     }
 
-    function current(): mixed
+    public function current(): mixed
     {
         return Wrapper::wrap($this->array[$this->key()]);
     }
 
-    function key(): mixed
+    public function key(): mixed
     {
         return $this->keys[$this->position];
     }
 
-    function next(): void
+    public function next(): void
     {
-        ++$this->position;
+        $this->position++;
     }
 
-    function valid(): bool
+    public function valid(): bool
     {
         return isset($this->keys[$this->position]);
     }
@@ -74,15 +74,14 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
     {
         if ($this->offsetExists($offset)) {
             return Wrapper::wrap($this->array[$offset]);
+        }
+        if (is_numeric($offset)) {
+            $key = (string)$offset;
         } else {
-            if (is_numeric($offset)) {
-                $key = (string)$offset;
-            } else {
-                $key = "'$offset'";
-            }
+            $key = "'{$offset}'";
+        }
 
-            throw new OutOfBoundsException("Undefined array key $key");
-        };
+        throw new OutOfBoundsException("Undefined array key {$key}");
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -136,33 +135,6 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         return Wrapper::wrap(array_reduce($this->array, $callable, $initial));
     }
 
-    protected function sort(array $array, string $mode): self
-    {
-        match ($mode) {
-            '' => sort($array),
-            'ar' => arsort($array),
-            'a' => asort($array),
-            'kr' => krsort($array),
-            'k' => ksort($array),
-            'r' => rsort($array),
-            default => throw new UnexpectedValueException("Sort mode '$mode' not supported"),
-        };
-
-        return new self($array);
-    }
-
-    /** @psalm-param ArrayCallable $callable */
-    protected function usort(array $array, string $mode, callable $callable): self
-    {
-        match ($mode) {
-            'ua' => uasort($array, $callable),
-            'u' => usort($array, $callable),
-            default => throw new UnexpectedValueException("Sort mode '$mode' not supported"),
-        };
-
-        return new self($array);
-    }
-
     /** @psalm-param ArrayCallable $callable */
     public function sorted(string $mode = '', ?callable $callable = null): self
     {
@@ -177,5 +149,32 @@ class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
         }
 
         return $this->sort($this->array, $mode);
+    }
+
+    protected function sort(array $array, string $mode): self
+    {
+        match ($mode) {
+            '' => sort($array),
+            'ar' => arsort($array),
+            'a' => asort($array),
+            'kr' => krsort($array),
+            'k' => ksort($array),
+            'r' => rsort($array),
+            default => throw new UnexpectedValueException("Sort mode '{$mode}' not supported"),
+        };
+
+        return new self($array);
+    }
+
+    /** @psalm-param ArrayCallable $callable */
+    protected function usort(array $array, string $mode, callable $callable): self
+    {
+        match ($mode) {
+            'ua' => uasort($array, $callable),
+            'u' => usort($array, $callable),
+            default => throw new UnexpectedValueException("Sort mode '{$mode}' not supported"),
+        };
+
+        return new self($array);
     }
 }
