@@ -2,6 +2,7 @@
     "name": "conia/boiler",
     "description": "A PHP template engine that doesn't require you to learn a new syntax",
     "type": "library",
+    "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
         {
@@ -31,10 +32,13 @@
         "symfony/html-sanitizer": "^6.1"
     },
     "require-dev": {
-        "pestphp/pest": "^1.21",
-        "vimeo/psalm": "^5",
+        "conia/chuck": "dev-main",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
-        "staabm/annotate-pull-request-from-checkstyle": "^1.8"
+        "nyholm/psr7": "^1.5",
+        "nyholm/psr7-server": "dev-master",
+        "pestphp/pest": "^1.21",
+        "staabm/annotate-pull-request-from-checkstyle": "^1.8",
+        "vimeo/psalm": "^5"
     },
     "config": {
         "allow-plugins": {
