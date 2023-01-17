@@ -1,6 +1,12 @@
 Boiler
 ======
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/coniadev/boiler.svg)](https://scrutinizer-ci.com/g/coniadev/boiler/code-structure)
+[![Psalm coverage](https://shepherd.dev/github/coniadev/boiler/coverage.svg?)](https://shepherd.dev/github/coniadev/boiler)
+[![Psalm level](https://shepherd.dev/github/coniadev/boiler/level.svg?)](https://conia.dev/boiler)
+[![Quality Score](https://img.shields.io/scrutinizer/g/coniadev/boiler.svg)](https://scrutinizer-ci.com/g/coniadev/boiler)
+
 Boiler is a native PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/), which
 uses PHP itself instead of a custom template language.
 
