@@ -1,1 +1,1 @@
-<?= $html ?><?= $html->unwrap() ?>
+<?php echo $html; ?><?php echo $html->unwrap(); ?>

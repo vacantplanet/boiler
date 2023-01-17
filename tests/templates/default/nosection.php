@@ -1,2 +1,2 @@
 <?php $this->layout('readsection'); ?>
-<p><?= $text ?></p>
+<p><?php echo $text; ?></p>

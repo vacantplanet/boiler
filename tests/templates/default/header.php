@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title><?= $title ?></title>
-    <link rel="stylesheet" href="<?= $this->url($url) ?>">
-    <meta name="keywords" content="<?= $obj->name() ?>">
+    <title><?php echo $title; ?></title>
+    <link rel="stylesheet" href="<?php echo $this->url($url); ?>">
+    <meta name="keywords" content="<?php echo $obj->name(); ?>">
 </head>

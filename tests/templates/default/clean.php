@@ -1,1 +1,1 @@
-<?= $html->clean() ?>
+<?php echo $html->clean();

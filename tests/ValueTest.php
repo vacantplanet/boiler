@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Value;
 use Conia\Boiler\Error\RuntimeException;
-
+use Conia\Boiler\Value;
 
 test('Value::unwrap', function () {
     expect((new Value('<b>boiler</b>'))->unwrap())->toBe('<b>boiler</b>');
@@ -32,8 +31,7 @@ test('String', function () {
 
 
 test('Stringable', function () {
-    $stringable = new class()
-    {
+    $stringable = new class () {
         public string $value = 'test';
 
         public function __toString(): string
@@ -60,16 +58,15 @@ test('Stringable', function () {
 
 
 test('Object :: valid', function () {
-    $object = new class()
-    {
-        public function html(): string
-        {
-            return '<b>boiler</b><script></script>';
-        }
-
+    $object = new class () {
         public function __invoke(string $s): string
         {
             return '<i>' . $s . '</i>';
+        }
+
+        public function html(): string
+        {
+            return '<b>boiler</b><script></script>';
         }
     };
     $value = new Value($object);
@@ -81,8 +78,7 @@ test('Object :: valid', function () {
 
 
 test('Object :: not invokable', function () {
-    $object = new class()
-    {
+    $object = new class () {
     };
     $value = new Value($object);
 
@@ -108,8 +104,7 @@ test('Getter throws I', function () {
 
 
 test('Getter throws II', function () {
-    $obj = new class()
-    {
+    $obj = new class () {
     };
     $value = new Value($obj);
     $value->test;
@@ -123,8 +118,7 @@ test('Setter throws I', function () {
 
 
 test('Setter throws II', function () {
-    $obj = new class()
-    {
+    $obj = new class () {
         public function __set(string $n, mixed $v): void
         {
             if ($n && $v === null) {

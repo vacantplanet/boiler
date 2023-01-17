@@ -1,2 +1,2 @@
-<?php $this->layout('stackedfirst') ?>
-<p><?= $text ?></p>
+<?php $this->layout('stackedfirst'); ?>
+<p><?php echo $text; ?></p>

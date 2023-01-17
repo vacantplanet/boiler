@@ -1,1 +1,1 @@
-<?= $html ?>
+<?php echo $html;

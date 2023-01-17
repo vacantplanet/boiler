@@ -1,6 +1,6 @@
-<?php if (!$empty->empty()) : ?>
+<?php if (!$empty->empty()) { ?>
     <b>empty</b>
-<?php endif ?>
-<?php if (!$notempty->empty()) : ?>
-    <?= $notempty ?>
-<?php endif ?>
+<?php } ?>
+<?php if (!$notempty->empty()) { ?>
+    <?php echo $notempty; ?>
+<?php } ?>

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Conia\Boiler\Error\LookupException;
-use Conia\Boiler\{Template, Value};
+use Conia\Boiler\Template;
 use Conia\Boiler\Tests\TestCase;
-
+use Conia\Boiler\Value;
 
 uses(TestCase::class);
 
@@ -17,7 +17,7 @@ beforeEach(function () {
 
 
 test('Standalone rendering', function () {
-    $path =  $this->templates . 'simple.php';
+    $path = $this->templates . 'simple.php';
     $template = new Template($path);
 
     expect($this->fullTrim($template->render([
@@ -28,11 +28,11 @@ test('Standalone rendering', function () {
 
 
 test('Standalone with layout', function () {
-    $path =  $this->templates . 'uselayout.php';
+    $path = $this->templates . 'uselayout.php';
     $template = new Template($path);
 
     expect($this->fullTrim($template->render([
-        'text' => 'standalone'
+        'text' => 'standalone',
     ])))->toBe('<body><p>standalone</p><p>standalone</p></body>');
 });
 
@@ -58,7 +58,7 @@ test('Custom template method', function () {
     });
 
     expect($this->fullTrim($template->render([
-        'text' => 'Boiler'
+        'text' => 'Boiler',
     ])))->toBe('<h2>BOILER</h2>');
 });
 

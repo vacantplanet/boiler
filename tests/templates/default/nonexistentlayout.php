@@ -1,1 +1,3 @@
-<?php $this->layout('doesnotexist');
+<?php
+
+$this->layout('doesnotexist');

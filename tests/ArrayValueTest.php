@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\{ArrayValue, IteratorValue, Value};
+use Conia\Boiler\ArrayValue;
 use Conia\Boiler\Error\OutOfBoundsException;
 use Conia\Boiler\Error\RuntimeException;
 use Conia\Boiler\Error\UnexpectedValueException;
-
+use Conia\Boiler\IteratorValue;
+use Conia\Boiler\Value;
 
 test('Count', function () {
     $arrval = new ArrayValue([1, 2, 3]);
@@ -173,11 +174,9 @@ test('Unset value', function () {
 
 
 test('Wrapped array access', function () {
-    $obj = new class()
-    {
+    $obj = new class () {
     };
-    $stringable = new class()
-    {
+    $stringable = new class () {
         public function __toString(): string
         {
             return '';
@@ -197,11 +196,9 @@ test('Wrapped array access', function () {
 
 
 test('Wrapped iteration', function () {
-    $obj = new class()
-    {
+    $obj = new class () {
     };
-    $stringable = new class()
-    {
+    $stringable = new class () {
         public function __toString(): string
         {
             return '';

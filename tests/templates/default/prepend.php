@@ -1,4 +1,4 @@
-<?php $this->prepend('section') ?>
+<?php $this->prepend('section'); ?>
 <script src="/prepend.js"></script>
-<?php $this->end() ?>
-<?= $this->section('section') ?>
+<?php $this->end(); ?>
+<?php echo $this->section('section'); ?>

@@ -1,1 +1,1 @@
-<h2><?= $this->upper() ?></h2>
+<h2><?php echo $this->upper(); ?></h2>

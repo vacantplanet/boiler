@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Conia\Boiler\Sanitizer;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 const MALFORMED = '
         <header>Test</header>

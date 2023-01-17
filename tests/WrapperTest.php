@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\{Wrapper, Value, IteratorValue, ArrayValue};
-
+use Conia\Boiler\ArrayValue;
+use Conia\Boiler\IteratorValue;
+use Conia\Boiler\Value;
+use Conia\Boiler\Wrapper;
 
 test('Number', function () {
     expect(Wrapper::wrap(13))->toBe(13);
@@ -39,8 +41,7 @@ test('Iterator', function () {
 
 
 test('Object', function () {
-    $obj = new class()
-    {
+    $obj = new class () {
     };
 
     expect(Wrapper::wrap($obj))->toBeInstanceOf(Value::class);
@@ -48,8 +49,7 @@ test('Object', function () {
 
 
 test('Stringable', function () {
-    $obj = new class()
-    {
+    $obj = new class () {
         public function __toString(): string
         {
             return '';

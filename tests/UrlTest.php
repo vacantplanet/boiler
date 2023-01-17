@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Url;
 use Conia\Boiler\Error\RuntimeException;
-
+use Conia\Boiler\Url;
 
 test('All segments', function () {
     $url = Url::clean(
@@ -18,12 +17,12 @@ test('All segments', function () {
 });
 
 test('Already clean without anything', function () {
-    $url = Url::clean("http://example.com/");
+    $url = Url::clean('http://example.com/');
 
     expect($url)->toBe('http://example.com/');
 });
 
 
 test('Failing', function () {
-    Url::clean("scheme://example_login:!#Password?@ZZZ@127.0.0.1/some_path");
+    Url::clean('scheme://example_login:!#Password?@ZZZ@127.0.0.1/some_path');
 })->throws(RuntimeException::class, 'Invalid Url');

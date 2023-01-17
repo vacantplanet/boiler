@@ -2,14 +2,18 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\{ArrayValue, IteratorValue, Value};
-
+use Conia\Boiler\ArrayValue;
+use Conia\Boiler\IteratorValue;
+use Conia\Boiler\Value;
 
 test('Wrapping', function () {
     $iterator = (function () {
         yield 1;
+
         yield 'string';
+
         yield [1, 2];
+
         yield (function () {
             yield 1;
         })();
@@ -43,6 +47,7 @@ test('Unwrap', function () {
 test('To array', function () {
     $iterator = (function () {
         yield 1;
+
         yield 2;
     })();
 
