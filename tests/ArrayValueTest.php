@@ -106,12 +106,32 @@ test('Helper ::sorted userdefined', function () {
     $arrval = new ArrayValue(['B', 'a', 'C', 'c', 'A', 'b']);
     expect($arrval->sorted(
         'u',
-        fn ($a, $b) => strtolower($a) > strtolower($b)
+        function ($a, $b) {
+            if (strtolower($a) > strtolower($b)) {
+                return 1;
+            }
+
+            if (strtolower($a) < strtolower($b)) {
+                return -1;
+            }
+
+            return 0;
+        }
     )->unwrap())->toBe(['a', 'A', 'B', 'b', 'C', 'c']);
 
     expect($arrval->sorted(
         'ua',
-        fn ($a, $b) => strtolower($a) > strtolower($b)
+        function ($a, $b) {
+            if (strtolower($a) > strtolower($b)) {
+                return 1;
+            }
+
+            if (strtolower($a) < strtolower($b)) {
+                return -1;
+            }
+
+            return 0;
+        }
     )->unwrap())->toBe([1 => 'a', 4 => 'A', 0 => 'B', 5 => 'b', 2 => 'C', 3 => 'c']);
 });
 
