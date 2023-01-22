@@ -6,7 +6,7 @@ namespace Conia\Boiler;
 
 use Conia\Boiler\Engine;
 use Conia\Boiler\Error\RendererException;
-use Conia\Chuck\Psr\Factory;
+use Conia\Chuck\Factory;
 use Conia\Chuck\Renderer\Renderer as RendererInterface;
 use Conia\Chuck\Response;
 use Throwable;
