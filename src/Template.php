@@ -8,6 +8,7 @@ use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Error\RuntimeException;
 use Throwable;
 
+/** @psalm-api */
 class Template
 {
     use RegistersMethod;

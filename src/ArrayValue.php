@@ -12,6 +12,8 @@ use Countable;
 use Iterator;
 
 /**
+ * @psalm-api
+ *
  * @psalm-type ArrayCallable = callable(mixed, mixed):int
  *
  * @template-implements ArrayAccess<array-key, mixed>

@@ -8,6 +8,8 @@ use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Error\UnexpectedValueException;
 
 /**
+ * @psalm-api
+ *
  * @psalm-type DirsInput = non-empty-string|list<non-empty-string>|array<non-empty-string, non-empty-string>
  * @psalm-type Dirs = list<string>|array<non-empty-string, non-empty-string>
  */

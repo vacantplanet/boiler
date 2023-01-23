@@ -13,6 +13,8 @@ use Throwable;
 use Traversable;
 
 /**
+ * @psalm-api
+ *
  * @psalm-import-type DirsInput from \Conia\Boiler\Engine
  */
 class Renderer implements RendererInterface

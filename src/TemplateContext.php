@@ -6,6 +6,7 @@ namespace Conia\Boiler;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
+/** @psalm-api */
 class TemplateContext
 {
     private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;

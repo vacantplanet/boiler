@@ -8,6 +8,8 @@ use Iterator;
 use IteratorIterator;
 
 /**
+ * @psalm-api
+ *
  * @template-covariant TKey
  * @template-covariant TValue
  *

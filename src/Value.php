@@ -8,6 +8,7 @@ use Conia\Boiler\Error\RuntimeException;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Throwable;
 
+/** @psalm-api */
 class Value implements ValueInterface
 {
     public function __construct(protected readonly mixed $value)
