@@ -54,6 +54,7 @@ test('Template Renderer :: change content-type (named parameter)', function () {
             $hasContentType = true;
         }
     }
+
     expect($hasContentType)->toBe(true);
     expect((string)$response->getBody())->toBe("<p>plain</p>\n");
 });
@@ -73,6 +74,7 @@ test('Template Renderer :: iterator', function () {
         ['config' => new Config('boiler')],
     );
     $response = $renderer->response($iter(), 'renderer');
+
     expect((string)$response->getBody())->toBe("<h1>boiler</h1>\n<p>characters</p><p>a</p><p>b</p><p>c</p>");
 });
 

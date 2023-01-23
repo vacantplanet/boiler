@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Template;
 use Conia\Boiler\Tests\TestCase;
+use Conia\Boiler\Tests\Whitelisted;
 use Conia\Boiler\Value;
 
 uses(TestCase::class);
@@ -24,6 +25,28 @@ test('Standalone rendering', function () {
         'obj' => $this->obj(),
         'text' => 'rocks',
     ])))->toBe('<h1>boiler</h1><p>rocks</p>');
+});
+
+
+test('Whitelisting', function () {
+    $path = $this->templates . 'whitelist.php';
+    $template = new Template($path);
+
+    expect($this->fullTrim($template->render([
+        'wl' => new Whitelisted(),
+        'content' => 'test',
+    ], [Whitelisted::class])))->toBe('<h1>headline</h1><p>test</p>');
+});
+
+
+test('Not whitelisted', function () {
+    $path = $this->templates . 'whitelist.php';
+    $template = new Template($path);
+
+    expect($this->fullTrim($template->render([
+        'wl' => new Whitelisted(),
+        'content' => 'test',
+    ])))->toBe('&lt;h1&gt;headline&lt;/h1&gt;&lt;p&gt;test&lt;/p&gt;');
 });
 
 

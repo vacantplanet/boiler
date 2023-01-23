@@ -47,16 +47,16 @@ class Template
         }
     }
 
-    public function render(array $context = [], bool $autoescape = true): string
+    public function render(array $context = [], array $whitelist = [], bool $autoescape = true): string
     {
-        $content = $this->getContent($context, $autoescape);
+        $content = $this->getContent($context, $whitelist, $autoescape);
 
         if ($this instanceof Layout) {
             return $content;
         }
 
         try {
-            return $this->renderLayouts($this, $context, $content, $autoescape);
+            return $this->renderLayouts($this, $context, $whitelist, $content, $autoescape);
         } catch (LookupException $e) {
             throw $e;
         } catch (Throwable $e) {
@@ -90,14 +90,14 @@ class Template
         $this->customMethods = $customMethods;
     }
 
-    protected function templateContext(array $context, bool $autoescape): TemplateContext
+    protected function templateContext(array $context, array $whitelist, bool $autoescape): TemplateContext
     {
-        return new TemplateContext($this, $context, $autoescape);
+        return new TemplateContext($this, $context, $whitelist, $autoescape);
     }
 
-    protected function getContent(array $context, bool $autoescape): string
+    protected function getContent(array $context, array $whitelist, bool $autoescape): string
     {
-        $templateContext = $this->templateContext($context, $autoescape);
+        $templateContext = $this->templateContext($context, $whitelist, $autoescape);
 
         $load = function (string $templatePath, array $context = []): void {
             // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
@@ -136,6 +136,7 @@ class Template
     protected function renderLayouts(
         Template $template,
         array $context,
+        array $whitelist,
         string $content,
         bool $autoescape
     ): string {
@@ -148,7 +149,7 @@ class Template
                 $template->engine,
             );
 
-            $content = $template->render($layout->context ?: $context, $autoescape);
+            $content = $template->render($layout->context ?: $context, $whitelist, $autoescape);
         }
 
         return $content;

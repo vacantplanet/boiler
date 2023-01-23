@@ -14,6 +14,7 @@ class TemplateContext
     public function __construct(
         protected readonly Template $template,
         public readonly array $context,
+        public readonly array $whitelist,
         public readonly bool $autoescape,
     ) {
     }
@@ -29,6 +30,10 @@ class TemplateContext
     {
         return array_map(
             function ($value): mixed {
+                if (is_object($value) && in_array($value::class, $this->whitelist)) {
+                    return $value;
+                }
+
                 return Wrapper::wrap($value);
             },
             array_merge($this->context, $values)
@@ -93,9 +98,9 @@ class TemplateContext
         );
 
         if (func_num_args() > 1) {
-            echo $template->render($context, $this->autoescape);
+            echo $template->render($context, $this->whitelist, $this->autoescape);
         } else {
-            echo $template->render($this->context, $this->autoescape);
+            echo $template->render($this->context, $this->whitelist, $this->autoescape);
         }
     }
 

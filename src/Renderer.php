@@ -17,12 +17,16 @@ use Traversable;
  */
 class Renderer implements RendererInterface
 {
-    /** @psalm-param DirsInput $dirs */
+    /**
+     * @psalm-param DirsInput $dirs
+     * @psalm-param list<class-string> $whitelist
+     */
     public function __construct(
         protected string|array $dirs,
         protected Factory $factory,
         protected bool $autoescape = true,
         protected array $defaults = [],
+        protected array $whitelist = [],
     ) {
     }
 
@@ -58,10 +62,10 @@ class Renderer implements RendererInterface
 
     public function response(mixed $data, mixed ...$args): Response
     {
-        $response = new Response($this->factory->response(
+        $response = Response::fromFactory($this->factory)->status(
             (int)($args['statusCode'] ?? 200),
             (string)($args['reasonPhrase'] ?? ''),
-        ), $this->factory);
+        );
 
         return $response
             ->header('Content-Type', (string)(($args['contentType'] ?? null) ?: 'text/html'))
@@ -71,6 +75,6 @@ class Renderer implements RendererInterface
     /** @psalm-param DirsInput $dirs */
     protected function createEngine(string|array $dirs): Engine
     {
-        return new Engine($dirs, defaults: $this->defaults);
+        return new Engine($dirs, $this->defaults, $this->whitelist, $this->autoescape);
     }
 }

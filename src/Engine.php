@@ -22,6 +22,7 @@ class Engine
     public function __construct(
         string|array $dirs,
         protected readonly array $defaults = [],
+        protected readonly array $whitelist = [],
         protected readonly bool $autoescape = true,
     ) {
         $this->dirs = $this->prepareDirs($dirs);
@@ -54,7 +55,7 @@ class Engine
 
         $template = $this->template($path);
 
-        return $template->render(array_merge($this->defaults, $context), $autoescape);
+        return $template->render(array_merge($this->defaults, $context), $this->whitelist, $autoescape);
     }
 
     /**

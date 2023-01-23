@@ -11,9 +11,10 @@ class LayoutContext extends TemplateContext
     public function __construct(
         Layout $template,
         array $context,
+        array $whitelist,
         bool $autoescape,
     ) {
-        parent::__construct($template, $context, $autoescape);
+        parent::__construct($template, $context, $whitelist, $autoescape);
         $this->layout = $template;
     }
 
