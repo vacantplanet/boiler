@@ -6,16 +6,18 @@ use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Error\RendererException;
 use Conia\Boiler\Renderer;
 use Conia\Boiler\Tests\TestCase;
+use Conia\Boiler\Tests\Whitelisted;
 use Conia\Chuck\Config;
 
 uses(TestCase::class);
 
-test('Template Renderer :: html (array of template dirs)', function () {
+test('Html (array of template dirs)', function () {
     $renderer = new Renderer(
-        $this->templates(),
         $this->factory(),
-        true,
+        $this->templates(),
         ['config' => new Config('boiler')],
+        [],
+        true,
     );
     $response = $renderer->response(['text' => 'numbers', 'arr' => [1, 2, 3]], 'renderer');
 
@@ -31,12 +33,13 @@ test('Template Renderer :: html (array of template dirs)', function () {
 });
 
 
-test('Template Renderer :: html (template dir as string)', function () {
+test('Html (template dir as string)', function () {
     $renderer = new Renderer(
-        TestCase::ROOT_DIR . '/default',
         $this->factory(),
-        true,
+        TestCase::ROOT_DIR . '/default',
         ['config' => new Config('boiler')],
+        [],
+        true,
     );
     $response = $renderer->response(['text' => 'numbers', 'arr' => [1, 2, 3]], 'renderer');
 
@@ -44,8 +47,22 @@ test('Template Renderer :: html (template dir as string)', function () {
 });
 
 
-test('Template Renderer :: change content-type (named parameter)', function () {
-    $renderer = new Renderer($this->templates(), $this->factory(), true, []);
+test('Whitelisting', function () {
+    $renderer = new Renderer(
+        $this->factory(),
+        TestCase::ROOT_DIR . '/default',
+        [],
+        [Whitelisted::class],
+        true,
+    );
+    $response = $renderer->response(['wl' => new Whitelisted(), 'content' => 'test'], 'whitelist');
+
+    expect((string)$response->getBody())->toBe('<h1>headline</h1><p>test</p>');
+});
+
+
+test('Change content-type (named parameter)', function () {
+    $renderer = new Renderer($this->factory(), $this->templates(), [], [], true);
     $response = $renderer->response([], 'plain', contentType: 'application/xhtml+xml');
 
     $hasContentType = false;
@@ -60,7 +77,7 @@ test('Template Renderer :: change content-type (named parameter)', function () {
 });
 
 
-test('Template Renderer :: iterator', function () {
+test('Iterator', function () {
     // Pass iterator
     $iter = function () {
         yield 'text' => 'characters';
@@ -68,10 +85,11 @@ test('Template Renderer :: iterator', function () {
         yield 'arr' => ['a', 'b', 'c'];
     };
     $renderer = new Renderer(
-        $this->templates(),
         $this->factory(),
-        true,
+        $this->templates(),
         ['config' => new Config('boiler')],
+        [],
+        true,
     );
     $response = $renderer->response($iter(), 'renderer');
 
@@ -79,23 +97,23 @@ test('Template Renderer :: iterator', function () {
 });
 
 
-test('Template Renderer :: template missing', function () {
-    (new Renderer($this->templates(), $this->factory()))->response([], 'missing');
+test('Template missing', function () {
+    (new Renderer($this->factory(), $this->templates()))->response([], 'missing');
 })->throws(LookupException::class);
 
 
-test('Template Renderer :: template dirs missing', function () {
-    (new Renderer([], $this->factory()))->response([], 'renderer');
+test('Template dirs missing', function () {
+    (new Renderer($this->factory(), []))->response([], 'renderer');
 })->throws(RendererException::class);
 
 
-test('Template Renderer :: wrong context', function () {
-    $renderer = new Renderer($this->templates(), $this->factory());
+test('Wrong context', function () {
+    $renderer = new Renderer($this->factory(), $this->templates());
     $renderer->response(new stdClass(), 'renderer');
 })->throws(RendererException::class);
 
 
-test('Template Renderer :: no template given', function () {
-    $renderer = new Renderer($this->templates(), $this->factory());
+test('No template given', function () {
+    $renderer = new Renderer($this->factory(), $this->templates());
     $renderer->response([]);
 })->throws(RendererException::class);

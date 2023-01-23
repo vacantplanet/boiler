@@ -22,11 +22,11 @@ class Renderer implements RendererInterface
      * @psalm-param list<class-string> $whitelist
      */
     public function __construct(
-        protected string|array $dirs,
         protected Factory $factory,
-        protected bool $autoescape = true,
+        protected string|array $dirs,
         protected array $defaults = [],
         protected array $whitelist = [],
+        protected bool $autoescape = true,
     ) {
     }
 

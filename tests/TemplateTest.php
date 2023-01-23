@@ -32,10 +32,13 @@ test('Whitelisting', function () {
     $path = $this->templates . 'whitelist.php';
     $template = new Template($path);
 
-    expect($this->fullTrim($template->render([
-        'wl' => new Whitelisted(),
-        'content' => 'test',
-    ], [Whitelisted::class])))->toBe('<h1>headline</h1><p>test</p>');
+    expect($this->fullTrim($template->render(
+        [
+            'wl' => new Whitelisted(),
+            'content' => 'test',
+        ],
+        [Whitelisted::class]
+    )))->toBe('<h1>headline</h1><p>test</p>');
 });
 
 
