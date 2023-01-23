@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Conia\Boiler\ArrayValue;
-use Conia\Boiler\Error\OutOfBoundsException;
-use Conia\Boiler\Error\RuntimeException;
-use Conia\Boiler\Error\UnexpectedValueException;
+use Conia\Boiler\Exception\OutOfBoundsException;
+use Conia\Boiler\Exception\RuntimeException;
+use Conia\Boiler\Exception\UnexpectedValueException;
 use Conia\Boiler\IteratorValue;
 use Conia\Boiler\Value;
 

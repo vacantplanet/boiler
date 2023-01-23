@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use Conia\Boiler\Error\RuntimeException;
+use Conia\Boiler\Exception\RuntimeException;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Throwable;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler\Error;
+namespace Conia\Boiler\Exception;
 
 class RendererException extends RuntimeException implements TemplateException
 {

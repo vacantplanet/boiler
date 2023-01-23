@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Error\RuntimeException;
+use Conia\Boiler\Exception\RuntimeException;
 use Conia\Boiler\Url;
 
 test('All segments', function () {

@@ -29,7 +29,7 @@ The only required parameter of the constructor is the path to a directory where 
 
     $engine = new \Conia\Boiler\Engine('/path/to/templates');
 
-If the directory does not exists, Boiler throws a `\Conia\Boiler\Error\DirectoryNotFound`
+If the directory does not exists, Boiler throws a `\Conia\Boiler\Exception\DirectoryNotFound`
 exception.
 
 ### Using multiple directories

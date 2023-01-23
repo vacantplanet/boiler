@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Boiler;
 
-use Conia\Boiler\Error\LookupException;
-use Conia\Boiler\Error\RuntimeException;
+use Conia\Boiler\Exception\LookupException;
+use Conia\Boiler\Exception\RuntimeException;
 use Throwable;
 
 /** @psalm-api */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Boiler;
 
 use Conia\Boiler\Engine;
-use Conia\Boiler\Error\RendererException;
+use Conia\Boiler\Exception\RendererException;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Renderer\Renderer as RendererInterface;
 use Conia\Chuck\Response;

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Error\LookupException;
-use Conia\Boiler\Error\RendererException;
+use Conia\Boiler\Exception\LookupException;
+use Conia\Boiler\Exception\RendererException;
 use Conia\Boiler\Renderer;
 use Conia\Boiler\Tests\TestCase;
 use Conia\Boiler\Tests\Whitelisted;

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Conia\Boiler\Engine;
-use Conia\Boiler\Error\LookupException;
-use Conia\Boiler\Error\UnexpectedValueException;
+use Conia\Boiler\Exception\LookupException;
+use Conia\Boiler\Exception\UnexpectedValueException;
 use Conia\Boiler\Tests\TestCase;
 use Conia\Boiler\Value;
 

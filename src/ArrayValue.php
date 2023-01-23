@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Conia\Boiler;
 
 use ArrayAccess;
-use Conia\Boiler\Error\OutOfBoundsException;
-use Conia\Boiler\Error\RuntimeException;
-use Conia\Boiler\Error\UnexpectedValueException;
+use Conia\Boiler\Exception\OutOfBoundsException;
+use Conia\Boiler\Exception\RuntimeException;
+use Conia\Boiler\Exception\UnexpectedValueException;
 use Countable;
 use Iterator;
 
