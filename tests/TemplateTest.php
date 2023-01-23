@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Conia\Boiler\Error\LookupException;
 use Conia\Boiler\Template;
 use Conia\Boiler\Tests\TestCase;
+use Conia\Boiler\Tests\WhitelistBase;
 use Conia\Boiler\Tests\Whitelisted;
 use Conia\Boiler\Value;
 
@@ -38,6 +39,20 @@ test('Whitelisting', function () {
             'content' => 'test',
         ],
         [Whitelisted::class]
+    )))->toBe('<h1>headline</h1><p>test</p>');
+});
+
+
+test('Whitelisting with base class', function () {
+    $path = $this->templates . 'whitelist.php';
+    $template = new Template($path);
+
+    expect($this->fullTrim($template->render(
+        [
+            'wl' => new Whitelisted(),
+            'content' => 'test',
+        ],
+        [WhitelistBase::class]
     )))->toBe('<h1>headline</h1><p>test</p>');
 });
 

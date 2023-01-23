@@ -8,6 +8,7 @@ class LayoutContext extends TemplateContext
 {
     protected Layout $layout;
 
+    /** @psalm-param list<class-string> $whitelist */
     public function __construct(
         Layout $template,
         array $context,

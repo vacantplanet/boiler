@@ -47,6 +47,9 @@ class Template
         }
     }
 
+    /**
+     * @psalm-param list<class-string> $whitelist
+     */
     public function render(array $context = [], array $whitelist = [], bool $autoescape = true): string
     {
         $content = $this->getContent($context, $whitelist, $autoescape);
@@ -90,11 +93,13 @@ class Template
         $this->customMethods = $customMethods;
     }
 
+    /** @psalm-param list<class-string> $whitelist */
     protected function templateContext(array $context, array $whitelist, bool $autoescape): TemplateContext
     {
         return new TemplateContext($this, $context, $whitelist, $autoescape);
     }
 
+    /** @psalm-param list<class-string> $whitelist */
     protected function getContent(array $context, array $whitelist, bool $autoescape): string
     {
         $templateContext = $this->templateContext($context, $whitelist, $autoescape);
@@ -133,6 +138,7 @@ class Template
         }
     }
 
+    /** @psalm-param list<class-string> $whitelist */
     protected function renderLayouts(
         Template $template,
         array $context,

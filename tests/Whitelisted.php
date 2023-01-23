@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Boiler\Tests;
 
-class Whitelisted
+class Whitelisted extends WhitelistBase
 {
     public function __toString(): string
     {

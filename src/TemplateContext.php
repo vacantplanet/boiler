@@ -11,6 +11,9 @@ class TemplateContext
     private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
     private const ESCAPE_ENCODING = 'UTF-8';
 
+    /**
+     * @psalm-param list<class-string> $whitelist
+     */
     public function __construct(
         protected readonly Template $template,
         public readonly array $context,
@@ -30,8 +33,15 @@ class TemplateContext
     {
         return array_map(
             function ($value): mixed {
-                if (is_object($value) && in_array($value::class, $this->whitelist)) {
-                    return $value;
+                if (is_object($value)) {
+                    foreach ($this->whitelist as $whitelisted) {
+                        if (
+                            $value::class === $whitelisted
+                            || is_subclass_of($value::class, $whitelisted)
+                        ) {
+                            return $value;
+                        }
+                    }
                 }
 
                 return Wrapper::wrap($value);
