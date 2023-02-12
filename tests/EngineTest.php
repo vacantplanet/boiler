@@ -10,16 +10,13 @@ use Conia\Boiler\Value;
 
 uses(TestCase::class);
 
-
 test('Directory does not exist I', function () {
     new Engine('./doesnotexist');
 })->throws(LookupException::class, 'doesnotexist');
 
-
 test('Directory does not exist II', function () {
     new Engine([TestCase::DEFAULT_DIR, './doesnotexist']);
 })->throws(LookupException::class, 'doesnotexist');
-
 
 test('Simple rendering', function () {
     $engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
@@ -29,6 +26,19 @@ test('Simple rendering', function () {
     )->toBe('<h1>boiler</h1><p>rocks</p>');
 });
 
+test('Simple scalar value rendering', function () {
+    $engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
+
+    expect(
+        $this->fullTrim($engine->render('scalar', [
+            'int' => 13,
+            'float' => 13.73,
+            'null' => null,
+            'bool' => true,
+            'string' => '<script></script>',
+        ]))
+    )->toBe('<p>13</p><p>1</p><p>13.73</p><p></p><p>&lt;script&gt;&lt;/script&gt;</p>');
+});
 
 test('Simple rendering (namespaced)', function () {
     $engine = new Engine($this->namespaced(), ['obj' => $this->obj()]);
@@ -38,13 +48,11 @@ test('Simple rendering (namespaced)', function () {
     )->toBe('<h1>boiler</h1><p>rocks</p>');
 });
 
-
 test('Extension given', function () {
     $engine = new Engine(self::DEFAULT_DIR, ['obj' => $this->obj()]);
 
     expect($this->fullTrim($engine->render('extension.tpl')))->toBe('<p></p>');
 });
-
 
 test('Unwrap rendering', function () {
     $engine = new Engine(self::DEFAULT_DIR);
@@ -54,7 +62,6 @@ test('Unwrap rendering', function () {
     ]))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>');
 });
 
-
 test('Switch off autoescaping by default', function () {
     $engine = new Engine(self::DEFAULT_DIR, autoescape: false);
 
@@ -62,7 +69,6 @@ test('Switch off autoescaping by default', function () {
         'html' => '<b>noautoescape</b>',
     ]))->toBe('<b>noautoescape</b>');
 });
-
 
 test('Switch off autoescaping when calling render', function () {
     $engine = new Engine(self::DEFAULT_DIR, autoescape: true);
@@ -73,7 +79,6 @@ test('Switch off autoescaping when calling render', function () {
         autoescape: false,
     ))->toBe('<b>nodefaultautoescape</b>');
 });
-
 
 test('Unwrap rendering with Stringable', function () {
     $engine = new Engine($this->templates());
@@ -87,7 +92,6 @@ test('Unwrap rendering with Stringable', function () {
         },
     ]))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>');
 });
-
 
 test('Rendering with Stringable', function () {
     $engine = new Engine($this->templates());
@@ -110,7 +114,6 @@ test('Rendering with Stringable', function () {
     ])))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>testmantasmantas');
 });
 
-
 test('Clean rendering', function () {
     $engine = new Engine($this->templates());
 
@@ -118,7 +121,6 @@ test('Clean rendering', function () {
         'html' => '<script src="/evil.js"></script><b>boiler</b>',
     ]))->toBe('<b>boiler</b>');
 });
-
 
 test('Array rendering', function () {
     $engine = new Engine($this->templates());
@@ -128,7 +130,6 @@ test('Array rendering', function () {
     ])))->toBe('&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;');
 });
 
-
 test('Helper function rendering', function () {
     $engine = new Engine($this->templates(), ['obj' => $this->obj()]);
 
@@ -136,7 +137,6 @@ test('Helper function rendering', function () {
         '&lt;script&gt;&lt;script&gt;<b>clean</b>'
     );
 });
-
 
 test('Empty helper method', function () {
     $engine = new Engine($this->templates());
@@ -147,7 +147,6 @@ test('Empty helper method', function () {
     ])))->toBe('&lt;b&gt;not empty&lt;/b&gt;');
 });
 
-
 test('Escape already wrapped Value', function () {
     $engine = new Engine($this->templates());
 
@@ -157,7 +156,6 @@ test('Escape already wrapped Value', function () {
         '<p>&lt;b&gt;wrapped&lt;/b&gt;</p>'
     );
 });
-
 
 test('Iterator rendering', function () {
     $engine = new Engine($this->templates());
@@ -173,7 +171,6 @@ test('Iterator rendering', function () {
         'arr' => $iter(),
     ])))->toBe('&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;b&gt;4&lt;/b&gt;');
 });
-
 
 test('Complex nested rendering', function () {
     $engine = new Engine(
@@ -215,7 +212,6 @@ test('Complex nested rendering', function () {
     expect($result)->toBe($compare);
 });
 
-
 test('Single layout', function () {
     $engine = new Engine($this->templates());
 
@@ -224,20 +220,17 @@ test('Single layout', function () {
     ])))->toBe('<body><p>boiler</p><p>boiler</p></body>');
 });
 
-
 test('Non-existent layout without extension', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nonexistentlayout');
 })->throws(LookupException::class, 'doesnotexist');
 
-
 test('Non-existent layout with extension', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nonexistentlayoutext');
 })->throws(LookupException::class, 'doesnotexist');
-
 
 test('Stacked layout', function () {
     $engine = new Engine($this->templates());
@@ -250,11 +243,9 @@ test('Stacked layout', function () {
     );
 });
 
-
 test('Multilple layouts error', function () {
     (new Engine($this->templates()))->render('multilayout');
 })->throws(RuntimeException::class, 'layout already set');
-
 
 test('Section rendering', function () {
     $engine = new Engine($this->templates());
@@ -263,7 +254,6 @@ test('Section rendering', function () {
         'text' => 'boiler',
     ])))->toBe('<div><p>boiler</p>boiler</div><ul><li>boiler</li></ul>');
 });
-
 
 test('Append/prepend sections', function () {
     $engine = new Engine($this->templates());
@@ -277,20 +267,17 @@ test('Append/prepend sections', function () {
     );
 });
 
-
 test('Nested sections error', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('nestedsections');
 })->throws(LogicException::class);
 
-
 test('Closing unopened section error', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('closeunopened');
 })->throws(LogicException::class);
-
 
 test('Missing section rendering', function () {
     $engine = new Engine($this->templates());
@@ -300,7 +287,6 @@ test('Missing section rendering', function () {
     ])))->toBe('<div><p>boiler</p>boiler</div><p>no list</p>');
 });
 
-
 test('Insert rendering', function () {
     $engine = new Engine($this->templates());
 
@@ -309,7 +295,6 @@ test('Insert rendering', function () {
     ])))->toBe('<p>Boiler</p><p>Templates</p>');
 });
 
-
 test('Template in sub directory', function () {
     $engine = new Engine($this->templates());
 
@@ -317,7 +302,6 @@ test('Template in sub directory', function () {
         'text' => 'Boiler',
     ])))->toBe('<h2>Boiler</h2>');
 });
-
 
 test('Additional template directories', function () {
     $engine = new Engine(
@@ -333,7 +317,6 @@ test('Additional template directories', function () {
     ])))->toBe('<span>Additional</span>');
 });
 
-
 test('Additional template directories namespaced', function () {
     $engine = new Engine($this->namespaced($this->additional()));
 
@@ -344,7 +327,6 @@ test('Additional template directories namespaced', function () {
         'text' => 'Additional',
     ])))->toBe('<span>Additional</span>');
 });
-
 
 test('Additional template directories shadowing', function () {
     $engine = new Engine($this->namespaced());
@@ -366,7 +348,6 @@ test('Additional template directories shadowing', function () {
     ])))->toBe('<h1>Sub Boiler</h1>');
 });
 
-
 test('Exists helper', function () {
     $engine = new Engine($this->templates());
 
@@ -374,13 +355,11 @@ test('Exists helper', function () {
     expect($engine->exists('wrongindex'))->toBe(false);
 });
 
-
 test('Config error :: wrong template format I', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('default:sub:index');
 })->throws(LookupException::class, 'Invalid template format');
-
 
 test('Config error :: wrong template format II', function () {
     $engine = new Engine($this->templates());
@@ -388,14 +367,11 @@ test('Config error :: wrong template format II', function () {
     $engine->render(':default.php');
 })->throws(LookupException::class, 'Invalid template format');
 
-
 test('Config error :: wrong template format III', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('default.php:');
 })->throws(LookupException::class, 'Invalid template format');
-
-
 
 test('Config error :: wrong template format IV', function () {
     $engine = new Engine($this->templates());
@@ -403,13 +379,11 @@ test('Config error :: wrong template format IV', function () {
     $engine->render('');
 })->throws(UnexpectedValueException::class, 'invalid or empty');
 
-
 test('Config error :: wrong template format V', function () {
     $engine = new Engine($this->templates());
 
     $engine->render("\0");
 })->throws(UnexpectedValueException::class, 'invalid or empty');
-
 
 test('Render error :: missing template', function () {
     $engine = new Engine($this->templates());
@@ -417,13 +391,11 @@ test('Render error :: missing template', function () {
     $engine->render('nonexistent');
 })->throws(LookupException::class, 'not found');
 
-
 test('Render error :: template outside root directory I', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('.././../.././../etc/passwd');
 })->throws(LookupException::class, 'not found');
-
 
 test('Render error :: template outside root directory II', function () {
     $engine = new Engine($this->templates());
@@ -431,13 +403,11 @@ test('Render error :: template outside root directory II', function () {
     $engine->render('../unreachable');
 })->throws(LookupException::class, 'outside');
 
-
 test('Render error :: parse error', function () {
     $engine = new Engine($this->templates());
 
     $engine->render('failing');
 })->throws(ParseError::class);
-
 
 test('Custom template method', function () {
     $engine = new Engine($this->templates());
@@ -449,7 +419,6 @@ test('Custom template method', function () {
         'text' => 'Boiler',
     ])))->toBe('<h2>BOILER</h2>');
 });
-
 
 test('Unknown custom method', function () {
     $engine = new Engine($this->templates());
