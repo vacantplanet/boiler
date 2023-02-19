@@ -1,1 +1,2 @@
-<p><?php echo $text; ?></p>
+<p><?= $text ?></p>
+<p><?= $int ?></p>

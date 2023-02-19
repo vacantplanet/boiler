@@ -9,11 +9,17 @@ test('Value::unwrap', function () {
     expect((new Value('<b>boiler</b>'))->unwrap())->toBe('<b>boiler</b>');
 });
 
+test('Value::strip', function () {
+    expect((new Value('<b>boiler<br>plate</b>'))->strip('<br>'))->toBe('boiler<br>plate');
+    expect((new Value('<b>boiler<br>plate</b>'))->strip(['br']))->toBe('boiler<br>plate');
+    expect((new Value('<b>boiler<br>plate</b>'))->strip(['<br>']))->toBe('boiler<br>plate');
+    expect((new Value('<b>boiler<br>plate</b>'))->strip(null))->toBe('boilerplate');
+    expect((new Value('<b>boiler<br>plate</b>'))->strip())->toBe('boilerplate');
+});
 
 test('Value::clean', function () {
     expect((new Value('<b onclick="function()">boiler</b>'))->clean())->toBe('<b>boiler</b>');
 });
-
 
 test('Value::empty', function () {
     expect((new Value(''))->empty())->toBe(true);
@@ -21,14 +27,12 @@ test('Value::empty', function () {
     expect((new Value(null))->empty())->toBe(true);
 });
 
-
 test('String', function () {
     $html = '<b onclick="func()">boiler</b>';
     $value = new Value($html);
 
     expect((string)$value)->toBe('&lt;b onclick=&quot;func()&quot;&gt;boiler&lt;/b&gt;');
 });
-
 
 test('Stringable', function () {
     $stringable = new class () {
@@ -56,7 +60,6 @@ test('Stringable', function () {
     expect((string)$value->testMethod())->toBe('boilerboiler');
 });
 
-
 test('Object :: valid', function () {
     $object = new class () {
         public function __invoke(string $s): string
@@ -76,7 +79,6 @@ test('Object :: valid', function () {
     expect((string)$value('test'))->toBe('&lt;i&gt;test&lt;/i&gt;');
 });
 
-
 test('Object :: not invokable', function () {
     $object = new class () {
     };
@@ -84,7 +86,6 @@ test('Object :: not invokable', function () {
 
     $value();
 })->throws(RuntimeException::class, 'No such method');
-
 
 test('Closure', function () {
     $closure = function (): string {
@@ -96,12 +97,10 @@ test('Closure', function () {
     expect($value()->clean())->toBe('<b>boiler</b>');
 });
 
-
 test('Getter throws I', function () {
     $value = new Value('test');
     $value->test;
 })->throws(RuntimeException::class, 'No such property');
-
 
 test('Getter throws II', function () {
     $obj = new class () {
@@ -110,12 +109,10 @@ test('Getter throws II', function () {
     $value->test;
 })->throws(RuntimeException::class, 'No such property');
 
-
 test('Setter throws I', function () {
     $value = new Value('test');
     $value->test = null;
 })->throws(RuntimeException::class, 'No such property');
-
 
 test('Setter throws II', function () {
     $obj = new class () {
@@ -129,7 +126,6 @@ test('Setter throws II', function () {
     $value = new Value($obj);
     $value->test = null;
 })->throws(RuntimeException::class, 'No such property');
-
 
 test('Method call throws', function () {
     $value = new Value('test');
