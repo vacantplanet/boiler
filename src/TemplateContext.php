@@ -33,31 +33,16 @@ class TemplateContext
     public function context(array $values = []): array
     {
         return array_map(
-            function ($value): mixed {
-                if ($value instanceof ValueInterface) {
-                    return $value;
-                }
-
-                if (is_object($value)) {
-                    foreach ($this->whitelist as $whitelisted) {
-                        if (
-                            $value::class === $whitelisted
-                            || is_subclass_of($value::class, $whitelisted)
-                        ) {
-                            return $value;
-                        }
-                    }
-                }
-
-                return Wrapper::wrap($value);
-            },
+            [$this, 'wrapIf'],
             array_merge($this->context, $values)
         );
     }
 
-    public function add(string $key, mixed $value): void
+    public function add(string $key, mixed $value): mixed
     {
         $this->context[$key] = $value;
+
+        return $this->wrapIf($value);
     }
 
     public function e(
@@ -152,5 +137,25 @@ class TemplateContext
     public function has(string $name): bool
     {
         return $this->template->sections->has($name);
+    }
+
+    protected function wrapIf(mixed $value): mixed
+    {
+        if ($value instanceof ValueInterface) {
+            return $value;
+        }
+
+        if (is_object($value)) {
+            foreach ($this->whitelist as $whitelisted) {
+                if (
+                    $value::class === $whitelisted
+                    || is_subclass_of($value::class, $whitelisted)
+                ) {
+                    return $value;
+                }
+            }
+        }
+
+        return Wrapper::wrap($value);
     }
 }

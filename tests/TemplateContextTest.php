@@ -31,11 +31,13 @@ test('Get context', function () {
 
 test('Adding to context', function () {
     $tmplContext = new TemplateContext($this->template, ['value1' => 'Value 1'], [], true);
-    $tmplContext->add('value2', '<i>Value 2</i>');
+    $value2 = $tmplContext->add('value2', '<i>Value 2</i>');
     $context = $tmplContext->context();
 
     expect($context['value1'])->toBeInstanceOf(Value::class);
     expect((string)$context['value1'])->toBe('Value 1');
     expect($context['value2'])->toBeInstanceOf(Value::class);
     expect((string)$context['value2'])->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
+    expect($value2)->toBeInstanceOf(Value::class);
+    expect((string)$value2)->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
 });
