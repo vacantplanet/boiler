@@ -17,7 +17,7 @@ class TemplateContext
      */
     public function __construct(
         protected readonly Template $template,
-        public readonly array $context,
+        public array $context,
         public readonly array $whitelist,
         public readonly bool $autoescape,
     ) {
@@ -57,6 +57,11 @@ class TemplateContext
             },
             array_merge($this->context, $values)
         );
+    }
+
+    public function add(string $key, mixed $value): void
+    {
+        $this->context[$key] = $value;
     }
 
     public function e(
