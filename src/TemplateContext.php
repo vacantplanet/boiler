@@ -49,14 +49,6 @@ class TemplateContext
                     }
                 }
 
-                if (is_scalar($value) && !is_string($value)) {
-                    return $value;
-                }
-
-                if (is_null($value)) {
-                    return null;
-                }
-
                 return Wrapper::wrap($value);
             },
             array_merge($this->context, $values)

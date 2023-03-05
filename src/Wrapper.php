@@ -10,14 +10,14 @@ class Wrapper
 {
     public static function wrap(mixed $value): mixed
     {
+        if (is_scalar($value) && !is_string($value)) {
+            return $value;
+        }
         if (is_string($value)) {
             return new Value($value);
         }
         if ($value instanceof ValueInterface) {
             // Don't wrap already wrapped values again
-            return $value;
-        }
-        if (is_numeric($value)) {
             return $value;
         }
         if (is_array($value)) {
@@ -27,7 +27,7 @@ class Wrapper
             return new IteratorValue($value);
         }
         if (is_null($value)) {
-            return $value;
+            return null;
         }
 
         return new Value($value);
