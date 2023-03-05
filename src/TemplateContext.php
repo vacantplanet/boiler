@@ -34,6 +34,10 @@ class TemplateContext
     {
         return array_map(
             function ($value): mixed {
+                if ($value instanceof ValueInterface) {
+                    return $value;
+                }
+
                 if (is_object($value)) {
                     foreach ($this->whitelist as $whitelisted) {
                         if (

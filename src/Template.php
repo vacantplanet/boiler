@@ -56,11 +56,17 @@ class Template
         $content = $this->getContent($context, $whitelist, $autoescape);
 
         if ($this instanceof Layout) {
-            return $content;
+            return $content->content;
         }
 
         try {
-            return $this->renderLayouts($this, $context, $whitelist, $content, $autoescape);
+            return $this->renderLayouts(
+                $this,
+                $content->templateContext,
+                $whitelist,
+                $content->content,
+                $autoescape
+            );
         } catch (LookupException $e) {
             throw $e;
         } catch (Throwable $e) {
@@ -101,7 +107,7 @@ class Template
     }
 
     /** @psalm-param list<class-string> $whitelist */
-    protected function getContent(array $context, array $whitelist, bool $autoescape): string
+    protected function getContent(array $context, array $whitelist, bool $autoescape): Content
     {
         $templateContext = $this->templateContext($context, $whitelist, $autoescape);
 
@@ -129,7 +135,9 @@ class Template
                     $context
             );
 
-            return ob_get_clean();
+            $content = ob_get_clean();
+
+            return new Content($content, $templateContext);
         } catch (Throwable $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
@@ -142,7 +150,7 @@ class Template
     /** @psalm-param list<class-string> $whitelist */
     protected function renderLayouts(
         Template $template,
-        array $context,
+        TemplateContext $context,
         array $whitelist,
         string $content,
         bool $autoescape
@@ -156,7 +164,7 @@ class Template
                 $template->engine,
             );
 
-            $content = $template->render($layout->context ?: $context, $whitelist, $autoescape);
+            $content = $template->render($layout->context ?: $context->context, $whitelist, $autoescape);
         }
 
         return $content;
