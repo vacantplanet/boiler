@@ -255,7 +255,15 @@ test('Section rendering', function () {
     ])))->toBe('<div><p>boiler</p>boiler</div><ul><li>boiler</li></ul>');
 });
 
-test('Append/prepend sections', function () {
+test('Render section with default value', function () {
+    $engine = new Engine($this->templates());
+
+    expect(
+        $this->fullTrim($engine->render('addsectiondefault', []))
+    )->toBe('<p>default value</p>');
+});
+
+test('Append/prepend to section', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('appendprepend', [
@@ -265,6 +273,14 @@ test('Append/prepend sections', function () {
             '<script src="/assign.js"></script>' .
             '<script src="/append.js"></script>'
     );
+});
+
+test('Append/prepend to section with default value and order', function () {
+    $engine = new Engine($this->templates());
+
+    expect($this->fullTrim($engine->render('appendprependdefault', [
+        'path' => '/assign.js',
+    ])))->toBe('<prepend-first><prepend><default><append><append-last>');
 });
 
 test('Nested sections error', function () {

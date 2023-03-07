@@ -8,8 +8,9 @@ use Conia\Boiler\Exception\LogicException;
 
 class Sections
 {
-    /** @var array<string, string> */
+    /** @var array<string, Section> */
     protected array $sections = [];
+
     protected array $capture = [];
     protected SectionMode $sectionMode = SectionMode::Closed;
 
@@ -34,9 +35,9 @@ class Sections
         $name = (string)array_pop($this->capture);
 
         $this->sections[$name] = match ($this->sectionMode) {
-            SectionMode::Assign => $content,
-            SectionMode::Append => ($this->sections[$name] ?? '') . $content,
-            SectionMode::Prepend => $content . ($this->sections[$name] ?? ''),
+            SectionMode::Assign => new Section($content),
+            SectionMode::Append => ($this->sections[$name] ?? new Section(''))->append($content),
+            SectionMode::Prepend => ($this->sections[$name] ?? new Section(''))->prepend($content),
             SectionMode::Closed => throw new LogicException('No section started'),
         };
 
@@ -45,7 +46,22 @@ class Sections
 
     public function get(string $name): string
     {
-        return $this->sections[$name];
+        return $this->sections[$name]->get();
+    }
+
+    public function getOr(string $name, string $default): string
+    {
+        $section = $this->sections[$name] ?? null;
+
+        if (is_null($section)) {
+            return $default;
+        }
+
+        if ($section->empty()) {
+            $section->setValue($default);
+        }
+
+        return $section->get();
     }
 
     public function has(string $name): bool

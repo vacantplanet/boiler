@@ -129,8 +129,12 @@ class TemplateContext
         $this->template->sections->end();
     }
 
-    public function section(string $name): string
+    public function section(string $name, string $default = ''): string
     {
+        if (func_num_args() > 1) {
+            return $this->template->sections->getOr($name, $default);
+        }
+
         return $this->template->sections->get($name);
     }
 
