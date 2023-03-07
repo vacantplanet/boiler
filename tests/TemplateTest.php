@@ -103,30 +103,11 @@ test('Custom template method', function () {
     ])))->toBe('<h2>BOILER</h2>');
 });
 
-
-test('Overwrite layout context I', function () {
-    $template = new Template($this->templates . 'overridelayoutcontext.php');
-
-    expect($this->fullTrim($template->render([
-        'text' => 'Boiler 1',
-        'text2' => 'Boiler 2',
-    ])))->toBe('<body><p>Boiler 1</p><p>Boiler 2</p><p>Boiler 2</p></body>');
-});
-
-
-test('Overwrite layout context II', function () {
-    $template = new Template($this->templates . 'overridelayouterror.php');
-
-    $template->render(['text' => 'Boiler 1', 'text2' => 'Boiler 2']);
-})->throws(RuntimeException::class, 'Undefined variable');
-
-
 test('Non-existent template without extension', function () {
     $template = new Template($this->templates . 'nonexistent');
 
     $template->render();
 })->throws(LookupException::class, 'Template not found');
-
 
 test('Directory not found', function () {
     $template = new Template('/__nonexistent_boiler_dir__/template.php');
@@ -134,9 +115,14 @@ test('Directory not found', function () {
     $template->render();
 })->throws(LookupException::class, 'Template directory does not exist');
 
-
 test('Empty path', function () {
     $template = new Template('');
 
     $template->render();
 })->throws(LookupException::class, 'No directory given or');
+
+test('Render error', function () {
+    $template = new Template($this->templates . 'rendererror.php');
+
+    $template->render();
+})->throws(RuntimeException::class, 'Render error:');

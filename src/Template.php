@@ -6,6 +6,7 @@ namespace Conia\Boiler;
 
 use Conia\Boiler\Exception\LookupException;
 use Conia\Boiler\Exception\RuntimeException;
+use ErrorException;
 use Throwable;
 
 /** @psalm-api */
@@ -59,19 +60,13 @@ class Template
             return $content->content;
         }
 
-        try {
-            return $this->renderLayouts(
-                $this,
-                $content->templateContext,
-                $whitelist,
-                $content->content,
-                $autoescape
-            );
-        } catch (LookupException $e) {
-            throw $e;
-        } catch (Throwable $e) {
-            throw new RuntimeException('Render error: ' . $e->getMessage(), 0, $e);
-        }
+        return $this->renderLayouts(
+            $this,
+            $content->templateContext,
+            $whitelist,
+            $content->content,
+            $autoescape
+        );
     }
 
     /**
@@ -138,12 +133,14 @@ class Template
             $content = ob_get_clean();
 
             return new Content($content, $templateContext);
+        } catch (ErrorException $e) {
+            throw new RuntimeException('Render error: ' . $e->getMessage());
         } catch (Throwable $e) {
+            throw $e;
+        } finally {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
-
-            throw $e;
         }
     }
 
