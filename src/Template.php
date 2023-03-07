@@ -161,7 +161,11 @@ class Template
                 $template->engine,
             );
 
-            $content = $template->render($layout->context ?: $context->context, $whitelist, $autoescape);
+            $layoutContext = $layout->context
+                ? array_merge($context->context, $layout->context)
+                : $context->context;
+
+            $content = $template->render($layoutContext, $whitelist, $autoescape);
         }
 
         return $content;
