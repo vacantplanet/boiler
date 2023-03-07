@@ -293,7 +293,7 @@ test('Insert rendering', function () {
     expect($this->fullTrim($engine->render('insert', [
         'text' => 'Boiler',
         'int' => 73,
-    ])))->toBe('<p>Boiler</p><p>73</p><p>Templates</p><p>13</p>');
+    ])))->toBe('<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p>Overwrite</p><p>13</p>');
 });
 
 test('Template in sub directory', function () {

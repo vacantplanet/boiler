@@ -17,7 +17,7 @@ class TemplateContext
      */
     public function __construct(
         protected readonly Template $template,
-        public array $context,
+        protected array $context,
         public readonly array $whitelist,
         public readonly bool $autoescape,
     ) {
@@ -42,7 +42,7 @@ class TemplateContext
     {
         $this->context[$key] = $value;
 
-        return $this->wrapIf($value);
+        return Wrapper::wrap($value);
     }
 
     public function e(
@@ -102,11 +102,11 @@ class TemplateContext
             engine: $this->template->engine,
         );
 
-        if (func_num_args() > 1) {
-            echo $template->render($context, $this->whitelist, $this->autoescape);
-        } else {
-            echo $template->render($this->context, $this->whitelist, $this->autoescape);
-        }
+        echo $template->render(
+            $this->context($context),
+            $this->whitelist,
+            $this->autoescape
+        );
     }
 
     public function begin(string $name): void
