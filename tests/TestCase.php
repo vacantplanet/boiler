@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Boiler\Tests;
 
-use Conia\Chuck\Psr\Nyholm;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
@@ -36,11 +35,6 @@ class TestCase extends BaseTestCase
                 )
             )
         );
-    }
-
-    public function factory(): Nyholm
-    {
-        return new Nyholm();
     }
 
     public function templates(array $templates = []): array
