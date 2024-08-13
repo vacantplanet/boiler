@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Exception\RuntimeException;
-use Conia\Boiler\Url;
+use VacantPlanet\Boiler\Exception\RuntimeException;
+use VacantPlanet\Boiler\Url;
 
 test('All segments', function () {
     $url = Url::clean(

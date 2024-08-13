@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler\Tests;
+namespace VacantPlanet\Boiler\Tests;
 
 class WhitelistBase
 {

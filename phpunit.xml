@@ -3,7 +3,7 @@
          xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          colors="true">
     <testsuites>
-        <testsuite name="Conia\Boiler Test Suite">
+        <testsuite name="VacantPlanet\Boiler Test Suite">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>

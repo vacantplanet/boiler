@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Template;
-use Conia\Boiler\TemplateContext;
-use Conia\Boiler\Tests\TestCase;
-use Conia\Boiler\Value;
+use VacantPlanet\Boiler\Template;
+use VacantPlanet\Boiler\TemplateContext;
+use VacantPlanet\Boiler\Tests\TestCase;
+use VacantPlanet\Boiler\Value;
 
 uses(TestCase::class);
 

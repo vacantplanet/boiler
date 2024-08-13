@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Sanitizer;
+use VacantPlanet\Boiler\Sanitizer;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 const MALFORMED = '

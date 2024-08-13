@@ -5,7 +5,7 @@ Displaying Values
 =================
 
 
-If you pass a value of type `Conia\Boiler\Value` to `e`/`escape` it will automatically
+If you pass a value of type `VacantPlanet\Boiler\Value` to `e`/`escape` it will automatically
 be unwrapped before it is passed to {{php('htmlspecialchars')}}.
 
 ## Changing the arguments passed to {{php('htmlspecialchars')}}

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Exception\LookupException;
-use Conia\Boiler\Template;
-use Conia\Boiler\Tests\TestCase;
-use Conia\Boiler\Tests\WhitelistBase;
-use Conia\Boiler\Tests\Whitelisted;
-use Conia\Boiler\Value;
+use VacantPlanet\Boiler\Exception\LookupException;
+use VacantPlanet\Boiler\Template;
+use VacantPlanet\Boiler\Tests\TestCase;
+use VacantPlanet\Boiler\Tests\WhitelistBase;
+use VacantPlanet\Boiler\Tests\Whitelisted;
+use VacantPlanet\Boiler\Value;
 
 uses(TestCase::class);
 

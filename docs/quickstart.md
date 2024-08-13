@@ -7,7 +7,7 @@ Quick Start
 Install Boiler via Composer:
 
 ```shell
-composer require conia/boiler
+composer require vacantplanet/boiler
 ```
 
 Then create a directory where your PHP templates reside. 
@@ -26,7 +26,7 @@ path
 Now create a `Engine` instance and render the template:
 
 ```php
-use Conia\Boiler\Engine;
+use VacantPlanet\Boiler\Engine;
 
 $engine = new Engine('/path/to/templates');
 $html = $engine->render('page', ['id' => 13]);

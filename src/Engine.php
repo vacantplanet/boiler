@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler;
+namespace VacantPlanet\Boiler;
 
-use Conia\Boiler\Exception\LookupException;
-use Conia\Boiler\Exception\UnexpectedValueException;
+use VacantPlanet\Boiler\Exception\LookupException;
+use VacantPlanet\Boiler\Exception\UnexpectedValueException;
 
 /**
  * @psalm-api

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler\Exception;
+namespace VacantPlanet\Boiler\Exception;
 
 class OutOfBoundsException extends \OutOfBoundsException implements TemplateException
 {

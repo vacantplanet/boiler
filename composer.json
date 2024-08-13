@@ -1,5 +1,5 @@
 {
-    "name": "conia/boiler",
+    "name": "vacantplanet/boiler",
     "description": "A PHP template engine that doesn't require you to learn a new syntax",
     "type": "library",
     "minimum-stability": "dev",
@@ -8,24 +8,24 @@
     "authors": [
         {
             "name": "ebene fünf GmbH",
-            "email": "conia@ebenefuenf.de",
+            "email": "vacantplanet@ebenefuenf.de",
             "role": "Developer"
         }
     ],
-    "homepage": "https://conia.dev/boiler",
+    "homepage": "https://vacantplanet.dev/boiler",
     "keywords": [
-        "conia",
+        "vacantplanet",
         "templating",
         "templates"
     ],
     "autoload": {
         "psr-4": {
-            "Conia\\Boiler\\": "src/"
+            "VacantPlanet\\Boiler\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Conia\\Boiler\\Tests\\": "tests"
+            "VacantPlanet\\Boiler\\Tests\\": "tests"
         }
     },
     "require": {

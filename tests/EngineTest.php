@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Engine;
-use Conia\Boiler\Exception\LookupException;
-use Conia\Boiler\Exception\UnexpectedValueException;
-use Conia\Boiler\Tests\TestCase;
-use Conia\Boiler\Value;
+use VacantPlanet\Boiler\Engine;
+use VacantPlanet\Boiler\Exception\LookupException;
+use VacantPlanet\Boiler\Exception\UnexpectedValueException;
+use VacantPlanet\Boiler\Tests\TestCase;
+use VacantPlanet\Boiler\Value;
 
 uses(TestCase::class);
 

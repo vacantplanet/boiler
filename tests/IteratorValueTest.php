@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\ArrayValue;
-use Conia\Boiler\IteratorValue;
-use Conia\Boiler\Value;
+use VacantPlanet\Boiler\ArrayValue;
+use VacantPlanet\Boiler\IteratorValue;
+use VacantPlanet\Boiler\Value;
 
 test('Wrapping', function () {
     $iterator = (function () {

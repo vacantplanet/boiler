@@ -27,16 +27,16 @@ feature.
 
 The only required parameter of the constructor is the path to a directory where your templates reside:
 
-    $engine = new \Conia\Boiler\Engine('/path/to/templates');
+    $engine = new \VacantPlanet\Boiler\Engine('/path/to/templates');
 
-If the directory does not exists, Boiler throws a `\Conia\Boiler\Exception\DirectoryNotFound`
+If the directory does not exists, Boiler throws a `\VacantPlanet\Boiler\Exception\DirectoryNotFound`
 exception.
 
 ### Using multiple directories
 
 If you have multiple directories, pass them in an array:
 
-    $engine = new \Conia\Boiler\Engine(['/path/to/templates', '/path/to/additional']);
+    $engine = new \VacantPlanet\Boiler\Engine(['/path/to/templates', '/path/to/additional']);
 
 **Note**: The directories are searched in order. 
 
@@ -48,7 +48,7 @@ in `/path/to/additional`, Boiler tries to find it in `/path/to/additional` and s
 You can use namespaces to later be able to address a specific directory. Pass the list of
 directories as associative array where the keys serve as namespaces:
 
-    $engine = new \Conia\Boiler\Engine([
+    $engine = new \VacantPlanet\Boiler\Engine([
         'first' => '/path/to/templates', 
         'second' => '/path/to/additional'
     ]);
@@ -59,17 +59,17 @@ Check [*Rendering Templates*](rendering.md) to see it in action.
 
 You can assign default values which are available in all templates:
 
-    $engine = new \Conia\Boiler\Engine('/path/to/dir', ['value' => 'default value']);
+    $engine = new \VacantPlanet\Boiler\Engine('/path/to/dir', ['value' => 'default value']);
 
 ### Turning off autoescaping
 
 If you don't want to use the autoescaping feature, e. g. to improve the performance of your application,
 you can turn it off globally:
 
-    $engine = new \Conia\Boiler\Engine('/path/to/dir', [], false);
+    $engine = new \VacantPlanet\Boiler\Engine('/path/to/dir', [], false);
     
     // better:
-    $engine = new \Conia\Boiler\Engine('/path/to/dir', autoescape: false);
+    $engine = new \VacantPlanet\Boiler\Engine('/path/to/dir', autoescape: false);
 
 ## Rendering Templates
 
@@ -112,4 +112,4 @@ To check if a template exists before rendering it, use the method `exists`:
 
     $template = $engine->template('template');
 
-    assert($template instanceof \Conia\Boiler\Template);
+    assert($template instanceof \VacantPlanet\Boiler\Template);

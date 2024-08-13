@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\Exception\RuntimeException;
-use Conia\Boiler\Value;
+use VacantPlanet\Boiler\Exception\RuntimeException;
+use VacantPlanet\Boiler\Value;
 
 test('Value::unwrap', function () {
     expect((new Value('<b>boiler</b>'))->unwrap())->toBe('<b>boiler</b>');

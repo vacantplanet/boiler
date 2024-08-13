@@ -4,7 +4,7 @@ title: Rendering Templates
 Rendering Templates
 ===================
 
-After you created an [`\Conia\Boiler\Engine`](engine.md) object, you can render
+After you created an [`\VacantPlanet\Boiler\Engine`](engine.md) object, you can render
 templates using its `render()` method.
 
 Throughout this page we assume the following directory structure ...
@@ -27,7 +27,7 @@ path
 
 ... and the [`Engine`](engine.md) initialized in this way:
 
-    $engine = new \Conia\Boiler\Engine(
+    $engine = new \VacantPlanet\Boiler\Engine(
         [
             'theme' => '/path/to/theme',
             'templates' => '/path/to/templates',

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Conia\Boiler\ArrayValue;
-use Conia\Boiler\IteratorValue;
-use Conia\Boiler\Value;
-use Conia\Boiler\Wrapper;
+use VacantPlanet\Boiler\ArrayValue;
+use VacantPlanet\Boiler\IteratorValue;
+use VacantPlanet\Boiler\Value;
+use VacantPlanet\Boiler\Wrapper;
 
 test('Number', function () {
     expect(Wrapper::wrap(13))->toBe(13);

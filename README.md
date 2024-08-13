@@ -2,12 +2,12 @@ Boiler
 ======
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/coniadev/boiler.svg)](https://scrutinizer-ci.com/g/coniadev/boiler/code-structure)
-[![Psalm coverage](https://shepherd.dev/github/coniadev/boiler/coverage.svg?)](https://shepherd.dev/github/coniadev/boiler)
-[![Psalm level](https://shepherd.dev/github/coniadev/boiler/level.svg?)](https://conia.dev/boiler)
-[![Quality Score](https://img.shields.io/scrutinizer/g/coniadev/boiler.svg)](https://scrutinizer-ci.com/g/coniadev/boiler)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/vacantplanet/boiler.svg)](https://scrutinizer-ci.com/g/vacantplanet/boiler/code-structure)
+[![Psalm coverage](https://shepherd.dev/github/vacantplanet/boiler/coverage.svg?)](https://shepherd.dev/github/vacantplanet/boiler)
+[![Psalm level](https://shepherd.dev/github/vacantplanet/boiler/level.svg?)](https://vacantplanet.dev/boiler)
+[![Quality Score](https://img.shields.io/scrutinizer/g/vacantplanet/boiler.svg)](https://scrutinizer-ci.com/g/vacantplanet/boiler)
 
-Boiler is a native PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/), which
+Boiler is a native >=PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/), which
 uses PHP itself instead of a custom template language.
 
 > :warning: **Note**: This template engine is under active development, some of the listed features are still experimental and subject to change. Large parts of the documentation are missing. 
@@ -20,7 +20,7 @@ Notable differences:
 
 ## Installation
 
-    composer require conia/boiler
+    composer require vacantplanet/boiler
 
 
 ## Quick start
@@ -38,7 +38,7 @@ Assuming the following directory structure ...
 
 Now create a `Engine` instance and render the template:
 
-    use Conia\Boiler\Engine;
+    use VacantPlanet\Boiler\Engine;
 
     $engine = new Engine('/path/to/templates');
     $html = $engine->render('page', ['id' => 13]);

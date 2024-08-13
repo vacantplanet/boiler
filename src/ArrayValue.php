@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler;
+namespace VacantPlanet\Boiler;
 
 use ArrayAccess;
-use Conia\Boiler\Exception\OutOfBoundsException;
-use Conia\Boiler\Exception\RuntimeException;
-use Conia\Boiler\Exception\UnexpectedValueException;
+use VacantPlanet\Boiler\Exception\OutOfBoundsException;
+use VacantPlanet\Boiler\Exception\RuntimeException;
+use VacantPlanet\Boiler\Exception\UnexpectedValueException;
 use Countable;
 use Iterator;
 

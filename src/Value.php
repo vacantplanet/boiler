@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Boiler;
+namespace VacantPlanet\Boiler;
 
-use Conia\Boiler\Exception\RuntimeException;
+use VacantPlanet\Boiler\Exception\RuntimeException;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Throwable;
 

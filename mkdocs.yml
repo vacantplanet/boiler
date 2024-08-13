@@ -1,5 +1,5 @@
-site_name: Conia Boiler
-copyright: © 2022 ebene fünf GmbH
+site_name: VacantPlanet Boiler
+copyright: © 2022-2024 ebene fünf GmbH
 nav:
   - index.md
   - quickstart.md
@@ -11,8 +11,8 @@ nav:
   - sections.md
   - template.md
 theme:
-    name: conia
-repo_url: https://github.com/coniadev/boiler
+    name: vacantplanet
+repo_url: https://github.com/vacantplanet/boiler
 extra:
     project: Boiler
 plugins:
