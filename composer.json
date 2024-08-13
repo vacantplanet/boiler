@@ -38,7 +38,7 @@
         "nyholm/psr7-server": "^1",
         "pestphp/pest": "^1.21",
         "staabm/annotate-pull-request-from-checkstyle": "^1.8",
-        "vimeo/psalm": "5.5"
+        "vimeo/psalm": "5.25"
     },
     "config": {
         "allow-plugins": {
