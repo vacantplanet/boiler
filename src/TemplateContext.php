@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VacantPlanet\Boiler;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use VacantPlanet\Boiler\Proxy\Proxy;
 
 /** @psalm-api */
 class TemplateContext
