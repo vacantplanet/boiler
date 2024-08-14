@@ -32,13 +32,18 @@
         "php": ">=8.2",
         "symfony/html-sanitizer": "^6.1"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../dev"
+        }
+    ],
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "nyholm/psr7": "^1.5",
-        "nyholm/psr7-server": "^1",
         "pestphp/pest": "^1.21",
         "staabm/annotate-pull-request-from-checkstyle": "^1.8",
-        "vimeo/psalm": "5.25"
+        "vimeo/psalm": "5.25",
+        "vacantplanet/development": "@dev"
     },
     "config": {
         "allow-plugins": {
