@@ -12,11 +12,9 @@ test('Number', function () {
     expect(Wrapper::wrap(1.13))->toBe(1.13);
 });
 
-
 test('String', function () {
     expect(Wrapper::wrap('string'))->toBeInstanceOf(Proxy::class);
 });
-
 
 test('Array', function () {
     $warray = Wrapper::wrap([1, 2, 3]);
@@ -26,7 +24,6 @@ test('Array', function () {
     expect(is_array($warray->unwrap()))->toBe(true);
     expect(count($warray))->toBe(3);
 });
-
 
 test('Iterator', function () {
     $iterator = (function () {
@@ -39,14 +36,11 @@ test('Iterator', function () {
     expect(is_iterable($witerator->unwrap()))->toBe(true);
 });
 
-
 test('Object', function () {
-    $obj = new class () {
-    };
+    $obj = new class () {};
 
     expect(Wrapper::wrap($obj))->toBeInstanceOf(Proxy::class);
 });
-
 
 test('Stringable', function () {
     $obj = new class () {
@@ -58,7 +52,6 @@ test('Stringable', function () {
 
     expect(Wrapper::wrap($obj))->toBeInstanceOf(Proxy::class);
 });
-
 
 test('Nesting', function () {
     $value = new Proxy('string');

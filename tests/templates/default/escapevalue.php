@@ -1,1 +1,1 @@
-<p><?php echo $this->escape($wrapped); ?></p>
+<p><?= $this->escape($wrapped); ?></p>

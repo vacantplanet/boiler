@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use VacantPlanet\Boiler\Sanitizer;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use VacantPlanet\Boiler\Sanitizer;
 
 const MALFORMED = '
         <header>Test</header>
@@ -17,7 +17,6 @@ const MALFORMED = '
             </section>
         </article>
         <footer>Test</footer>';
-
 
 test('Clean with config', function () {
     $clean = '
@@ -33,7 +32,6 @@ test('Clean with config', function () {
 
     expect(Sanitizer::clean(MALFORMED))->toBe($clean);
 });
-
 
 test('Clean with block extension', function () {
     $config = (new HtmlSanitizerConfig())

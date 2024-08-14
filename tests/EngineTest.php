@@ -5,8 +5,8 @@ declare(strict_types=1);
 use VacantPlanet\Boiler\Engine;
 use VacantPlanet\Boiler\Exception\LookupException;
 use VacantPlanet\Boiler\Exception\UnexpectedValueException;
-use VacantPlanet\Boiler\Tests\TestCase;
 use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Tests\TestCase;
 
 uses(TestCase::class);
 
@@ -147,7 +147,7 @@ test('Empty helper method', function () {
     ])))->toBe('&lt;b&gt;not empty&lt;/b&gt;');
 });
 
-test('Escape already wrapped Value', function () {
+test('Escape already wrapped Proxy', function () {
     $engine = new Engine($this->templates());
 
     expect($this->fullTrim($engine->render('escapevalue', [
@@ -162,6 +162,7 @@ test('Iterator rendering', function () {
 
     $iter = function () {
         $a = ['<b>2</b>', '<b>3</b>', '<b>4</b>'];
+
         foreach ($a as $i) {
             yield $i;
         }
@@ -180,6 +181,7 @@ test('Complex nested rendering', function () {
 
     $iter = function () {
         $a = [13.73, 'String II', 1];
+
         foreach ($a as $i) {
             yield $i;
         }

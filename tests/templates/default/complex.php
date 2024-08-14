@@ -1,17 +1,17 @@
 <?php require 'header.php'; ?>
 
 <body>
-    <h1><?php echo $headline; ?></h1>
+    <h1><?= $headline; ?></h1>
     <table>
         <?php foreach ($array as $key => $value) { ?>
             <tr>
-                <td><?php echo $this->e($key); ?></td>
+                <td><?= $this->e($key); ?></td>
                 <?php foreach ($value as $item) { ?>
-                    <td><?php echo $item; ?></td>
+                    <td><?= $item; ?></td>
                 <?php } ?>
             </tr>
         <?php } ?>
-    </table><?php echo $html->unwrap(); ?>
+    </table><?= $html->unwrap(); ?>
 </body>
 
 </html>

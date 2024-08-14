@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Exception\OutOfBoundsException;
 use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Exception\UnexpectedValueException;
+use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
 use VacantPlanet\Boiler\Proxy\Proxy;
 
@@ -15,13 +15,11 @@ test('Count', function () {
     expect(count($arrval))->toBe(3);
 });
 
-
 test('Unwrap', function () {
     $arrval = new ArrayProxy(['string', 2]);
 
     expect($arrval->unwrap())->toBe(['string', 2]);
 });
-
 
 test('Helper ::exists', function () {
     $arrval = new ArrayProxy([1, 2]);
@@ -31,7 +29,6 @@ test('Helper ::exists', function () {
     expect($arrval->exists(2))->toBe(false);
     expect($arrval->exists('test'))->toBe(false);
 
-
     $arrval = new ArrayProxy([1, 'test' => 2]);
 
     expect($arrval->exists(0))->toBe(true);
@@ -39,7 +36,6 @@ test('Helper ::exists', function () {
     expect($arrval->exists(2))->toBe(false);
     expect($arrval->exists('test'))->toBe(true);
 });
-
 
 test('Helper ::merge', function () {
     $arrval1 = new ArrayProxy([1, 2]);
@@ -51,20 +47,17 @@ test('Helper ::merge', function () {
     expect($arrval1->merge([5, 'string'])[3])->toBeInstanceOf(Proxy::class);
 });
 
-
 test('Helper ::map', function () {
     $arrval = new ArrayProxy(['str1', 'str2']);
 
     expect($arrval->map(fn ($v) => $v . 'plus')->unwrap())->toBe(['str1plus', 'str2plus']);
 });
 
-
 test('Helper ::filter', function () {
     $arrval = new ArrayProxy([1, 3, 4, 2]);
 
     expect(array_values($arrval->filter(fn ($v) => $v < 3)->unwrap()))->toBe([1, 2]);
 });
-
 
 test('Helper ::reduce', function () {
     $arrval = new ArrayProxy([1, 3, 4, 2]);
@@ -75,7 +68,6 @@ test('Helper ::reduce', function () {
 
     expect($arrval->reduce(fn ($c, $v) => $c . $v, '')->unwrap())->toBe('abc');
 });
-
 
 test('Helper ::sorted', function () {
     $arrval = new ArrayProxy([1, 3, 4, 2]);
@@ -95,12 +87,10 @@ test('Helper ::sorted', function () {
     expect($arrval->sorted('kr')->unwrap())->toBe(['c' => 1, 'b' => 3, 'a' => 2]);
 });
 
-
 test('Helper ::sorted throws', function () {
     $arrval = new ArrayProxy(['B', 'a']);
     $arrval->sorted('t');
 })->throws(UnexpectedValueException::class);
-
 
 test('Helper ::sorted userdefined', function () {
     $arrval = new ArrayProxy(['B', 'a', 'C', 'c', 'A', 'b']);
@@ -135,12 +125,10 @@ test('Helper ::sorted userdefined', function () {
     )->unwrap())->toBe([1 => 'a', 4 => 'A', 0 => 'B', 5 => 'b', 2 => 'C', 3 => 'c']);
 });
 
-
 test('Helper ::sorted userdefined throws', function () {
     $arrval = new ArrayProxy(['B', 'a']);
     $arrval->sorted('ut', fn ($a, $b) => strtolower($a) > strtolower($b));
 })->throws(UnexpectedValueException::class);
-
 
 test('Helper ::sorted userdefined throws no callable', function () {
     $arrval = new ArrayProxy(['B', 'a']);
@@ -155,7 +143,6 @@ test('Array access', function () {
     expect($arrval['key'])->toBe(3);
 });
 
-
 test('Iteration', function () {
     $arrval = new ArrayProxy([1, 2, 3]);
     $new = [];
@@ -167,14 +154,12 @@ test('Iteration', function () {
     expect($new)->toBe([3, 4, 5]);
 });
 
-
 test('Null value', function () {
     $arrval = new ArrayProxy([1, null]);
 
     expect($arrval[0])->toBe(1);
     expect($arrval[1])->toBe(null);
 });
-
 
 test('Set value', function () {
     $arrval = new ArrayProxy([1, 2, 3]);
@@ -184,7 +169,6 @@ test('Set value', function () {
     expect($arrval->unwrap())->toBe([1, 2, 3, 44, 55]);
 });
 
-
 test('Unset value', function () {
     $arrval = new ArrayProxy([1, 2, 3]);
     unset($arrval[1]);
@@ -192,10 +176,8 @@ test('Unset value', function () {
     expect($arrval->unwrap())->toBe([0 => 1, 2 => 3]);
 });
 
-
 test('Wrapped array access', function () {
-    $obj = new class () {
-    };
+    $obj = new class () {};
     $stringable = new class () {
         public function __toString(): string
         {
@@ -214,10 +196,8 @@ test('Wrapped array access', function () {
     expect($arrval[4])->toBeInstanceOf(IteratorProxy::class);
 });
 
-
 test('Wrapped iteration', function () {
-    $obj = new class () {
-    };
+    $obj = new class () {};
     $stringable = new class () {
         public function __toString(): string
         {
@@ -244,7 +224,6 @@ test('Wrapped iteration', function () {
     ]);
 });
 
-
 test('Nested', function () {
     $arrval = new ArrayProxy([['first'], ['second', 'third']]);
 
@@ -255,12 +234,10 @@ test('Nested', function () {
     expect($arrval[1][1])->toBeInstanceOf(Proxy::class);
 });
 
-
 test('Undefined numeric key', function () {
     $arrval = new ArrayProxy([1, 2, 3]);
     $arrval[4];
 })->throws(OutOfBoundsException::class, 'Undefined array key 4');
-
 
 test('Undefined array key', function () {
     $arrval = new ArrayProxy([1, 2, 3]);

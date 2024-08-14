@@ -1,2 +1,2 @@
-<h1><?php echo $obj->name(); ?></h1>
-<p><?php echo $text; ?></p>
+<h1><?= $obj->name(); ?></h1>
+<p><?= $text; ?></p>

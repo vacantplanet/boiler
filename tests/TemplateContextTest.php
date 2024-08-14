@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\TemplateContext;
 use VacantPlanet\Boiler\Tests\TestCase;
-use VacantPlanet\Boiler\Proxy\Proxy;
 
 uses(TestCase::class);
 

@@ -80,8 +80,7 @@ test('Object :: valid', function () {
 });
 
 test('Object :: not invokable', function () {
-    $object = new class () {
-    };
+    $object = new class () {};
     $value = new Proxy($object);
 
     $value();
@@ -103,8 +102,7 @@ test('Getter throws I', function () {
 })->throws(RuntimeException::class, 'No such property');
 
 test('Getter throws II', function () {
-    $obj = new class () {
-    };
+    $obj = new class () {};
     $value = new Proxy($obj);
     $value->test;
 })->throws(RuntimeException::class, 'No such property');

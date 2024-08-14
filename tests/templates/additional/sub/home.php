@@ -1,1 +1,1 @@
-<h1>Sub <?php echo $text; ?></h1>
+<h1>Sub <?= $text; ?></h1>

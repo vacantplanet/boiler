@@ -1,7 +1,7 @@
 <?php $this->layout('readsection'); ?>
-<p><?php echo $text; ?></p>
+<p><?= $text; ?></p>
 <?php $this->begin('list'); ?>
 <ul>
-    <li><?php echo $text; ?></li>
+    <li><?= $text; ?></li>
 </ul>
 <?php $this->end(); ?>

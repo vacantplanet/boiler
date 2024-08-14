@@ -1,2 +1,2 @@
-<?php foreach ($arr as $html) { ?><?php echo $html; ?>
+<?php foreach ($arr as $html) { ?><?= $html; ?>
 <?php } ?>

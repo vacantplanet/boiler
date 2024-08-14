@@ -17,19 +17,24 @@ class Wrapper
         if (is_scalar($value) && !is_string($value)) {
             return $value;
         }
+
         if (is_string($value)) {
             return new Proxy($value);
         }
+
         if ($value instanceof ProxyInterface) {
             // Don't wrap already wrapped values again
             return $value;
         }
+
         if (is_array($value)) {
             return new ArrayProxy($value);
         }
+
         if ($value instanceof Traversable) {
             return new IteratorProxy($value);
         }
+
         if (is_null($value)) {
             return null;
         }

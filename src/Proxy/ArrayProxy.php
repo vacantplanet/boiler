@@ -78,6 +78,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
         if ($this->offsetExists($offset)) {
             return Wrapper::wrap($this->array[$offset]);
         }
+
         if (is_numeric($offset)) {
             $key = (string)$offset;
         } else {

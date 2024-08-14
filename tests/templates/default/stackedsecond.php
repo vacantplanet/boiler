@@ -1,2 +1,2 @@
 <?php $this->layout('layout'); ?>
-<div class="stackedsecond"><?php echo $this->body(); ?></div>
+<div class="stackedsecond"><?= $this->body(); ?></div>

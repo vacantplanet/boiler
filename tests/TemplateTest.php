@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use VacantPlanet\Boiler\Exception\LookupException;
+use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\Tests\TestCase;
 use VacantPlanet\Boiler\Tests\WhitelistBase;
 use VacantPlanet\Boiler\Tests\Whitelisted;
-use VacantPlanet\Boiler\Proxy\Proxy;
 
 uses(TestCase::class);
 

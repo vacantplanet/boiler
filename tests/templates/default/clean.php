@@ -1,1 +1,4 @@
-<?php echo $html->clean();
+<?php
+
+declare(strict_types=1);
+echo $html->clean();

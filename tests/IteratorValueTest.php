@@ -32,7 +32,6 @@ test('Wrapping', function () {
     expect($new[3])->toBeInstanceOf(IteratorProxy::class);
 });
 
-
 test('Unwrap', function () {
     $iterator = (function () {
         yield 1;
@@ -42,7 +41,6 @@ test('Unwrap', function () {
 
     expect($iterval->unwrap())->toBe($iterator);
 });
-
 
 test('To array', function () {
     $iterator = (function () {

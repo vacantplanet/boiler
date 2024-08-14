@@ -22,7 +22,6 @@ test('Already clean without anything', function () {
     expect($url)->toBe('http://example.com/');
 });
 
-
 test('Failing', function () {
     Url::clean('scheme://example_login:!#Password?@ZZZ@127.0.0.1/some_path');
 })->throws(RuntimeException::class, 'Invalid Url');

@@ -2,5 +2,5 @@
     <b>empty</b>
 <?php } ?>
 <?php if (!$notempty->empty()) { ?>
-    <?php echo $notempty; ?>
+    <?= $notempty; ?>
 <?php } ?>
