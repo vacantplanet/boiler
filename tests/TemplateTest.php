@@ -7,7 +7,7 @@ use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\Tests\TestCase;
 use VacantPlanet\Boiler\Tests\WhitelistBase;
 use VacantPlanet\Boiler\Tests\Whitelisted;
-use VacantPlanet\Boiler\Value;
+use VacantPlanet\Boiler\Proxy\Proxy;
 
 uses(TestCase::class);
 
@@ -94,8 +94,8 @@ test('Non-existent layout with extension', function () {
 
 test('Custom template method', function () {
     $template = new Template($this->templates . 'method.php');
-    $template->registerMethod('upper', function (Value $value): Value {
-        return new Value(strtoupper($value->unwrap()));
+    $template->registerMethod('upper', function (Proxy $value): Proxy {
+        return new Proxy(strtoupper($value->unwrap()));
     });
 
     expect($this->fullTrim($template->render([

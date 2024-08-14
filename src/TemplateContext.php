@@ -20,8 +20,7 @@ class TemplateContext
         protected array $context,
         public readonly array $whitelist,
         public readonly bool $autoescape,
-    ) {
-    }
+    ) {}
 
     public function __call(string $name, array $args): mixed
     {
@@ -46,11 +45,11 @@ class TemplateContext
     }
 
     public function e(
-        string|Value $value,
+        Proxy|string $value,
         int $flags = self::ESCAPE_FLAGS,
         string $encoding = self::ESCAPE_ENCODING,
     ): string {
-        if ($value instanceof Value) {
+        if ($value instanceof Proxy) {
             return htmlspecialchars((string)$value->unwrap(), $flags, $encoding);
         }
 
@@ -58,7 +57,7 @@ class TemplateContext
     }
 
     public function escape(
-        string|Value $value,
+        Proxy|string $value,
         int $flags = self::ESCAPE_FLAGS,
         string $encoding = self::ESCAPE_ENCODING,
     ): string {
@@ -67,15 +66,15 @@ class TemplateContext
 
     public function clean(
         string $value,
-        HtmlSanitizerConfig $config = null,
+        ?HtmlSanitizerConfig $config = null,
         bool $removeEmptyLines = true,
     ): string {
         return Sanitizer::clean($value, $config, $removeEmptyLines);
     }
 
-    public function url(string|Value $value): string
+    public function url(Proxy|string $value): string
     {
-        return Url::clean($value instanceof Value ? (string)$value->unwrap() : $value);
+        return Url::clean($value instanceof Proxy ? (string)$value->unwrap() : $value);
     }
 
     /**
@@ -145,7 +144,7 @@ class TemplateContext
 
     protected function wrapIf(mixed $value): mixed
     {
-        if ($value instanceof ValueInterface) {
+        if ($value instanceof ProxyInterface) {
             return $value;
         }
 

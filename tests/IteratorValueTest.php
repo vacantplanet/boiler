@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use VacantPlanet\Boiler\ArrayValue;
-use VacantPlanet\Boiler\IteratorValue;
-use VacantPlanet\Boiler\Value;
+use VacantPlanet\Boiler\Proxy\ArrayProxy;
+use VacantPlanet\Boiler\Proxy\IteratorProxy;
+use VacantPlanet\Boiler\Proxy\Proxy;
 
 test('Wrapping', function () {
     $iterator = (function () {
@@ -19,7 +19,7 @@ test('Wrapping', function () {
         })();
     })();
 
-    $iterval = new IteratorValue($iterator);
+    $iterval = new IteratorProxy($iterator);
     $new = [];
 
     foreach ($iterval as $val) {
@@ -27,9 +27,9 @@ test('Wrapping', function () {
     }
 
     expect($new[0])->toBe(1);
-    expect($new[1])->toBeInstanceOf(Value::class);
-    expect($new[2])->toBeInstanceOf(ArrayValue::class);
-    expect($new[3])->toBeInstanceOf(IteratorValue::class);
+    expect($new[1])->toBeInstanceOf(Proxy::class);
+    expect($new[2])->toBeInstanceOf(ArrayProxy::class);
+    expect($new[3])->toBeInstanceOf(IteratorProxy::class);
 });
 
 
@@ -38,7 +38,7 @@ test('Unwrap', function () {
         yield 1;
     })();
 
-    $iterval = new IteratorValue($iterator);
+    $iterval = new IteratorProxy($iterator);
 
     expect($iterval->unwrap())->toBe($iterator);
 });
@@ -51,7 +51,7 @@ test('To array', function () {
         yield 2;
     })();
 
-    $iterval = new IteratorValue($iterator);
+    $iterval = new IteratorProxy($iterator);
 
     expect($iterval->toArray()->unwrap())->toBe([1, 2]);
 });

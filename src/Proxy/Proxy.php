@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace VacantPlanet\Boiler;
+namespace VacantPlanet\Boiler\Proxy;
 
-use VacantPlanet\Boiler\Exception\RuntimeException;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Throwable;
+use VacantPlanet\Boiler\Exception\RuntimeException;
+use VacantPlanet\Boiler\Sanitizer;
+use VacantPlanet\Boiler\Wrapper;
 
 /** @psalm-api */
-class Value implements ValueInterface
+class Proxy implements ProxyInterface
 {
-    public function __construct(protected readonly mixed $value)
-    {
-    }
+    public function __construct(protected readonly mixed $value) {}
 
     public function __toString(): string
     {
@@ -72,7 +72,7 @@ class Value implements ValueInterface
         return $this->value;
     }
 
-    public function strip(array|string|null $allowed = null): string
+    public function strip(null|array|string $allowed = null): string
     {
         /**
          * As of now (early 2023), psalm does not support the
@@ -84,7 +84,7 @@ class Value implements ValueInterface
     }
 
     public function clean(
-        HtmlSanitizerConfig $config = null,
+        ?HtmlSanitizerConfig $config = null,
         bool $removeEmptyLines = true
     ): string {
         return Sanitizer::clean((string)$this->value, $config, $removeEmptyLines);

@@ -12,9 +12,7 @@ class Section
     /** @var list<string> */
     protected array $appended = [];
 
-    public function __construct(protected string $value)
-    {
-    }
+    public function __construct(protected string $value) {}
 
     public function prepend(string $content): self
     {

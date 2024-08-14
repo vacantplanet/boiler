@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace VacantPlanet\Boiler;
+namespace VacantPlanet\Boiler\Proxy;
 
 use Iterator;
 use IteratorIterator;
+use VacantPlanet\Boiler\Wrapper;
 
 /**
  * @psalm-api
@@ -17,7 +18,7 @@ use IteratorIterator;
  *
  * @template-extends IteratorIterator<TKey, TValue, TIterator>
  */
-class IteratorValue extends IteratorIterator implements ValueInterface
+class IteratorProxy extends IteratorIterator implements ProxyInterface
 {
     public function current(): mixed
     {
@@ -31,8 +32,8 @@ class IteratorValue extends IteratorIterator implements ValueInterface
         return $this->getInnerIterator();
     }
 
-    public function toArray(): ArrayValue
+    public function toArray(): ArrayProxy
     {
-        return new ArrayValue(iterator_to_array($this->getInnerIterator()));
+        return new ArrayProxy(iterator_to_array($this->getInnerIterator()));
     }
 }

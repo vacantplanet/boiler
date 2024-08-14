@@ -16,7 +16,6 @@ class Url
             throw new RuntimeException('Invalid Url');
         }
 
-
         $path = empty($parsed['scheme']) ? '' : $parsed['scheme'] . '://';
         $path .= rawurlencode($parsed['user'] ?? '');
         $path .= rawurlencode(empty($parsed['pass']) ? '' : ':' . $parsed['pass']);

@@ -6,7 +6,7 @@ use VacantPlanet\Boiler\Engine;
 use VacantPlanet\Boiler\Exception\LookupException;
 use VacantPlanet\Boiler\Exception\UnexpectedValueException;
 use VacantPlanet\Boiler\Tests\TestCase;
-use VacantPlanet\Boiler\Value;
+use VacantPlanet\Boiler\Proxy\Proxy;
 
 uses(TestCase::class);
 
@@ -428,8 +428,8 @@ test('Render error :: parse error', function () {
 
 test('Custom template method', function () {
     $engine = new Engine($this->templates());
-    $engine->registerMethod('upper', function (Value $value): Value {
-        return new Value(strtoupper($value->unwrap()));
+    $engine->registerMethod('upper', function (Proxy $value): Proxy {
+        return new Proxy(strtoupper($value->unwrap()));
     });
 
     expect($this->fullTrim($engine->render('method', [

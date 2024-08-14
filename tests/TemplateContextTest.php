@@ -5,7 +5,7 @@ declare(strict_types=1);
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\TemplateContext;
 use VacantPlanet\Boiler\Tests\TestCase;
-use VacantPlanet\Boiler\Value;
+use VacantPlanet\Boiler\Proxy\Proxy;
 
 uses(TestCase::class);
 
@@ -22,9 +22,9 @@ test('Get context', function () {
     ], [], true);
     $context = $tmplContext->context();
 
-    expect($context['value1'])->toBeInstanceOf(Value::class);
+    expect($context['value1'])->toBeInstanceOf(Proxy::class);
     expect((string)$context['value1'])->toBe('Value 1');
-    expect($context['value2'])->toBeInstanceOf(Value::class);
+    expect($context['value2'])->toBeInstanceOf(Proxy::class);
     expect((string)$context['value2'])->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
     expect($context['value3'])->toBe(3);
 });
@@ -34,10 +34,10 @@ test('Adding to context', function () {
     $value2 = $tmplContext->add('value2', '<i>Value 2</i>');
     $context = $tmplContext->context();
 
-    expect($context['value1'])->toBeInstanceOf(Value::class);
+    expect($context['value1'])->toBeInstanceOf(Proxy::class);
     expect((string)$context['value1'])->toBe('Value 1');
-    expect($context['value2'])->toBeInstanceOf(Value::class);
+    expect($context['value2'])->toBeInstanceOf(Proxy::class);
     expect((string)$context['value2'])->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
-    expect($value2)->toBeInstanceOf(Value::class);
+    expect($value2)->toBeInstanceOf(Proxy::class);
     expect((string)$value2)->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
 });

@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace VacantPlanet\Boiler;
+namespace VacantPlanet\Boiler\Proxy;
 
 use ArrayAccess;
+use Countable;
+use Iterator;
 use VacantPlanet\Boiler\Exception\OutOfBoundsException;
 use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Exception\UnexpectedValueException;
-use Countable;
-use Iterator;
+use VacantPlanet\Boiler\Wrapper;
 
 /**
  * @psalm-api
@@ -21,7 +22,7 @@ use Iterator;
  *
  * @psalm-suppress MixedArrayOffset -- ArrayValue is meant to hold mixed values accessed by mixed keys
  */
-class ArrayValue implements ArrayAccess, Iterator, Countable, ValueInterface
+class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 {
     private int $position;
     private array $keys;

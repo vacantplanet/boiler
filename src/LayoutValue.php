@@ -12,6 +12,5 @@ class LayoutValue
     public function __construct(
         public readonly string $layout,
         public readonly ?array $context = null
-    ) {
-    }
+    ) {}
 }

@@ -25,7 +25,7 @@ class Engine
      * @psalm-param list<class-string> $whitelist
      */
     public function __construct(
-        string|array $dirs,
+        array|string $dirs,
         protected readonly array $defaults = [],
         protected readonly array $whitelist = [],
         protected readonly bool $autoescape = true,
@@ -37,7 +37,7 @@ class Engine
     /** @psalm-param non-empty-string $path */
     public function template(string $path): Template
     {
-        if (!preg_match('/^[\\w\\.\/:_-]+$/u', $path)) {
+        if (!preg_match('/^[\w\.\/:_-]+$/u', $path)) {
             throw new UnexpectedValueException('The template path is invalid or empty');
         }
 
@@ -115,7 +115,7 @@ class Engine
      *
      * @return Dirs
      */
-    protected function prepareDirs(string|array $dirs): array
+    protected function prepareDirs(array|string $dirs): array
     {
         if (is_string($dirs)) {
             return [realpath($dirs) ?: throw new LookupException('Template directory does not exist ' . $dirs)];
@@ -127,7 +127,7 @@ class Engine
         );
     }
 
-    protected function validateFile(string $dir, string $file): string|false
+    protected function validateFile(string $dir, string $file): false|string
     {
         $path = $dir . DIRECTORY_SEPARATOR . $file;
 
@@ -138,7 +138,7 @@ class Engine
         return realpath($path);
     }
 
-    /** @return list{non-empty-string|null, non-empty-string} */
+    /** @return list{null|non-empty-string, non-empty-string} */
     protected function getSegments(string $path): array
     {
         if (strpos($path, ':') === false) {
