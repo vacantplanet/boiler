@@ -147,27 +147,23 @@ class Engine
 	protected function validateFile(string $dir, string $file): false|string
 	{
 		/** @var callable(string):(false|non-empty-string) */
-		$rigidRealPath = function (string $path): false|string {
+		$strictRealPath = function (string $path): false|string {
 			$realpath = realpath($path);
 
-			if ($realpath !== false) {
-				if (strlen($realpath) === 0) {
-					return false;
-				}
-
-				return $realpath;
+			if ($realpath === false || strlen($realpath) === 0) {
+				return false;
 			}
 
-			return false;
+			return $realpath;
 		};
 
-		$realpath = $rigidRealPath($dir . DIRECTORY_SEPARATOR . $file . '.php');
+		$realpath = $strictRealPath($dir . DIRECTORY_SEPARATOR . $file . '.php');
 
 		if ($realpath !== false) {
 			return $realpath;
 		}
 
-		return $rigidRealPath($dir . DIRECTORY_SEPARATOR . $file);
+		return $strictRealPath($dir . DIRECTORY_SEPARATOR . $file);
 	}
 
 	/** @return list{null|non-empty-string, non-empty-string} */
