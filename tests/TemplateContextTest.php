@@ -2,42 +2,51 @@
 
 declare(strict_types=1);
 
+namespace VacantPlanet\Boiler\Tests;
+
 use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\TemplateContext;
 use VacantPlanet\Boiler\Tests\TestCase;
 
-uses(TestCase::class);
+final class TemplateContextTest extends TestCase
+{
+	private string $templates;
+	private Template $template;
 
-beforeEach(function () {
-	$ds = DIRECTORY_SEPARATOR;
-	$this->templates = __DIR__ . $ds . 'templates' . $ds . 'default' . $ds;
-	$path = $this->templates . 'simple.php';
-	$this->template = new Template($path);
-});
+	protected function setUp(): void
+	{
+		$ds = DIRECTORY_SEPARATOR;
+		$this->templates = __DIR__ . $ds . 'templates' . $ds . 'default' . $ds;
+		$path = $this->templates . 'simple.php';
+		$this->template = new Template($path);
+	}
 
-test('Get context', function () {
-	$tmplContext = new TemplateContext($this->template, [
-		'value1' => 'Value 1', 'value2' => '<i>Value 2</i>', 'value3' => 3,
-	], [], true);
-	$context = $tmplContext->context();
+	public function testGetContext(): void
+	{
+		$tmplContext = new TemplateContext($this->template, [
+			'value1' => 'Value 1', 'value2' => '<i>Value 2</i>', 'value3' => 3,
+		], [], true);
+		$context = $tmplContext->context();
 
-	expect($context['value1'])->toBeInstanceOf(Proxy::class);
-	expect((string) $context['value1'])->toBe('Value 1');
-	expect($context['value2'])->toBeInstanceOf(Proxy::class);
-	expect((string) $context['value2'])->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
-	expect($context['value3'])->toBe(3);
-});
+		$this->assertInstanceOf(Proxy::class, $context['value1']);
+		$this->assertSame('Value 1', (string) $context['value1']);
+		$this->assertInstanceOf(Proxy::class, $context['value2']);
+		$this->assertSame('&lt;i&gt;Value 2&lt;/i&gt;', (string) $context['value2']);
+		$this->assertSame(3, $context['value3']);
+	}
 
-test('Adding to context', function () {
-	$tmplContext = new TemplateContext($this->template, ['value1' => 'Value 1'], [], true);
-	$value2 = $tmplContext->add('value2', '<i>Value 2</i>');
-	$context = $tmplContext->context();
+	public function testAddingToContext(): void
+	{
+		$tmplContext = new TemplateContext($this->template, ['value1' => 'Value 1'], [], true);
+		$value2 = $tmplContext->add('value2', '<i>Value 2</i>');
+		$context = $tmplContext->context();
 
-	expect($context['value1'])->toBeInstanceOf(Proxy::class);
-	expect((string) $context['value1'])->toBe('Value 1');
-	expect($context['value2'])->toBeInstanceOf(Proxy::class);
-	expect((string) $context['value2'])->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
-	expect($value2)->toBeInstanceOf(Proxy::class);
-	expect((string) $value2)->toBe('&lt;i&gt;Value 2&lt;/i&gt;');
-});
+		$this->assertInstanceOf(Proxy::class, $context['value1']);
+		$this->assertSame('Value 1', (string) $context['value1']);
+		$this->assertInstanceOf(Proxy::class, $context['value2']);
+		$this->assertSame('&lt;i&gt;Value 2&lt;/i&gt;', (string) $context['value2']);
+		$this->assertInstanceOf(Proxy::class, $value2);
+		$this->assertSame('&lt;i&gt;Value 2&lt;/i&gt;', (string) $value2);
+	}
+}
