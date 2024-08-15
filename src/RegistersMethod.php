@@ -6,16 +6,16 @@ namespace VacantPlanet\Boiler;
 
 trait RegistersMethod
 {
-    protected CustomMethods $customMethods;
+	protected CustomMethods $customMethods;
 
-    /** @psalm-param non-empty-string $name */
-    public function registerMethod(string $name, callable $callable): void
-    {
-        $this->customMethods->add($name, $callable);
-    }
+	/** @psalm-param non-empty-string $name */
+	public function registerMethod(string $name, callable $callable): void
+	{
+		$this->customMethods->add($name, $callable);
+	}
 
-    public function getMethods(): CustomMethods
-    {
-        return $this->customMethods;
-    }
+	public function getMethods(): CustomMethods
+	{
+		return $this->customMethods;
+	}
 }

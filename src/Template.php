@@ -12,162 +12,162 @@ use VacantPlanet\Boiler\Exception\RuntimeException;
 /** @psalm-api */
 class Template
 {
-    use RegistersMethod;
+	use RegistersMethod;
 
-    public readonly Engine $engine;
-    public readonly Sections $sections;
-    protected ?LayoutValue $layout = null;
+	public readonly Engine $engine;
+	public readonly Sections $sections;
+	protected ?LayoutValue $layout = null;
 
-    /** @psalm-suppress PropertyNotSetInConstructor */
-    protected CustomMethods $customMethods;
+	/** @psalm-suppress PropertyNotSetInConstructor */
+	protected CustomMethods $customMethods;
 
-    /**
-     * @psalm-param non-empty-string $path
-     */
-    public function __construct(
-        public readonly string $path,
-        ?Sections $sections = null,
-        ?Engine $engine = null,
-    ) {
-        $this->sections = $sections ?: new Sections();
-        $this->customMethods = new CustomMethods();
+	/**
+	 * @psalm-param non-empty-string $path
+	 */
+	public function __construct(
+		public readonly string $path,
+		?Sections $sections = null,
+		?Engine $engine = null,
+	) {
+		$this->sections = $sections ?: new Sections();
+		$this->customMethods = new CustomMethods();
 
-        if ($engine === null) {
-            $dir = dirname($path);
+		if ($engine === null) {
+			$dir = dirname($path);
 
-            if (empty($dir) || empty($path)) {
-                throw new LookupException('No directory given or empty path');
-            }
+			if (empty($dir) || empty($path)) {
+				throw new LookupException('No directory given or empty path');
+			}
 
-            $this->engine = new Engine($dir);
+			$this->engine = new Engine($dir);
 
-            if (!is_file($path)) {
-                throw new LookupException('Template not found: ' . $path);
-            }
-        } else {
-            $this->engine = $engine;
-        }
-    }
+			if (!is_file($path)) {
+				throw new LookupException('Template not found: ' . $path);
+			}
+		} else {
+			$this->engine = $engine;
+		}
+	}
 
-    /**
-     * @psalm-param list<class-string> $whitelist
-     */
-    public function render(array $context = [], array $whitelist = [], bool $autoescape = true): string
-    {
-        $content = $this->getContent($context, $whitelist, $autoescape);
+	/**
+	 * @psalm-param list<class-string> $whitelist
+	 */
+	public function render(array $context = [], array $whitelist = [], bool $autoescape = true): string
+	{
+		$content = $this->getContent($context, $whitelist, $autoescape);
 
-        if ($this instanceof Layout) {
-            return $content->content;
-        }
+		if ($this instanceof Layout) {
+			return $content->content;
+		}
 
-        return $this->renderLayouts(
-            $this,
-            $content->templateContext,
-            $whitelist,
-            $content->content,
-            $autoescape,
-        );
-    }
+		return $this->renderLayouts(
+			$this,
+			$content->templateContext,
+			$whitelist,
+			$content->content,
+			$autoescape,
+		);
+	}
 
-    /**
-     * Defines a layout template that will be wrapped around this instance.
-     *
-     * Typically it’s placed at the top of the file.
-     */
-    public function setLayout(LayoutValue $layout): void
-    {
-        if ($this->layout === null) {
-            $this->layout = $layout;
+	/**
+	 * Defines a layout template that will be wrapped around this instance.
+	 *
+	 * Typically it’s placed at the top of the file.
+	 */
+	public function setLayout(LayoutValue $layout): void
+	{
+		if ($this->layout === null) {
+			$this->layout = $layout;
 
-            return;
-        }
+			return;
+		}
 
-        throw new RuntimeException('Template error: layout already set');
-    }
+		throw new RuntimeException('Template error: layout already set');
+	}
 
-    public function layout(): ?LayoutValue
-    {
-        return $this->layout;
-    }
+	public function layout(): ?LayoutValue
+	{
+		return $this->layout;
+	}
 
-    public function setCustomMethods(CustomMethods $customMethods): void
-    {
-        $this->customMethods = $customMethods;
-    }
+	public function setCustomMethods(CustomMethods $customMethods): void
+	{
+		$this->customMethods = $customMethods;
+	}
 
-    /** @psalm-param list<class-string> $whitelist */
-    protected function templateContext(array $context, array $whitelist, bool $autoescape): TemplateContext
-    {
-        return new TemplateContext($this, $context, $whitelist, $autoescape);
-    }
+	/** @psalm-param list<class-string> $whitelist */
+	protected function templateContext(array $context, array $whitelist, bool $autoescape): TemplateContext
+	{
+		return new TemplateContext($this, $context, $whitelist, $autoescape);
+	}
 
-    /** @psalm-param list<class-string> $whitelist */
-    protected function getContent(array $context, array $whitelist, bool $autoescape): Content
-    {
-        $templateContext = $this->templateContext($context, $whitelist, $autoescape);
+	/** @psalm-param list<class-string> $whitelist */
+	protected function getContent(array $context, array $whitelist, bool $autoescape): Content
+	{
+		$templateContext = $this->templateContext($context, $whitelist, $autoescape);
 
-        $load = function (string $templatePath, array $context = []): void {
-            // Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
-            $____template_path____ = $templatePath;
+		$load = function (string $templatePath, array $context = []): void {
+			// Hide $templatePath. Could be overwritten if $context['templatePath'] exists.
+			$____template_path____ = $templatePath;
 
-            extract($context);
+			extract($context);
 
-            /** @psalm-suppress UnresolvableInclude */
-            include $____template_path____;
-        };
+			/** @psalm-suppress UnresolvableInclude */
+			include $____template_path____;
+		};
 
-        /** @var callable */
-        $load = $load->bindTo($templateContext);
-        $level = ob_get_level();
+		/** @var callable */
+		$load = $load->bindTo($templateContext);
+		$level = ob_get_level();
 
-        try {
-            ob_start();
+		try {
+			ob_start();
 
-            $load(
-                $this->path,
-                $autoescape ?
-                    $templateContext->context() :
-                    $context,
-            );
+			$load(
+				$this->path,
+				$autoescape ?
+					$templateContext->context() :
+					$context,
+			);
 
-            $content = ob_get_clean();
+			$content = ob_get_clean();
 
-            return new Content($content, $templateContext);
-        } catch (ErrorException $e) {
-            throw new RuntimeException('Render error: ' . $e->getMessage());
-        } catch (Throwable $e) {
-            throw $e;
-        } finally {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-        }
-    }
+			return new Content($content, $templateContext);
+		} catch (ErrorException $e) {
+			throw new RuntimeException('Render error: ' . $e->getMessage());
+		} catch (Throwable $e) {
+			throw $e;
+		} finally {
+			while (ob_get_level() > $level) {
+				ob_end_clean();
+			}
+		}
+	}
 
-    /** @psalm-param list<class-string> $whitelist */
-    protected function renderLayouts(
-        Template $template,
-        TemplateContext $context,
-        array $whitelist,
-        string $content,
-        bool $autoescape,
-    ): string {
-        while ($layout = $template->layout()) {
-            $file = $template->engine->getFile($layout->layout);
-            $template = new Layout(
-                $file,
-                $content,
-                $this->sections,
-                $template->engine,
-            );
+	/** @psalm-param list<class-string> $whitelist */
+	protected function renderLayouts(
+		Template $template,
+		TemplateContext $context,
+		array $whitelist,
+		string $content,
+		bool $autoescape,
+	): string {
+		while ($layout = $template->layout()) {
+			$file = $template->engine->getFile($layout->layout);
+			$template = new Layout(
+				$file,
+				$content,
+				$this->sections,
+				$template->engine,
+			);
 
-            $layoutContext = $layout->context
-                ? $context->context($layout->context)
-                : $context->context();
+			$layoutContext = $layout->context
+				? $context->context($layout->context)
+				: $context->context();
 
-            $content = $template->render($layoutContext, $whitelist, $autoescape);
-        }
+			$content = $template->render($layoutContext, $whitelist, $autoescape);
+		}
 
-        return $content;
-    }
+		return $content;
+	}
 }

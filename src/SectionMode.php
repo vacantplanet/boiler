@@ -6,8 +6,8 @@ namespace VacantPlanet\Boiler;
 
 enum SectionMode
 {
-    case Assign;
-    case Append;
-    case Prepend;
-    case Closed;
+	case Assign;
+	case Append;
+	case Prepend;
+	case Closed;
 }

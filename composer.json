@@ -1,54 +1,54 @@
 {
-    "name": "vacantplanet/boiler",
-    "description": "A PHP template engine that doesn't require you to learn a new syntax",
-    "type": "library",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "ebene fünf GmbH",
-            "email": "vacantplanet@ebenefuenf.de",
-            "role": "Developer"
-        }
-    ],
-    "homepage": "https://vacantplanet.dev/boiler",
-    "keywords": [
-        "vacantplanet",
-        "templating",
-        "templates"
-    ],
-    "autoload": {
-        "psr-4": {
-            "VacantPlanet\\Boiler\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "VacantPlanet\\Boiler\\Tests\\": "tests"
-        }
-    },
-    "require": {
-        "php": ">=8.2",
-        "symfony/html-sanitizer": "^6.1"
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../dev"
-        }
-    ],
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "pestphp/pest": "^1.21",
-        "staabm/annotate-pull-request-from-checkstyle": "^1.8",
-        "vimeo/psalm": "5.25",
-        "vacantplanet/development": "@dev"
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    }
+	"name": "vacantplanet/boiler",
+	"description": "A PHP template engine that doesn't require you to learn a new syntax",
+	"type": "library",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "ebene fünf GmbH",
+			"email": "vacantplanet@ebenefuenf.de",
+			"role": "Developer"
+		}
+	],
+	"homepage": "https://vacantplanet.dev/boiler",
+	"keywords": [
+		"vacantplanet",
+		"templating",
+		"templates"
+	],
+	"autoload": {
+		"psr-4": {
+			"VacantPlanet\\Boiler\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"VacantPlanet\\Boiler\\Tests\\": "tests"
+		}
+	},
+	"require": {
+		"php": ">=8.2",
+		"symfony/html-sanitizer": "^6.1"
+	},
+	"repositories": [
+		{
+			"type": "path",
+			"url": "../dev"
+		}
+	],
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"pestphp/pest": "^1.21",
+		"staabm/annotate-pull-request-from-checkstyle": "^1.8",
+		"vimeo/psalm": "5.25",
+		"vacantplanet/development": "@dev"
+	},
+	"config": {
+		"allow-plugins": {
+			"pestphp/pest-plugin": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
 }

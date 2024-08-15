@@ -19,7 +19,7 @@ const MALFORMED = '
         <footer>Test</footer>';
 
 test('Clean with config', function () {
-    $clean = '
+	$clean = '
         <header>Test</header>
         <aside><div>Test</div></aside>
         <nav><ul><li>Test</li></ul></nav>
@@ -30,16 +30,16 @@ test('Clean with config', function () {
         </article>
         <footer>Test</footer>';
 
-    expect(Sanitizer::clean(MALFORMED))->toBe($clean);
+	expect(Sanitizer::clean(MALFORMED))->toBe($clean);
 });
 
 test('Clean with block extension', function () {
-    $config = (new HtmlSanitizerConfig())
-        ->allowSafeElements()
-        ->blockElement('header')
-        ->blockElement('footer')
-        ->blockElement('section');
-    $clean = '
+	$config = (new HtmlSanitizerConfig())
+		->allowSafeElements()
+		->blockElement('header')
+		->blockElement('footer')
+		->blockElement('section');
+	$clean = '
         Test
         <aside><div>Test</div></aside>
         <nav><ul><li>Test</li></ul></nav>
@@ -48,5 +48,5 @@ test('Clean with block extension', function () {
         </article>
         Test';
 
-    expect(Sanitizer::clean(MALFORMED, $config))->toBe($clean);
+	expect(Sanitizer::clean(MALFORMED, $config))->toBe($clean);
 });

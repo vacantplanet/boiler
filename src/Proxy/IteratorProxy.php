@@ -20,20 +20,20 @@ use VacantPlanet\Boiler\Wrapper;
  */
 class IteratorProxy extends IteratorIterator implements ProxyInterface
 {
-    public function current(): mixed
-    {
-        $value = parent::current();
+	public function current(): mixed
+	{
+		$value = parent::current();
 
-        return Wrapper::wrap($value);
-    }
+		return Wrapper::wrap($value);
+	}
 
-    public function unwrap(): Iterator
-    {
-        return $this->getInnerIterator();
-    }
+	public function unwrap(): Iterator
+	{
+		return $this->getInnerIterator();
+	}
 
-    public function toArray(): ArrayProxy
-    {
-        return new ArrayProxy(iterator_to_array($this->getInnerIterator()));
-    }
+	public function toArray(): ArrayProxy
+	{
+		return new ArrayProxy(iterator_to_array($this->getInnerIterator()));
+	}
 }

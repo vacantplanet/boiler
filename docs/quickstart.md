@@ -16,12 +16,12 @@ Assuming the following directory structure ...
 ```text
 path
 `-- to
-    `-- templates
+	`-- templates
 ```
 
 ... create the file `/path/to/templates/page.php` with the content:
-    
-    <p>ID <?= $id ?></p>
+	
+	<p>ID <?= $id ?></p>
 
 Now create a `Engine` instance and render the template:
 

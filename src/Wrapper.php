@@ -12,33 +12,33 @@ use VacantPlanet\Boiler\Proxy\ProxyInterface;
 
 class Wrapper
 {
-    public static function wrap(mixed $value): mixed
-    {
-        if (is_scalar($value) && !is_string($value)) {
-            return $value;
-        }
+	public static function wrap(mixed $value): mixed
+	{
+		if (is_scalar($value) && !is_string($value)) {
+			return $value;
+		}
 
-        if (is_string($value)) {
-            return new Proxy($value);
-        }
+		if (is_string($value)) {
+			return new Proxy($value);
+		}
 
-        if ($value instanceof ProxyInterface) {
-            // Don't wrap already wrapped values again
-            return $value;
-        }
+		if ($value instanceof ProxyInterface) {
+			// Don't wrap already wrapped values again
+			return $value;
+		}
 
-        if (is_array($value)) {
-            return new ArrayProxy($value);
-        }
+		if (is_array($value)) {
+			return new ArrayProxy($value);
+		}
 
-        if ($value instanceof Traversable) {
-            return new IteratorProxy($value);
-        }
+		if ($value instanceof Traversable) {
+			return new IteratorProxy($value);
+		}
 
-        if (is_null($value)) {
-            return null;
-        }
+		if (is_null($value)) {
+			return null;
+		}
 
-        return new Proxy($value);
-    }
+		return new Proxy($value);
+	}
 }

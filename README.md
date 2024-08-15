@@ -20,36 +20,36 @@ Notable differences:
 
 ## Installation
 
-    composer require vacantplanet/boiler
+	composer require vacantplanet/boiler
 
 
 ## Quick start
 
 Assuming the following directory structure ...
 
-    path
-    `-- to
-        `-- templates
-           `-- page.php
+	path
+	`-- to
+		`-- templates
+		   `-- page.php
 
 ... and the content of the file `/path/to/templates/page.php` to be:
-    
-    <p>ID <?= $id ?></p>
+	
+	<p>ID <?= $id ?></p>
 
 Now create a `Engine` instance and render the template:
 
-    use VacantPlanet\Boiler\Engine;
+	use VacantPlanet\Boiler\Engine;
 
-    $engine = new Engine('/path/to/templates');
-    $html = $engine->render('page', ['id' => 13]);
+	$engine = new Engine('/path/to/templates');
+	$html = $engine->render('page', ['id' => 13]);
 
-    assert($html == '<p>ID 13</p>');
+	assert($html == '<p>ID 13</p>');
 
 ## Run the tests
 
-    pest --coverage && \
-        psalm --no-cache --show-info=true && \
-        phpcs -s -p --ignore=tests/templates src tests
+	pest --coverage && \
+		psalm --no-cache --show-info=true && \
+		phpcs -s -p --ignore=tests/templates src tests
 
 
 ## License

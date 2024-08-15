@@ -14,12 +14,12 @@ Wrapped values pass the flags `ENT_QUOTES | ENT_SUBSTITUTE` and the encoding `UT
 when calling PHP's {{php('htmlspecialchars')}} function 
 internally. If you need to override these defaults use the template helper method `e` or its long form `escape`:
 
-    $this->e($value, ENT_NOQUOTES | ENT_HTML401, 'EUC-JP');
-    $this->e(
-        value: $value, 
-        flags: ENT_NOQUOTES | ENT_HTML401, 
-        encoding: 'EUC-JP'
-    );
+	$this->e($value, ENT_NOQUOTES | ENT_HTML401, 'EUC-JP');
+	$this->e(
+		value: $value, 
+		flags: ENT_NOQUOTES | ENT_HTML401, 
+		encoding: 'EUC-JP'
+	);
 
-    // or 
-    $this->escape($value, ENT_NOQUOTES | ENT_HTML401, 'EUC-JP');
+	// or 
+	$this->escape($value, ENT_NOQUOTES | ENT_HTML401, 'EUC-JP');
