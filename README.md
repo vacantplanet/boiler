@@ -47,7 +47,7 @@ Now create a `Engine` instance and render the template:
 
 ## Run the tests
 
-	pest --coverage && \
+	phpunit --testdox && \
 		psalm --no-cache --show-info=true && \
 		phpcs -s -p --ignore=tests/templates src tests
 
