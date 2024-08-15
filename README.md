@@ -2,10 +2,10 @@ Boiler
 ======
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/vacantplanet/boiler.svg)](https://scrutinizer-ci.com/g/vacantplanet/boiler/code-structure)
-[![Psalm coverage](https://shepherd.dev/github/vacantplanet/boiler/coverage.svg?)](https://shepherd.dev/github/vacantplanet/boiler)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cd2e266bcfb14b21b8ce11ddaafe4f06)](https://app.codacy.com/gh/vacantplanet/boiler/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/cd2e266bcfb14b21b8ce11ddaafe4f06)](https://app.codacy.com/gh/vacantplanet/boiler/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Psalm level](https://shepherd.dev/github/vacantplanet/boiler/level.svg?)](https://vacantplanet.dev/boiler)
-[![Quality Score](https://img.shields.io/scrutinizer/g/vacantplanet/boiler.svg)](https://scrutinizer-ci.com/g/vacantplanet/boiler)
+[![Psalm coverage](https://shepherd.dev/github/vacantplanet/boiler/coverage.svg?)](https://shepherd.dev/github/vacantplanet/boiler)
 
 Boiler is a native >=PHP 8.1 template engine in the vein of [Plates](https://platesphp.com/), which
 uses PHP itself instead of a custom template language.
