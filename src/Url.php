@@ -12,16 +12,16 @@ class Url
 	{
 		$parsed = parse_url($url);
 
-		if (!$parsed) {
+		if ($parsed === false) {
 			throw new RuntimeException('Invalid Url');
 		}
 
-		$path = empty($parsed['scheme']) ? '' : $parsed['scheme'] . '://';
+		$path = self::empty($parsed, 'scheme') ? '' : ($parsed['scheme'] ?? '') . '://';
 		$path .= rawurlencode($parsed['user'] ?? '');
-		$path .= rawurlencode(empty($parsed['pass']) ? '' : ':' . $parsed['pass']);
-		$path .= !empty($parsed['pass']) || !empty($parsed['pass']) ? '@' : '';
+		$path .= rawurlencode(self::empty($parsed, 'pass') ? '' : ':' . ($parsed['pass'] ?? ''));
+		$path .= !self::empty($parsed, 'pass') || !self::empty($parsed, 'pass') ? '@' : '';
 		$path .= $parsed['host'] ?? '';
-		$path .= empty($parsed['port']) ? '' : ':' . $parsed['port'];
+		$path .= self::empty($parsed, 'port') ? '' : ':' . ($parsed['port'] ?? '');
 
 		$segments = [];
 
@@ -32,16 +32,21 @@ class Url
 		$path .= implode('/', $segments);
 		$query = '';
 
-		if (!empty($parsed['query'])) {
-			parse_str($parsed['query'], $array);
+		if (!self::empty($parsed, 'query')) {
+			parse_str($parsed['query'] ?? '', $array);
 
 			if (count($array) > 0) {
 				$query .= '?' . http_build_query($array);
 			}
 		}
 
-		$query .= empty($parsed['fragment']) ? '' : '#' . rawurlencode($parsed['fragment']);
+		$query .= self::empty($parsed, 'fragment') ? '' : '#' . rawurlencode($parsed['fragment'] ?? '');
 
 		return $path . $query;
+	}
+
+	protected static function empty(array $url, string $key): bool
+	{
+		return strlen((string) ($url[$key] ?? '')) > 0;
 	}
 }
