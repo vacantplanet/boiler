@@ -2,54 +2,62 @@
 
 declare(strict_types=1);
 
+namespace VacantPlanet\Boiler\Tests;
+
 use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
 use VacantPlanet\Boiler\Proxy\Proxy;
 
-test('Wrapping', function () {
-	$iterator = (function () {
-		yield 1;
-
-		yield 'string';
-
-		yield [1, 2];
-
-		yield (function () {
+final class IteratorProxyTest extends TestCase
+{
+	public function testIteratorProxyWrapping(): void
+	{
+		$iterator = (function () {
 			yield 1;
+
+			yield 'string';
+
+			yield [1, 2];
+
+			yield (function () {
+				yield 1;
+			})();
 		})();
-	})();
 
-	$iterval = new IteratorProxy($iterator);
-	$new = [];
+		$iterval = new IteratorProxy($iterator);
+		$new = [];
 
-	foreach ($iterval as $val) {
-		$new[] = $val;
+		foreach ($iterval as $val) {
+			$new[] = $val;
+		}
+
+		$this->assertSame(1, $new[0]);
+		$this->assertInstanceOf(Proxy::class, $new[1]);
+		$this->assertInstanceOf(ArrayProxy::class, $new[2]);
+		$this->assertInstanceOf(IteratorProxy::class, $new[3]);
 	}
 
-	expect($new[0])->toBe(1);
-	expect($new[1])->toBeInstanceOf(Proxy::class);
-	expect($new[2])->toBeInstanceOf(ArrayProxy::class);
-	expect($new[3])->toBeInstanceOf(IteratorProxy::class);
-});
+	public function testIteratorProxyUnwrap(): void
+	{
+		$iterator = (function () {
+			yield 1;
+		})();
 
-test('Unwrap', function () {
-	$iterator = (function () {
-		yield 1;
-	})();
+		$iterval = new IteratorProxy($iterator);
 
-	$iterval = new IteratorProxy($iterator);
+		$this->assertSame($iterator, $iterval->unwrap());
+	}
 
-	expect($iterval->unwrap())->toBe($iterator);
-});
+	public function testIteratorProxyToArray(): void
+	{
+		$iterator = (function () {
+			yield 1;
 
-test('To array', function () {
-	$iterator = (function () {
-		yield 1;
+			yield 2;
+		})();
 
-		yield 2;
-	})();
+		$iterval = new IteratorProxy($iterator);
 
-	$iterval = new IteratorProxy($iterator);
-
-	expect($iterval->toArray()->unwrap())->toBe([1, 2]);
-});
+		$this->assertSame([1, 2], $iterval->toArray()->unwrap());
+	}
+}
