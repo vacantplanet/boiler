@@ -133,10 +133,12 @@ class Template
 			$content = ob_get_clean();
 
 			return new Content($content, $templateContext);
-		} catch (ErrorException $e) {
-			throw new RuntimeException('Render error: ' . $e->getMessage());
 		} catch (Throwable $e) {
-			throw $e;
+			throw new RuntimeException(
+				'Render error: ' . $e->getMessage(),
+				$e->getCode(),
+				$e,
+			);
 		} finally {
 			while (ob_get_level() > $level) {
 				ob_end_clean();
