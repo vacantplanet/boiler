@@ -134,8 +134,8 @@ class Template
 
 			return new Content($content, $templateContext);
 		} catch (Throwable $e) {
-			throw new RuntimeException(
-				'Render error: ' . $e->getMessage(),
+			throw new ($e::class)(
+				"Template rendering error ({$this->path}): " . $e->getMessage(),
 				$e->getCode(),
 				$e,
 			);

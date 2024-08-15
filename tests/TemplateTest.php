@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace VacantPlanet\Boiler\Tests;
 
+use ParseError;
 use VacantPlanet\Boiler\Exception\LookupException;
-use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\Tests\TestCase;
@@ -167,7 +167,7 @@ final class TemplateTest extends TestCase
 
 	public function testRenderError(): void
 	{
-		$this->throws(RuntimeException::class, 'Render error:');
+		$this->throws(ParseError::class, 'Template rendering error');
 
 		$template = new Template($this->templates . 'rendererror.php');
 
