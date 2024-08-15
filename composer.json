@@ -30,7 +30,8 @@
 	},
 	"require": {
 		"php": ">=8.2",
-		"symfony/html-sanitizer": "^6.1"
+		"symfony/html-sanitizer": "^6.1",
+		"ernst/coverlyzer": "^0.1.1"
 	},
 	"repositories": [
 		{
@@ -44,6 +45,28 @@
 		"staabm/annotate-pull-request-from-checkstyle": "^1.8",
 		"vacantplanet/development": "@dev",
 		"vimeo/psalm": "5.25"
+	},
+	"scripts": {
+		"test": [
+			"./vendor/bin/phpunit --testdox --no-coverage --colors=always"
+		],
+		"check": "./vendor/bin/psalm --no-cache",
+		"check-github": "./vendor/bin/psalm --output-format=github --shepherd",
+		"lint": "./vendor/bin/phpcs -s -p src tests",
+		"coverage": [
+			"./vendor/bin/phpunit --testdox --coverage-clover=clover.xml --coverage-text --coverage-php=coverage/cover.php  --colors=always",
+			"./vendor/bin/coverlyzer coverage/cover.php"
+		],
+		"ci": [
+			"composer coverage",
+			"composer check",
+			"composer lint"
+		],
+		"github": [
+			"composer coverage",
+			"composer check-github",
+			"composer lint"
+		]
 	},
 	"config": {
 		"allow-plugins": {
