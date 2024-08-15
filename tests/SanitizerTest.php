@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
+namespace VacantPlanet\Boiler\Tests;
+
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use VacantPlanet\Boiler\Sanitizer;
 
-const MALFORMED = '
+final class SanitizerTest extends TestCase
+{
+	public const MALFORMED = '
         <header>Test</header>
         <aside><div>Test</div></aside>
         <iframe src="example.com"></iframe>
@@ -18,8 +22,9 @@ const MALFORMED = '
         </article>
         <footer>Test</footer>';
 
-test('Clean with config', function () {
-	$clean = '
+	public function testCleanWithConfig(): void
+	{
+		$clean = '
         <header>Test</header>
         <aside><div>Test</div></aside>
         <nav><ul><li>Test</li></ul></nav>
@@ -30,16 +35,17 @@ test('Clean with config', function () {
         </article>
         <footer>Test</footer>';
 
-	expect(Sanitizer::clean(MALFORMED))->toBe($clean);
-});
+		$this->assertSame($clean, Sanitizer::clean(self::MALFORMED));
+	}
 
-test('Clean with block extension', function () {
-	$config = (new HtmlSanitizerConfig())
-		->allowSafeElements()
-		->blockElement('header')
-		->blockElement('footer')
-		->blockElement('section');
-	$clean = '
+	public function testCleanWithBlockExtension(): void
+	{
+		$config = (new HtmlSanitizerConfig())
+			->allowSafeElements()
+			->blockElement('header')
+			->blockElement('footer')
+			->blockElement('section');
+		$clean = '
         Test
         <aside><div>Test</div></aside>
         <nav><ul><li>Test</li></ul></nav>
@@ -48,5 +54,6 @@ test('Clean with block extension', function () {
         </article>
         Test';
 
-	expect(Sanitizer::clean(MALFORMED, $config))->toBe($clean);
-});
+		$this->assertSame($clean, Sanitizer::clean(self::MALFORMED, $config));
+	}
+}
