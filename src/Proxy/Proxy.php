@@ -18,7 +18,7 @@ class Proxy implements ProxyInterface
     public function __toString(): string
     {
         return htmlspecialchars(
-            (string)$this->value,
+            (string) $this->value,
             ENT_QUOTES | ENT_SUBSTITUTE,
             'UTF-8',
         );
@@ -80,14 +80,14 @@ class Proxy implements ProxyInterface
          *
          * @psalm-suppress PossiblyInvalidArgument
          */
-        return strip_tags((string)$this->value, $allowed);
+        return strip_tags((string) $this->value, $allowed);
     }
 
     public function clean(
         ?HtmlSanitizerConfig $config = null,
-        bool $removeEmptyLines = true
+        bool $removeEmptyLines = true,
     ): string {
-        return Sanitizer::clean((string)$this->value, $config, $removeEmptyLines);
+        return Sanitizer::clean((string) $this->value, $config, $removeEmptyLines);
     }
 
     public function empty(): bool

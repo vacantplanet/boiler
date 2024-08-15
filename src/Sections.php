@@ -32,7 +32,7 @@ class Sections
     public function end(): void
     {
         $content = ob_get_clean();
-        $name = (string)array_pop($this->capture);
+        $name = (string) array_pop($this->capture);
 
         $this->sections[$name] = match ($this->sectionMode) {
             SectionMode::Assign => new Section($content),

@@ -51,7 +51,7 @@ class Engine
     public function render(
         string $path,
         array $context = [],
-        ?bool $autoescape = null
+        ?bool $autoescape = null,
     ): string {
         if (is_null($autoescape)) {
             // Use the engine's default value if nothing is passed
@@ -86,9 +86,9 @@ class Engine
         }
 
         if (isset($dir) && $templatePath && is_file($templatePath)) {
-            if (!str_starts_with($templatePath, (string)$dir)) {
+            if (!str_starts_with($templatePath, (string) $dir)) {
                 throw new LookupException(
-                    'Template resides outside of root directory: ' . $templatePath
+                    'Template resides outside of root directory: ' . $templatePath,
                 );
             }
 
@@ -122,8 +122,8 @@ class Engine
         }
 
         return array_map(
-            fn ($dir) => realpath($dir) ?: throw new LookupException('Template directory does not exist ' . $dir),
-            $dirs
+            fn($dir) => realpath($dir) ?: throw new LookupException('Template directory does not exist ' . $dir),
+            $dirs,
         );
     }
 
@@ -147,7 +147,7 @@ class Engine
 
             return [null, $path];
         }
-        $segments = array_map(fn ($s) => trim($s), explode(':', $path));
+        $segments = array_map(fn($s) => trim($s), explode(':', $path));
 
         if (count($segments) == 2) {
             if (!empty($segments[0]) && !empty($segments[1])) {
@@ -156,12 +156,12 @@ class Engine
 
             throw new LookupException(
                 "Invalid template format: '{$path}'. " .
-                    "Use 'namespace:template/path or template/path'."
+                    "Use 'namespace:template/path or template/path'.",
             );
         } else {
             throw new LookupException(
                 "Invalid template format: '{$path}'. " .
-                    "Use 'namespace:template/path or template/path'."
+                    "Use 'namespace:template/path or template/path'.",
             );
         }
     }

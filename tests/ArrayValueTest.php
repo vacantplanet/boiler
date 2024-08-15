@@ -50,23 +50,23 @@ test('Helper ::merge', function () {
 test('Helper ::map', function () {
     $arrval = new ArrayProxy(['str1', 'str2']);
 
-    expect($arrval->map(fn ($v) => $v . 'plus')->unwrap())->toBe(['str1plus', 'str2plus']);
+    expect($arrval->map(fn($v) => $v . 'plus')->unwrap())->toBe(['str1plus', 'str2plus']);
 });
 
 test('Helper ::filter', function () {
     $arrval = new ArrayProxy([1, 3, 4, 2]);
 
-    expect(array_values($arrval->filter(fn ($v) => $v < 3)->unwrap()))->toBe([1, 2]);
+    expect(array_values($arrval->filter(fn($v) => $v < 3)->unwrap()))->toBe([1, 2]);
 });
 
 test('Helper ::reduce', function () {
     $arrval = new ArrayProxy([1, 3, 4, 2]);
 
-    expect($arrval->reduce(fn ($c, $v) => $c + $v, 0))->toBe(10);
+    expect($arrval->reduce(fn($c, $v) => $c + $v, 0))->toBe(10);
 
     $arrval = new ArrayProxy(['a', 'b', 'c']);
 
-    expect($arrval->reduce(fn ($c, $v) => $c . $v, '')->unwrap())->toBe('abc');
+    expect($arrval->reduce(fn($c, $v) => $c . $v, '')->unwrap())->toBe('abc');
 });
 
 test('Helper ::sorted', function () {
@@ -106,7 +106,7 @@ test('Helper ::sorted userdefined', function () {
             }
 
             return 0;
-        }
+        },
     )->unwrap())->toBe(['a', 'A', 'B', 'b', 'C', 'c']);
 
     expect($arrval->sorted(
@@ -121,13 +121,13 @@ test('Helper ::sorted userdefined', function () {
             }
 
             return 0;
-        }
+        },
     )->unwrap())->toBe([1 => 'a', 4 => 'A', 0 => 'B', 5 => 'b', 2 => 'C', 3 => 'c']);
 });
 
 test('Helper ::sorted userdefined throws', function () {
     $arrval = new ArrayProxy(['B', 'a']);
-    $arrval->sorted('ut', fn ($a, $b) => strtolower($a) > strtolower($b));
+    $arrval->sorted('ut', fn($a, $b) => strtolower($a) > strtolower($b));
 })->throws(UnexpectedValueException::class);
 
 test('Helper ::sorted userdefined throws no callable', function () {
@@ -177,8 +177,8 @@ test('Unset value', function () {
 });
 
 test('Wrapped array access', function () {
-    $obj = new class () {};
-    $stringable = new class () {
+    $obj = new class {};
+    $stringable = new class {
         public function __toString(): string
         {
             return '';
@@ -197,8 +197,8 @@ test('Wrapped array access', function () {
 });
 
 test('Wrapped iteration', function () {
-    $obj = new class () {};
-    $stringable = new class () {
+    $obj = new class {};
+    $stringable = new class {
         public function __toString(): string
         {
             return '';

@@ -37,13 +37,13 @@ test('Iterator', function () {
 });
 
 test('Object', function () {
-    $obj = new class () {};
+    $obj = new class {};
 
     expect(Wrapper::wrap($obj))->toBeInstanceOf(Proxy::class);
 });
 
 test('Stringable', function () {
-    $obj = new class () {
+    $obj = new class {
         public function __toString(): string
         {
             return '';

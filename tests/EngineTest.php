@@ -22,7 +22,7 @@ test('Simple rendering', function () {
     $engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
     expect(
-        $this->fullTrim($engine->render('simple', ['text' => 'rocks']))
+        $this->fullTrim($engine->render('simple', ['text' => 'rocks'])),
     )->toBe('<h1>boiler</h1><p>rocks</p>');
 });
 
@@ -36,7 +36,7 @@ test('Simple scalar value rendering', function () {
             'null' => null,
             'bool' => true,
             'string' => '<script></script>',
-        ]))
+        ])),
     )->toBe('<p>13</p><p>1</p><p>13.73</p><p></p><p>&lt;script&gt;&lt;/script&gt;</p>');
 });
 
@@ -44,7 +44,7 @@ test('Simple rendering (namespaced)', function () {
     $engine = new Engine($this->namespaced(), ['obj' => $this->obj()]);
 
     expect(
-        $this->fullTrim($engine->render('namespace:simple', ['text' => 'rocks']))
+        $this->fullTrim($engine->render('namespace:simple', ['text' => 'rocks'])),
     )->toBe('<h1>boiler</h1><p>rocks</p>');
 });
 
@@ -84,7 +84,7 @@ test('Unwrap rendering with Stringable', function () {
     $engine = new Engine($this->templates());
 
     expect($engine->render('unwrap', [
-        'html' => new class () {
+        'html' => new class {
             public function __toString(): string
             {
                 return '<b>boiler</b>';
@@ -95,7 +95,7 @@ test('Unwrap rendering with Stringable', function () {
 
 test('Rendering with Stringable', function () {
     $engine = new Engine($this->templates());
-    $stringable = new class () {
+    $stringable = new class {
         public string $test = 'test';
 
         public function __toString(): string
@@ -134,7 +134,7 @@ test('Helper function rendering', function () {
     $engine = new Engine($this->templates(), ['obj' => $this->obj()]);
 
     expect($this->fullTrim($engine->render('helper')))->toBe(
-        '&lt;script&gt;&lt;script&gt;<b>clean</b>'
+        '&lt;script&gt;&lt;script&gt;<b>clean</b>',
     );
 });
 
@@ -153,7 +153,7 @@ test('Escape already wrapped Proxy', function () {
     expect($this->fullTrim($engine->render('escapevalue', [
         'wrapped' => '<b>wrapped</b>',
     ])))->toBe(
-        '<p>&lt;b&gt;wrapped&lt;/b&gt;</p>'
+        '<p>&lt;b&gt;wrapped&lt;/b&gt;</p>',
     );
 });
 
@@ -176,7 +176,7 @@ test('Iterator rendering', function () {
 test('Complex nested rendering', function () {
     $engine = new Engine(
         $this->templates(),
-        ['obj' => $this->obj()]
+        ['obj' => $this->obj()],
     );
 
     $iter = function () {
@@ -193,7 +193,7 @@ test('Complex nested rendering', function () {
         'url' => 'https://example.com/boiler  /app  ',
         'array' => [
             '<b>sanitize</b>' => [
-                1, 'String', new class () {
+                1, 'String', new class {
                     public function __toString(): string
                     {
                         return '<p>Object</p>';
@@ -241,7 +241,7 @@ test('Stacked layout', function () {
         'text' => 'boiler',
     ])))->toBe(
         '<body><div class="stackedsecond"><div class="stackedfirst">' .
-            '<p>boiler</p></div></div><p>boiler</p></body>'
+            '<p>boiler</p></div></div><p>boiler</p></body>',
     );
 });
 
@@ -261,7 +261,7 @@ test('Render section with default value', function () {
     $engine = new Engine($this->templates());
 
     expect(
-        $this->fullTrim($engine->render('addsectiondefault', []))
+        $this->fullTrim($engine->render('addsectiondefault', [])),
     )->toBe('<p>default value</p>');
 });
 
@@ -273,7 +273,7 @@ test('Append/prepend to section', function () {
     ])))->toBe(
         '<script src="/prepend.js"></script>' .
             '<script src="/assign.js"></script>' .
-            '<script src="/append.js"></script>'
+            '<script src="/append.js"></script>',
     );
 });
 
@@ -325,7 +325,7 @@ test('Template in sub directory', function () {
 test('Additional template directories', function () {
     $engine = new Engine(
         $this->templates($this->additional()),
-        ['obj' => $this->obj()]
+        ['obj' => $this->obj()],
     );
 
     expect($this->fullTrim($engine->render('simple', [

@@ -7,12 +7,13 @@ use VacantPlanet\Boiler\Url;
 
 test('All segments', function () {
     $url = Url::clean(
-        "http://user :pss@example.com:81/mypath/    myfile.html?a=\"chuck schuldiner\"&b[]=2&b[]\n\n\n=3&z=666#symbolic"
+        "http://user :pss@example.com:81/mypath/   " .
+        " myfile.html?a=\"chuck schuldiner\"&b[]=2&b[]\n\n\n=3&z=666#symbolic",
     );
 
     expect($url)->toBe(
         'http://user%20%3Apss@example.com:81/mypath/++++myfile.html' .
-            '?a=%22chuck+schuldiner%22&b%5B0%5D=2&b%5B1%5D=3&z=666#symbolic'
+        '?a=%22chuck+schuldiner%22&b%5B0%5D=2&b%5B1%5D=3&z=666#symbolic',
     );
 });
 

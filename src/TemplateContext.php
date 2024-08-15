@@ -34,7 +34,7 @@ class TemplateContext
     {
         return array_map(
             [$this, 'wrapIf'],
-            array_merge($this->context, $values)
+            array_merge($this->context, $values),
         );
     }
 
@@ -51,7 +51,7 @@ class TemplateContext
         string $encoding = self::ESCAPE_ENCODING,
     ): string {
         if ($value instanceof Proxy) {
-            return htmlspecialchars((string)$value->unwrap(), $flags, $encoding);
+            return htmlspecialchars((string) $value->unwrap(), $flags, $encoding);
         }
 
         return htmlspecialchars($value, $flags, $encoding);
@@ -75,7 +75,7 @@ class TemplateContext
 
     public function url(Proxy|string $value): string
     {
-        return Url::clean($value instanceof Proxy ? (string)$value->unwrap() : $value);
+        return Url::clean($value instanceof Proxy ? (string) $value->unwrap() : $value);
     }
 
     /**
@@ -105,7 +105,7 @@ class TemplateContext
         echo $template->render(
             $this->context($context),
             $this->whitelist,
-            $this->autoescape
+            $this->autoescape,
         );
     }
 

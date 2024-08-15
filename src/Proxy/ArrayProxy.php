@@ -80,7 +80,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
         }
 
         if (is_numeric($offset)) {
-            $key = (string)$offset;
+            $key = (string) $offset;
         } else {
             $key = "'{$offset}'";
         }
@@ -117,7 +117,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
     {
         return new self(array_merge(
             $this->array,
-            $array instanceof self ? $array->unwrap() : $array
+            $array instanceof self ? $array->unwrap() : $array,
         ));
     }
 

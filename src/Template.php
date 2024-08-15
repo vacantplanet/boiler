@@ -65,7 +65,7 @@ class Template
             $content->templateContext,
             $whitelist,
             $content->content,
-            $autoescape
+            $autoescape,
         );
     }
 
@@ -127,7 +127,7 @@ class Template
                 $this->path,
                 $autoescape ?
                     $templateContext->context() :
-                    $context
+                    $context,
             );
 
             $content = ob_get_clean();
@@ -150,7 +150,7 @@ class Template
         TemplateContext $context,
         array $whitelist,
         string $content,
-        bool $autoescape
+        bool $autoescape,
     ): string {
         while ($layout = $template->layout()) {
             $file = $template->engine->getFile($layout->layout);

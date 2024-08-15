@@ -35,7 +35,7 @@ test('Whitelisting', function () {
             'wl' => new Whitelisted(),
             'content' => 'test',
         ],
-        [Whitelisted::class]
+        [Whitelisted::class],
     )))->toBe('<h1>headline</h1><p>test</p>');
 });
 
@@ -48,7 +48,7 @@ test('Whitelisting with base class', function () {
             'wl' => new Whitelisted(),
             'content' => 'test',
         ],
-        [WhitelistBase::class]
+        [WhitelistBase::class],
     )))->toBe('<h1>headline</h1><p>test</p>');
 });
 

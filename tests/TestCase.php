@@ -31,9 +31,9 @@ class TestCase extends BaseTestCase
                 preg_replace(
                     '/\s+/',
                     ' ',
-                    preg_replace('/\n/', '', $text)
-                )
-            )
+                    preg_replace('/\n/', '', $text),
+                ),
+            ),
         );
     }
 
@@ -58,7 +58,7 @@ class TestCase extends BaseTestCase
 
     public function obj(): object
     {
-        return new class () {
+        return new class {
             public function name(): string
             {
                 return 'boiler';
