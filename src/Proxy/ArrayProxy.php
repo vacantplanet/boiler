@@ -16,6 +16,7 @@ use VacantPlanet\Boiler\Wrapper;
  * @psalm-api
  *
  * @psalm-type ArrayCallable = callable(mixed, mixed):int
+ * @psalm-type FilterCallable = callable(mixed):mixed
  *
  * @template-implements ArrayAccess<array-key, mixed>
  * @template-implements Iterator<mixed>
@@ -90,7 +91,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
-		if ($offset) {
+		if (is_int($offset)) {
 			$this->array[$offset] = $value;
 		} else {
 			$this->array[] = $value;
@@ -127,7 +128,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 		return new self(array_map($callable, $this->array));
 	}
 
-	/** @psalm-param ArrayCallable $callable */
+	/** @psalm-param FilterCallable $callable */
 	public function filter(callable $callable): self
 	{
 		return new self(array_filter($this->array, $callable));
@@ -145,7 +146,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 		$mode = strtolower(trim($mode));
 
 		if (str_starts_with($mode, 'u')) {
-			if (empty($callable)) {
+			if (!is_callable($callable)) {
 				throw new RuntimeException('No callable provided for user defined sorting');
 			}
 
