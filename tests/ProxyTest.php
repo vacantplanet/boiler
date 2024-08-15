@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace VacantPlanet\Boiler\Tests;
 
+use PHPUnit\Framework\Attributes\TestDox;
 use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Proxy\Proxy;
 use ValueError;
@@ -112,6 +113,7 @@ final class ProxyTest extends TestCase
 		$this->assertSame('<b>boiler</b>', $value()->clean());
 	}
 
+	#[TestDox('Getter throws I')]
 	public function testGetterThrowsI(): void
 	{
 		$this->throws(RuntimeException::class, 'No such property');
@@ -120,6 +122,7 @@ final class ProxyTest extends TestCase
 		$value->test;
 	}
 
+	#[TestDox('Getter throws II')]
 	public function testGetterThrowsII(): void
 	{
 		$this->throws(RuntimeException::class, 'No such property');
@@ -129,6 +132,7 @@ final class ProxyTest extends TestCase
 		$value->test;
 	}
 
+	#[TestDox('Setter throws I')]
 	public function testSetterThrowsI(): void
 	{
 		$this->throws(RuntimeException::class, 'No such property');
@@ -137,6 +141,7 @@ final class ProxyTest extends TestCase
 		$value->test = null;
 	}
 
+	#[TestDox('Setter throws II')]
 	public function testSetterThrowsII(): void
 	{
 		$this->throws(RuntimeException::class, 'No such property');
