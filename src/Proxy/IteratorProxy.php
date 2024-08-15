@@ -20,10 +20,12 @@ use VacantPlanet\Boiler\Wrapper;
  */
 class IteratorProxy extends IteratorIterator implements ProxyInterface
 {
+	/** @psalm-suppress MixedInferredReturnType a proxy has to wrap everything */
 	public function current(): mixed
 	{
 		$value = parent::current();
 
+		/** @psalm-suppress MixedReturnStatement see above */
 		return Wrapper::wrap($value);
 	}
 
