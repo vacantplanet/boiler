@@ -163,9 +163,9 @@ class Template
 				$template->engine,
 			);
 
-			$layoutContext = $layout->context
-				? $context->context($layout->context)
-				: $context->context();
+			$layoutContext = is_null($layout->context)
+				? $context->context()
+				: $context->context($layout->context);
 
 			$content = $template->render($layoutContext, $whitelist, $autoescape);
 		}
