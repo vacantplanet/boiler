@@ -2,8 +2,13 @@
 .cache
 .env
 .php*.cache
-__pycache__
-composer.lock
+.phpactor.json
+/coverage
+/data
 /site
 /tmp
 /vendor
+/venv
+__pycache__
+composer.lock
+mutants.log
