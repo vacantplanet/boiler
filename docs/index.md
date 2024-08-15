@@ -26,8 +26,7 @@ The main differences to *Plates* are:
 * Code reuse with template [inheritance](layouts.md) and
   [inclusion](inserts.md).
 * You use plain PHP in your templates. No need to learn another syntax.
-* Fully tested and statically analyzed with Psalm set to level 1  (disclaimer:
-  `reportMixedIssues` is disabled).
+* Fully tested and statically analyzed with Psalm set to level 1.
 * Reasonable performance.
 
 Next: [*Quick Start*](quickstart.md) or [*The Engine*](engine.md).
