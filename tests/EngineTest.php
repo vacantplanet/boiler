@@ -48,7 +48,13 @@ final class EngineTest extends TestCase
 
 		$this->assertSame(
 			'<p>13</p><p>1</p><p>13.73</p><p></p><p>&lt;script&gt;&lt;/script&gt;</p>',
-			$this->fullTrim($engine->render('scalar', ['int' => 13, 'float' => 13.73, 'null' => null, 'bool' => true, 'string' => '<script></script>'])),
+			$this->fullTrim($engine->render('scalar', [
+				'int' => 13,
+				'float' => 13.73,
+				'null' => null,
+				'bool' => true,
+				'string' => '<script></script>',
+			])),
 		);
 	}
 
@@ -95,7 +101,11 @@ final class EngineTest extends TestCase
 
 		$this->assertSame(
 			'<b>nodefaultautoescape</b>',
-			$engine->render('noautoescape', ['html' => '<b>nodefaultautoescape</b>'], autoescape: false, ),
+			$engine->render(
+				'noautoescape',
+				['html' => '<b>nodefaultautoescape</b>'],
+				autoescape: false,
+			),
 		);
 	}
 

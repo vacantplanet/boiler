@@ -72,20 +72,22 @@ class Engine
 	{
 		[$namespace, $file] = $this->getSegments($path);
 
-		if ($namespace) {
+		if (!is_Null($namespace)) {
 			$dir = $this->dirs[$namespace] ?? '';
 			$templatePath = $this->validateFile($this->dirs[$namespace], $file);
 		} else {
 			$templatePath = false;
 
 			foreach ($this->dirs as $dir) {
-				if ($templatePath = $this->validateFile($dir, $file)) {
+				$templatePath = $this->validateFile($dir, $file);
+
+				if ($templatePath !== false) {
 					break;
 				}
 			}
 		}
 
-		if (isset($dir) && $templatePath && is_file($templatePath)) {
+		if (isset($dir) && $templatePath !== false && is_file($templatePath)) {
 			if (!str_starts_with($templatePath, (string) $dir)) {
 				throw new LookupException(
 					'Template resides outside of root directory: ' . $templatePath,
@@ -118,24 +120,54 @@ class Engine
 	protected function prepareDirs(array|string $dirs): array
 	{
 		if (is_string($dirs)) {
-			return [realpath($dirs) ?: throw new LookupException('Template directory does not exist ' . $dirs)];
+			$realpath = realpath($dirs);
+
+			return [
+				$realpath !== false ?
+					$realpath :
+					throw new LookupException(
+						'Template directory does not exist ' . $dirs,
+					),
+			];
 		}
 
 		return array_map(
-			fn($dir) => realpath($dir) ?: throw new LookupException('Template directory does not exist ' . $dir),
+			function ($dir) {
+				$realpath = realpath($dir);
+
+				return $realpath !== false ?
+					$realpath :
+					throw new LookupException('Template directory does not exist ' . $dir);
+			},
 			$dirs,
 		);
 	}
 
+	/** @return false|non-empty-string */
 	protected function validateFile(string $dir, string $file): false|string
 	{
-		$path = $dir . DIRECTORY_SEPARATOR . $file;
+		/** @var callable(string):(false|non-empty-string) */
+		$rigidRealPath = function (string $path): false|string {
+			$realpath = realpath($path);
 
-		if ($realpath = realpath($path . '.php')) {
+			if ($realpath !== false) {
+				if (strlen($realpath) === 0) {
+					return false;
+				}
+
+				return $realpath;
+			}
+
+			return false;
+		};
+
+		$realpath = $rigidRealPath($dir . DIRECTORY_SEPARATOR . $file . '.php');
+
+		if ($realpath !== false) {
 			return $realpath;
 		}
 
-		return realpath($path);
+		return $rigidRealPath($dir . DIRECTORY_SEPARATOR . $file);
 	}
 
 	/** @return list{null|non-empty-string, non-empty-string} */
@@ -150,7 +182,8 @@ class Engine
 		$segments = array_map(fn($s) => trim($s), explode(':', $path));
 
 		if (count($segments) == 2) {
-			if (!empty($segments[0]) && !empty($segments[1])) {
+			if (($segments[0] ?? '') && ($segments[1] ?? '')) {
+				/** @var list{non-empty-string, non-empty-string} */
 				return [$segments[0], $segments[1]];
 			}
 
