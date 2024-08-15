@@ -2,62 +2,75 @@
 
 declare(strict_types=1);
 
+namespace VacantPlanet\Boiler\Tests;
+
+use Traversable;
 use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
 use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Wrapper;
 
-test('Number', function () {
-	expect(Wrapper::wrap(13))->toBe(13);
-	expect(Wrapper::wrap(1.13))->toBe(1.13);
-});
+final class WrapperTest extends TestCase
+{
+	public function testWrapNumber(): void
+	{
+		$this->assertSame(13, Wrapper::wrap(13));
+		$this->assertSame(1.13, Wrapper::wrap(1.13));
+	}
 
-test('String', function () {
-	expect(Wrapper::wrap('string'))->toBeInstanceOf(Proxy::class);
-});
+	public function testWrapString(): void
+	{
+		$this->assertInstanceOf(Proxy::class, Wrapper::wrap('string'));
+	}
 
-test('Array', function () {
-	$warray = Wrapper::wrap([1, 2, 3]);
+	public function testWrapArray(): void
+	{
+		$warray = Wrapper::wrap([1, 2, 3]);
 
-	expect($warray)->toBeInstanceOf(ArrayProxy::class);
-	expect(is_array($warray))->toBe(false);
-	expect(is_array($warray->unwrap()))->toBe(true);
-	expect(count($warray))->toBe(3);
-});
+		$this->assertInstanceOf(ArrayProxy::class, $warray);
+		$this->assertSame(false, is_array($warray));
+		$this->assertSame(true, is_array($warray->unwrap()));
+		$this->assertSame(3, count($warray));
+	}
 
-test('Iterator', function () {
-	$iterator = (function () {
-		yield 1;
-	})();
-	$witerator = Wrapper::wrap($iterator);
+	public function testWrapIterator(): void
+	{
+		$iterator = (function () {
+			yield 1;
+		})();
+		$witerator = Wrapper::wrap($iterator);
 
-	expect($witerator)->toBeInstanceOf(IteratorProxy::class);
-	expect($witerator->unwrap())->toBeInstanceOf(Traversable::class);
-	expect(is_iterable($witerator->unwrap()))->toBe(true);
-});
+		$this->assertInstanceOf(IteratorProxy::class, $witerator);
+		$this->assertInstanceOf(Traversable::class, $witerator->unwrap());
+		$this->assertSame(true, is_iterable($witerator->unwrap()));
+	}
 
-test('Object', function () {
-	$obj = new class {};
+	public function testWrapObject(): void
+	{
+		$obj = new class {};
 
-	expect(Wrapper::wrap($obj))->toBeInstanceOf(Proxy::class);
-});
+		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($obj));
+	}
 
-test('Stringable', function () {
-	$obj = new class {
-		public function __toString(): string
-		{
-			return '';
-		}
-	};
+	public function testWrapStringable(): void
+	{
+		$obj = new class {
+			public function __toString(): string
+			{
+				return '';
+			}
+		};
 
-	expect(Wrapper::wrap($obj))->toBeInstanceOf(Proxy::class);
-});
+		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($obj));
+	}
 
-test('Nesting', function () {
-	$value = new Proxy('string');
+	public function testNestingWrapping(): void
+	{
+		$value = new Proxy('string');
 
-	expect(Wrapper::wrap($value))->toBeInstanceOf(Proxy::class);
-	expect(Wrapper::wrap($value)->unwrap())->toBe('string');
-	expect(is_string(Wrapper::wrap($value)->unwrap()))->toBe(true);
-	expect(Wrapper::wrap($value))->toBeInstanceOf(Proxy::class);
-});
+		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($value));
+		$this->assertSame('string', Wrapper::wrap($value)->unwrap());
+		$this->assertSame(true, is_string(Wrapper::wrap($value)->unwrap()));
+		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($value));
+	}
+}
