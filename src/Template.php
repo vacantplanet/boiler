@@ -17,13 +17,8 @@ class Template
 	public readonly Engine $engine;
 	public readonly Sections $sections;
 	protected ?LayoutValue $layout = null;
-
-	/** @psalm-suppress PropertyNotSetInConstructor */
 	protected CustomMethods $customMethods;
 
-	/**
-	 * @psalm-param non-empty-string $path
-	 */
 	public function __construct(
 		public readonly string $path,
 		?Sections $sections = null,
@@ -35,7 +30,7 @@ class Template
 		if ($engine === null) {
 			$dir = dirname($path);
 
-			if (empty($dir) || empty($path)) {
+			if ($dir === '' || $path === '') {
 				throw new LookupException('No directory given or empty path');
 			}
 
