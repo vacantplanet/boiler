@@ -17,9 +17,9 @@ class Url
 		}
 
 		$path = self::empty($parsed, 'scheme') ? '' : ($parsed['scheme'] ?? '') . '://';
-		$path .= rawurlencode($parsed['user'] ?? '');
+		$path .= implode('@', array_map('rawurlencode', explode('@', $parsed['user'] ?? '')));
 		$path .= rawurlencode(self::empty($parsed, 'pass') ? '' : ':' . ($parsed['pass'] ?? ''));
-		$path .= !self::empty($parsed, 'pass') || !self::empty($parsed, 'pass') ? '@' : '';
+		$path .= !self::empty($parsed, 'user') || !self::empty($parsed, 'pass') ? '@' : '';
 		$path .= $parsed['host'] ?? '';
 		$path .= self::empty($parsed, 'port') ? '' : ':' . ($parsed['port'] ?? '');
 
@@ -47,6 +47,6 @@ class Url
 
 	protected static function empty(array $url, string $key): bool
 	{
-		return strlen((string) ($url[$key] ?? '')) > 0;
+		return strlen((string) ($url[$key] ?? '')) === 0;
 	}
 }

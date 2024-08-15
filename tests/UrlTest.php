@@ -12,12 +12,12 @@ final class UrlTest extends TestCase
 	public function testAllSegments(): void
 	{
 		$url = Url::clean(
-			"http://user :pss@example.com:81/mypath/   " .
+			"http://user @ example. com :pss@example.com:81/mypath/   " .
 			" myfile.html?a=\"chuck schuldiner\"&b[]=2&b[]\n\n\n=3&z=666#symbolic",
 		);
 
 		$this->assertSame(
-			'http://user%20%3Apss@example.com:81/mypath/++++myfile.html' .
+			'http://user%20@%20example.%20com%20%3Apss@example.com:81/mypath/++++myfile.html' .
 				'?a=%22chuck+schuldiner%22&b%5B0%5D=2&b%5B1%5D=3&z=666#symbolic',
 			$url,
 		);
