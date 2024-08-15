@@ -25,7 +25,7 @@ class Proxy implements ProxyInterface
 
 	public function __get(string $name): mixed
 	{
-		if (property_exists($this->value, $name)) {
+		if (is_object($this->value) && property_exists($this->value, $name)) {
 			return Wrapper::wrap($this->value->{$name});
 		}
 
@@ -34,7 +34,7 @@ class Proxy implements ProxyInterface
 
 	public function __set(string $name, mixed $value): void
 	{
-		if (property_exists($this->value, $name)) {
+		if (is_object($this->value) && property_exists($this->value, $name)) {
 			$this->value->{$name} = $value;
 
 			return;
@@ -66,14 +66,11 @@ class Proxy implements ProxyInterface
 		return $this->value;
 	}
 
+	/**
+	 * @param array<array-key, string>|null|string $allowed
+	 */
 	public function strip(null|array|string $allowed = null): string
 	{
-		/**
-		 * As of now (early 2023), psalm does not support the
-		 * type array as arguments to strip_tags's $allowed_tags.
-		 *
-		 * @psalm-suppress PossiblyInvalidArgument
-		 */
 		return strip_tags((string) $this->value, $allowed);
 	}
 
