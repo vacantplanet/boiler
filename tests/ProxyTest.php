@@ -2,130 +2,162 @@
 
 declare(strict_types=1);
 
+namespace VacantPlanet\Boiler\Tests;
+
 use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Proxy\Proxy;
+use ValueError;
 
-test('Proxy::unwrap', function () {
-	expect((new Proxy('<b>boiler</b>'))->unwrap())->toBe('<b>boiler</b>');
-});
+final class ProxyTest extends TestCase
+{
+	public function testProxyUnwrap(): void
+	{
+		$this->assertSame('<b>boiler</b>', (new Proxy('<b>boiler</b>'))->unwrap());
+	}
 
-test('Proxy::strip', function () {
-	expect((new Proxy('<b>boiler<br>plate</b>'))->strip('<br>'))->toBe('boiler<br>plate');
-	expect((new Proxy('<b>boiler<br>plate</b>'))->strip(['br']))->toBe('boiler<br>plate');
-	expect((new Proxy('<b>boiler<br>plate</b>'))->strip(['<br>']))->toBe('boiler<br>plate');
-	expect((new Proxy('<b>boiler<br>plate</b>'))->strip(null))->toBe('boilerplate');
-	expect((new Proxy('<b>boiler<br>plate</b>'))->strip())->toBe('boilerplate');
-});
+	public function testProxyStrip(): void
+	{
+		$this->assertSame('boiler<br>plate', (new Proxy('<b>boiler<br>plate</b>'))->strip('<br>'));
+		$this->assertSame('boiler<br>plate', (new Proxy('<b>boiler<br>plate</b>'))->strip(['br']));
+		$this->assertSame('boiler<br>plate', (new Proxy('<b>boiler<br>plate</b>'))->strip(['<br>']));
+		$this->assertSame('boilerplate', (new Proxy('<b>boiler<br>plate</b>'))->strip(null));
+		$this->assertSame('boilerplate', (new Proxy('<b>boiler<br>plate</b>'))->strip());
+	}
 
-test('Proxy::clean', function () {
-	expect((new Proxy('<b onclick="function()">boiler</b>'))->clean())->toBe('<b>boiler</b>');
-});
+	public function testProxyClean(): void
+	{
+		$this->assertSame('<b>boiler</b>', (new Proxy('<b onclick="function()">boiler</b>'))->clean());
+	}
 
-test('Proxy::empty', function () {
-	expect((new Proxy(''))->empty())->toBe(true);
-	expect((new Proxy('test'))->empty())->toBe(false);
-	expect((new Proxy(null))->empty())->toBe(true);
-});
+	public function testProxyEmpty(): void
+	{
+		$this->assertSame(true, (new Proxy(''))->empty());
+		$this->assertSame(false, (new Proxy('test'))->empty());
+		$this->assertSame(true, (new Proxy(null))->empty());
+	}
 
-test('String', function () {
-	$html = '<b onclick="func()">boiler</b>';
-	$value = new Proxy($html);
+	public function testStringValue(): void
+	{
+		$html = '<b onclick="func()">boiler</b>';
+		$value = new Proxy($html);
 
-	expect((string) $value)->toBe('&lt;b onclick=&quot;func()&quot;&gt;boiler&lt;/b&gt;');
-});
+		$this->assertSame('&lt;b onclick=&quot;func()&quot;&gt;boiler&lt;/b&gt;', (string) $value);
+	}
 
-test('Stringable', function () {
-	$stringable = new class {
-		public string $value = 'test';
+	public function testStringableValue(): void
+	{
+		$stringable = new class {
+			public string $value = 'test';
 
-		public function __toString(): string
-		{
-			return '<b>boiler</b>';
-		}
-
-		public function testMethod(): string
-		{
-			return $this->value . $this->value;
-		}
-	};
-	$value = new Proxy($stringable);
-
-	expect((string) $value)->toBe('&lt;b&gt;boiler&lt;/b&gt;');
-	expect($value->unwrap())->toBe($stringable);
-	expect($value->value)->toBeInstanceOf(Proxy::class);
-	expect((string) $value->value)->toBe('test');
-	$value->value = 'boiler';
-	expect((string) $value->value)->toBe('boiler');
-	expect($value->testMethod())->toBeInstanceOf(Proxy::class);
-	expect((string) $value->testMethod())->toBe('boilerboiler');
-});
-
-test('Object :: valid', function () {
-	$object = new class {
-		public function __invoke(string $s): string
-		{
-			return '<i>' . $s . '</i>';
-		}
-
-		public function html(): string
-		{
-			return '<b>boiler</b><script></script>';
-		}
-	};
-	$value = new Proxy($object);
-
-	expect((string) $value->html())->toBe('&lt;b&gt;boiler&lt;/b&gt;&lt;script&gt;&lt;/script&gt;');
-	expect($value->html()->clean())->toBe('<b>boiler</b>');
-	expect((string) $value('test'))->toBe('&lt;i&gt;test&lt;/i&gt;');
-});
-
-test('Object :: not invokable', function () {
-	$object = new class {};
-	$value = new Proxy($object);
-
-	$value();
-})->throws(RuntimeException::class, 'No such method');
-
-test('Closure', function () {
-	$closure = function (): string {
-		return '<b>boiler</b><script></script>';
-	};
-	$value = new Proxy($closure);
-
-	expect((string) $value())->toBe('&lt;b&gt;boiler&lt;/b&gt;&lt;script&gt;&lt;/script&gt;');
-	expect($value()->clean())->toBe('<b>boiler</b>');
-});
-
-test('Getter throws I', function () {
-	$value = new Proxy('test');
-	$value->test;
-})->throws(RuntimeException::class, 'No such property');
-
-test('Getter throws II', function () {
-	$obj = new class {};
-	$value = new Proxy($obj);
-	$value->test;
-})->throws(RuntimeException::class, 'No such property');
-
-test('Setter throws I', function () {
-	$value = new Proxy('test');
-	$value->test = null;
-})->throws(RuntimeException::class, 'No such property');
-
-test('Setter throws II', function () {
-	$obj = new class {
-		public function __set(string $n, mixed $v): void
-		{
-			if ($n && $v === null) {
-				throw new ValueError();
+			public function __toString(): string
+			{
+				return '<b>boiler</b>';
 			}
-		}
-	};
-	$value = new Proxy($obj);
-	$value->test = null;
-})->throws(RuntimeException::class, 'No such property');
 
-test('Method call throws', function () {
-	$value = new Proxy('test');
-	$value->test();
-})->throws(RuntimeException::class, 'No such method');
+			public function testMethod(): string
+			{
+				return $this->value . $this->value;
+			}
+		};
+		$value = new Proxy($stringable);
+
+		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;', (string) $value);
+		$this->assertSame($stringable, $value->unwrap());
+		$this->assertInstanceOf(Proxy::class, $value->value);
+		$this->assertSame('test', (string) $value->value);
+		$value->value = 'boiler';
+		$this->assertSame('boiler', (string) $value->value);
+		$this->assertInstanceOf(Proxy::class, $value->testMethod());
+		$this->assertSame('boilerboiler', (string) $value->testMethod());
+	}
+
+	public function testObjectValid(): void
+	{
+		$object = new class {
+			public function __invoke(string $s): string
+			{
+				return '<i>' . $s . '</i>';
+			}
+
+			public function html(): string
+			{
+				return '<b>boiler</b><script></script>';
+			}
+		};
+		$value = new Proxy($object);
+
+		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;&lt;script&gt;&lt;/script&gt;', (string) $value->html());
+		$this->assertSame('<b>boiler</b>', $value->html()->clean());
+		$this->assertSame('&lt;i&gt;test&lt;/i&gt;', (string) $value('test'));
+	}
+
+	public function testObjectNotInvokable(): void
+	{
+		$this->throws(RuntimeException::class, 'No such method');
+
+		$object = new class {};
+		$value = new Proxy($object);
+
+		$value();
+	}
+
+	public function testClosureValue(): void
+	{
+		$closure = function (): string {
+			return '<b>boiler</b><script></script>';
+		};
+		$value = new Proxy($closure);
+
+		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;&lt;script&gt;&lt;/script&gt;', (string) $value());
+		$this->assertSame('<b>boiler</b>', $value()->clean());
+	}
+
+	public function testGetterThrowsI(): void
+	{
+		$this->throws(RuntimeException::class, 'No such property');
+
+		$value = new Proxy('test');
+		$value->test;
+	}
+
+	public function testGetterThrowsII(): void
+	{
+		$this->throws(RuntimeException::class, 'No such property');
+
+		$obj = new class {};
+		$value = new Proxy($obj);
+		$value->test;
+	}
+
+	public function testSetterThrowsI(): void
+	{
+		$this->throws(RuntimeException::class, 'No such property');
+
+		$value = new Proxy('test');
+		$value->test = null;
+	}
+
+	public function testSetterThrowsII(): void
+	{
+		$this->throws(RuntimeException::class, 'No such property');
+
+		$obj = new class {
+			public function __set(string $n, mixed $v): void
+			{
+				if ($n && $v === null) {
+					throw new ValueError();
+				}
+			}
+		};
+		$value = new Proxy($obj);
+		$value->test = null;
+	}
+
+	public function testMethodCallThrows(): void
+	{
+		$this->throws(RuntimeException::class, 'No such method');
+
+		$value = new Proxy('test');
+		$value->test();
+	}
+}
