@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VacantPlanet\Boiler\Tests;
 
 use ParseError;
+use PHPUnit\Framework\Attributes\TestDox;
 use VacantPlanet\Boiler\Engine;
 use VacantPlanet\Boiler\Exception\LogicException;
 use VacantPlanet\Boiler\Exception\LookupException;
@@ -15,6 +16,7 @@ use VacantPlanet\Boiler\Tests\TestCase;
 
 final class EngineTest extends TestCase
 {
+	#[TestDox('Directory does not exist I')]
 	public function testDirectoryDoesNotExistI(): void
 	{
 		$this->throws(LookupException::class, 'doesnotexist');
@@ -22,6 +24,7 @@ final class EngineTest extends TestCase
 		new Engine('./doesnotexist');
 	}
 
+	#[TestDox('Directory does not exist II')]
 	public function testDirectoryDoesNotExistII(): void
 	{
 		$this->throws(LookupException::class, 'doesnotexist');
@@ -33,83 +36,82 @@ final class EngineTest extends TestCase
 	{
 		$engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
-		expect(
+		$this->assertSame(
+			'<h1>boiler</h1><p>rocks</p>',
 			$this->fullTrim($engine->render('simple', ['text' => 'rocks'])),
-		)->toBe('<h1>boiler</h1><p>rocks</p>');
+		);
 	}
 
 	public function testSimpleScalarValueRendering(): void
 	{
 		$engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
-		expect(
-			$this->fullTrim($engine->render('scalar', [
-				'int' => 13,
-				'float' => 13.73,
-				'null' => null,
-				'bool' => true,
-				'string' => '<script></script>',
-			])),
-		)->toBe('<p>13</p><p>1</p><p>13.73</p><p></p><p>&lt;script&gt;&lt;/script&gt;</p>');
+		$this->assertSame(
+			'<p>13</p><p>1</p><p>13.73</p><p></p><p>&lt;script&gt;&lt;/script&gt;</p>',
+			$this->fullTrim($engine->render('scalar', ['int' => 13, 'float' => 13.73, 'null' => null, 'bool' => true, 'string' => '<script></script>'])),
+		);
 	}
 
 	public function testSimpleRenderingNamespaced(): void
 	{
 		$engine = new Engine($this->namespaced(), ['obj' => $this->obj()]);
 
-		expect(
+		$this->assertSame(
+			'<h1>boiler</h1><p>rocks</p>',
 			$this->fullTrim($engine->render('namespace:simple', ['text' => 'rocks'])),
-		)->toBe('<h1>boiler</h1><p>rocks</p>');
+		);
 	}
 
 	public function testExtensionGiven(): void
 	{
 		$engine = new Engine(self::DEFAULT_DIR, ['obj' => $this->obj()]);
 
-		expect($this->fullTrim($engine->render('extension.tpl')))->toBe('<p></p>');
+		$this->assertSame('<p></p>', $this->fullTrim($engine->render('extension.tpl')));
 	}
 
 	public function testUnwrapRendering(): void
 	{
 		$engine = new Engine(self::DEFAULT_DIR);
 
-		expect($engine->render('unwrap', [
-			'html' => '<b>boiler</b>',
-		]))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>');
+		$this->assertSame(
+			'&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>',
+			$engine->render('unwrap', ['html' => '<b>boiler</b>']),
+		);
 	}
 
 	public function testSwitchOffAutoescapingByDefault(): void
 	{
 		$engine = new Engine(self::DEFAULT_DIR, autoescape: false);
 
-		expect($engine->render('noautoescape', [
-			'html' => '<b>noautoescape</b>',
-		]))->toBe('<b>noautoescape</b>');
+		$this->assertSame(
+			'<b>noautoescape</b>',
+			$engine->render('noautoescape', ['html' => '<b>noautoescape</b>']),
+		);
 	}
 
 	public function testSwitchOffAutoescapingWhenCallingRender(): void
 	{
 		$engine = new Engine(self::DEFAULT_DIR, autoescape: true);
 
-		expect($engine->render(
-			'noautoescape',
-			['html' => '<b>nodefaultautoescape</b>'],
-			autoescape: false,
-		))->toBe('<b>nodefaultautoescape</b>');
+		$this->assertSame(
+			'<b>nodefaultautoescape</b>',
+			$engine->render('noautoescape', ['html' => '<b>nodefaultautoescape</b>'], autoescape: false, ),
+		);
 	}
 
 	public function testUnwrapRenderingWithStringable(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($engine->render('unwrap', [
-			'html' => new class {
+		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>', $engine->render(
+			'unwrap',
+			['html' => new class {
 				public function __toString(): string
 				{
 					return '<b>boiler</b>';
 				}
-			},
-		]))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>');
+			}],
+		));
 	}
 
 	public function testRenderingWithStringable(): void
@@ -129,35 +131,47 @@ final class EngineTest extends TestCase
 			}
 		};
 
-		expect($this->fullTrim($engine->render('stringable', [
-			'html' => $stringable,
-		])))->toBe('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>testmantasmantas');
+		$this->assertSame(
+			'&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>testmantasmantas',
+			$this->fullTrim(
+				$engine->render('stringable', ['html' => $stringable]),
+			),
+		);
 	}
 
 	public function testCleanRendering(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($engine->render('clean', [
-			'html' => '<script src="/evil.js"></script><b>boiler</b>',
-		]))->toBe('<b>boiler</b>');
+		$this->assertSame(
+			'<b>boiler</b>',
+			$engine->render(
+				'clean',
+				['html' => '<script src="/evil.js"></script><b>boiler</b>'],
+			),
+		);
 	}
 
 	public function testArrayRendering(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect(trim($engine->render('iter', [
-			'arr' => ['<b>1</b>', '<b>2</b>', '<b>3</b>'],
-		])))->toBe('&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;');
+		$this->assertSame(
+			'&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;',
+			trim($engine->render(
+				'iter',
+				['arr' => ['<b>1</b>', '<b>2</b>', '<b>3</b>']],
+			)),
+		);
 	}
 
 	public function testHelperFunctionRendering(): void
 	{
 		$engine = new Engine($this->templates(), ['obj' => $this->obj()]);
 
-		expect($this->fullTrim($engine->render('helper')))->toBe(
+		$this->assertSame(
 			'&lt;script&gt;&lt;script&gt;<b>clean</b>',
+			$this->fullTrim($engine->render('helper')),
 		);
 	}
 
@@ -165,20 +179,25 @@ final class EngineTest extends TestCase
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('empty', [
-			'empty' => '',
-			'notempty' => '<b>not empty</b>',
-		])))->toBe('&lt;b&gt;not empty&lt;/b&gt;');
+		$this->assertSame(
+			'&lt;b&gt;not empty&lt;/b&gt;',
+			$this->fullTrim($engine->render(
+				'empty',
+				['empty' => '', 'notempty' => '<b>not empty</b>'],
+			)),
+		);
 	}
 
 	public function testEscapeAlreadyWrappedProxy(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('escapevalue', [
-			'wrapped' => '<b>wrapped</b>',
-		])))->toBe(
+		$this->assertSame(
 			'<p>&lt;b&gt;wrapped&lt;/b&gt;</p>',
+			$this->fullTrim($engine->render(
+				'escapevalue',
+				['wrapped' => '<b>wrapped</b>'],
+			)),
 		);
 	}
 
@@ -194,9 +213,13 @@ final class EngineTest extends TestCase
 			}
 		};
 
-		expect(trim($engine->render('iter', [
-			'arr' => $iter(),
-		])))->toBe('&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;b&gt;4&lt;/b&gt;');
+		$this->assertSame(
+			'&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;b&gt;4&lt;/b&gt;',
+			trim($engine->render(
+				'iter',
+				['arr' => $iter()],
+			)),
+		);
 	}
 
 	public function testComplexNestedRendering(): void
@@ -238,16 +261,20 @@ final class EngineTest extends TestCase
 			'<td>&lt;p&gt;Object&lt;/p&gt;</td></tr><tr><td>666</td><td>13.73</td><td>String II</td>' .
 			'<td>1</td></tr></table><p>HTML</p></body></html>';
 
-		expect($result)->toBe($compare);
+		$this->assertSame($compare, $result);
 	}
 
 	public function testSingleLayout(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('uselayout', [
-			'text' => 'boiler',
-		])))->toBe('<body><p>boiler</p><p>boiler</p></body>');
+		$this->assertSame(
+			'<body><p>boiler</p><p>boiler</p></body>',
+			$this->fullTrim($engine->render(
+				'uselayout',
+				['text' => 'boiler'],
+			)),
+		);
 	}
 
 	public function testNonExistentLayoutWithoutExtension(): void
@@ -272,11 +299,13 @@ final class EngineTest extends TestCase
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('usestacked', [
-			'text' => 'boiler',
-		])))->toBe(
+		$this->assertSame(
 			'<body><div class="stackedsecond"><div class="stackedfirst">' .
 				'<p>boiler</p></div></div><p>boiler</p></body>',
+			$this->fullTrim($engine->render(
+				'usestacked',
+				['text' => 'boiler'],
+			)),
 		);
 	}
 
@@ -291,30 +320,31 @@ final class EngineTest extends TestCase
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('addsection', [
-			'text' => 'boiler',
-		])))->toBe('<div><p>boiler</p>boiler</div><ul><li>boiler</li></ul>');
+		$this->assertSame(
+			'<div><p>boiler</p>boiler</div><ul><li>boiler</li></ul>',
+			$this->fullTrim($engine->render('addsection', ['text' => 'boiler'])),
+		);
 	}
 
 	public function testRenderSectionWithDefaultValue(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect(
+		$this->assertSame(
+			'<p>default value</p>',
 			$this->fullTrim($engine->render('addsectiondefault', [])),
-		)->toBe('<p>default value</p>');
+		);
 	}
 
 	public function testAppendPrependToSection(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('appendprepend', [
-			'path' => '/assign.js',
-		])))->toBe(
+		$this->assertSame(
 			'<script src="/prepend.js"></script>' .
 				'<script src="/assign.js"></script>' .
 				'<script src="/append.js"></script>',
+			$this->fullTrim($engine->render('appendprepend', ['path' => '/assign.js'])),
 		);
 	}
 
@@ -322,9 +352,13 @@ final class EngineTest extends TestCase
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('appendprependdefault', [
-			'path' => '/assign.js',
-		])))->toBe('<prepend-first><prepend><default><append><append-last>');
+		$this->assertSame(
+			'<prepend-first><prepend><default><append><append-last>',
+			$this->fullTrim($engine->render(
+				'appendprependdefault',
+				['path' => '/assign.js'],
+			)),
+		);
 	}
 
 	public function testNestedSectionsError(): void
@@ -349,28 +383,30 @@ final class EngineTest extends TestCase
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('nosection', [
-			'text' => 'boiler',
-		])))->toBe('<div><p>boiler</p>boiler</div><p>no list</p>');
+		$this->assertSame(
+			'<div><p>boiler</p>boiler</div><p>no list</p>',
+			$this->fullTrim($engine->render('nosection', ['text' => 'boiler'])),
+		);
 	}
 
 	public function testInsertRendering(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('insert', [
-			'text' => 'Boiler',
-			'int' => 73,
-		])))->toBe('<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p>Overwrite</p><p>13</p>');
+		$this->assertSame(
+			'<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p>Overwrite</p><p>13</p>',
+			$this->fullTrim($engine->render('insert', ['text' => 'Boiler', 'int' => 73])),
+		);
 	}
 
 	public function testTemplateInSubDirectory(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($this->fullTrim($engine->render('sub/home', [
-			'text' => 'Boiler',
-		])))->toBe('<h2>Boiler</h2>');
+		$this->assertSame(
+			'<h2>Boiler</h2>',
+			$this->fullTrim($engine->render('sub/home', ['text' => 'Boiler'])),
+		);
 	}
 
 	public function testAdditionalTemplateDirectories(): void
@@ -380,55 +416,64 @@ final class EngineTest extends TestCase
 			['obj' => $this->obj()],
 		);
 
-		expect($this->fullTrim($engine->render('simple', [
-			'text' => 'rocks',
-		])))->toBe('<h1>boiler</h1><p>rocks</p>');
-		expect($this->fullTrim($engine->render('additional', [
-			'text' => 'Additional',
-		])))->toBe('<span>Additional</span>');
+		$this->assertSame(
+			'<h1>boiler</h1><p>rocks</p>',
+			$this->fullTrim($engine->render('simple', ['text' => 'rocks'])),
+		);
+		$this->assertSame(
+			'<span>Additional</span>',
+			$this->fullTrim($engine->render('additional', ['text' => 'Additional'])),
+		);
 	}
 
 	public function testAdditionalTemplateDirectoriesNamespaced(): void
 	{
 		$engine = new Engine($this->namespaced($this->additional()));
 
-		expect($this->fullTrim($engine->render('namespace:sub/home', [
-			'text' => 'Boiler',
-		])))->toBe('<h2>Boiler</h2>');
-		expect($this->fullTrim($engine->render('additional:additional', [
-			'text' => 'Additional',
-		])))->toBe('<span>Additional</span>');
+		$this->assertSame(
+			'<h2>Boiler</h2>',
+			$this->fullTrim($engine->render('namespace:sub/home', ['text' => 'Boiler'])),
+		);
+		$this->assertSame(
+			'<span>Additional</span>',
+			$this->fullTrim($engine->render('additional:additional', ['text' => 'Additional'])),
+		);
 	}
 
 	public function testAdditionalTemplateDirectoriesShadowing(): void
 	{
 		$engine = new Engine($this->namespaced());
 
-		expect($this->fullTrim($engine->render('sub/home', [
-			'text' => 'Boiler',
-		])))->toBe('<h2>Boiler</h2>');
+		$this->assertSame(
+			'<h2>Boiler</h2>',
+			$this->fullTrim($engine->render('sub/home', ['text' => 'Boiler'])),
+		);
 
 		$engine = new Engine($this->namespaced($this->additional()));
 
-		expect($this->fullTrim($engine->render('sub/home', [
-			'text' => 'Boiler',
-		])))->toBe('<h1>Sub Boiler</h1>');
-		expect($this->fullTrim($engine->render('namespace:sub/home', [
-			'text' => 'Boiler',
-		])))->toBe('<h2>Boiler</h2>');
-		expect($this->fullTrim($engine->render('additional:sub/home', [
-			'text' => 'Boiler',
-		])))->toBe('<h1>Sub Boiler</h1>');
+		$this->assertSame(
+			'<h1>Sub Boiler</h1>',
+			$this->fullTrim($engine->render('sub/home', ['text' => 'Boiler'])),
+		);
+		$this->assertSame(
+			'<h2>Boiler</h2>',
+			$this->fullTrim($engine->render('namespace:sub/home', ['text' => 'Boiler'])),
+		);
+		$this->assertSame(
+			'<h1>Sub Boiler</h1>',
+			$this->fullTrim($engine->render('additional:sub/home', ['text' => 'Boiler'])),
+		);
 	}
 
 	public function testExistsHelper(): void
 	{
 		$engine = new Engine($this->templates());
 
-		expect($engine->exists('simple'))->toBe(true);
-		expect($engine->exists('wrongindex'))->toBe(false);
+		$this->assertSame(true, $engine->exists('simple'));
+		$this->assertSame(false, $engine->exists('wrongindex'));
 	}
 
+	#[TestDox('Config error wrong template format I')]
 	public function testConfigErrorWrongTemplateFormatI(): void
 	{
 		$this->throws(LookupException::class, 'Invalid template format');
@@ -438,6 +483,7 @@ final class EngineTest extends TestCase
 		$engine->render('default:sub:index');
 	}
 
+	#[TestDox('Config error wrong template format II')]
 	public function testConfigErrorWrongTemplateFormatII(): void
 	{
 		$this->throws(LookupException::class, 'Invalid template format');
@@ -447,6 +493,7 @@ final class EngineTest extends TestCase
 		$engine->render(':default.php');
 	}
 
+	#[TestDox('Config error wrong template format III')]
 	public function testConfigErrorWrongTemplateFormatIII(): void
 	{
 		$this->throws(LookupException::class, 'Invalid template format');
@@ -456,6 +503,7 @@ final class EngineTest extends TestCase
 		$engine->render('default.php:');
 	}
 
+	#[TestDox('Config error wrong template format IV')]
 	public function testConfigErrorWrongTemplateFormatIV(): void
 	{
 		$this->throws(UnexpectedValueException::class, 'invalid or empty');
@@ -465,6 +513,7 @@ final class EngineTest extends TestCase
 		$engine->render('');
 	}
 
+	#[TestDox('Config error wrong template format V')]
 	public function testConfigErrorWrongTemplateFormatV(): void
 	{
 		$this->throws(UnexpectedValueException::class, 'invalid or empty');
@@ -483,6 +532,7 @@ final class EngineTest extends TestCase
 		$engine->render('nonexistent');
 	}
 
+	#[TestDox('Render error template outside root directory I')]
 	public function testRenderErrorTemplateOutsideRootDirectoryI(): void
 	{
 		$this->throws(LookupException::class, 'not found');
@@ -492,6 +542,7 @@ final class EngineTest extends TestCase
 		$engine->render('.././../.././../etc/passwd');
 	}
 
+	#[TestDox('Render error template outside root directory II')]
 	public function testRenderErrorTemplateOutsideRootDirectoryII(): void
 	{
 		$this->throws(LookupException::class, 'outside');
@@ -517,9 +568,10 @@ final class EngineTest extends TestCase
 			return new Proxy(strtoupper($value->unwrap()));
 		});
 
-		expect($this->fullTrim($engine->render('method', [
-			'text' => 'Boiler',
-		])))->toBe('<h2>BOILER</h2>');
+		$this->assertSame(
+			'<h2>BOILER</h2>',
+			$this->fullTrim($engine->render('method', ['text' => 'Boiler'])),
+		);
 	}
 
 	public function testUnknownCustomMethod(): void
