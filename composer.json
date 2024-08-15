@@ -33,17 +33,11 @@
 		"symfony/html-sanitizer": "^6.1",
 		"ernst/coverlyzer": "^0.1.1"
 	},
-	"repositories": [
-		{
-			"type": "path",
-			"url": "../dev"
-		}
-	],
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
 		"phpunit/phpunit": "^10.5",
 		"staabm/annotate-pull-request-from-checkstyle": "^1.8",
-		"vacantplanet/development": "@dev",
+		"vacantplanet/development": "^1.1",
 		"vimeo/psalm": "5.25"
 	},
 	"scripts": {
