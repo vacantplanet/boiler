@@ -14,12 +14,12 @@ class Wrapper
 {
 	public static function wrap(mixed $value): mixed
 	{
-		if (is_scalar($value) && !is_string($value)) {
-			return $value;
-		}
+		if (is_scalar($value)) {
+			if (is_string($value)) {
+				return new Proxy($value);
+			}
 
-		if (is_string($value)) {
-			return new Proxy($value);
+			return $value;
 		}
 
 		if ($value instanceof ProxyInterface) {
