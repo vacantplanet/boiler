@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace VacantPlanet\Boiler\Proxy;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
-use Throwable;
 use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Sanitizer;
 use VacantPlanet\Boiler\Wrapper;
@@ -26,27 +25,22 @@ class Proxy implements ProxyInterface
 
 	public function __get(string $name): mixed
 	{
-		try {
-			/**
-			 * @psalm-suppress MixedPropertyFetch
-			 *
-			 * Wrapper::wrap checks types
-			 */
+		if (property_exists($this->value, $name)) {
 			return Wrapper::wrap($this->value->{$name});
-		} catch (Throwable) {
-			throw new RuntimeException('No such property');
 		}
+
+		throw new RuntimeException('No such property');
 	}
 
 	public function __set(string $name, mixed $value): void
 	{
-		try {
+		if (property_exists($this->value, $name)) {
 			$this->value->{$name} = $value;
 
 			return;
-		} catch (Throwable) {
-			throw new RuntimeException('No such property');
 		}
+
+		throw new RuntimeException('No such property');
 	}
 
 	public function __call(string $name, array $args): mixed
