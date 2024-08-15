@@ -11,7 +11,7 @@ use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
 use VacantPlanet\Boiler\Proxy\Proxy;
 
-final class ArrayValueTest extends TestCase
+final class ArrayProxyTest extends TestCase
 {
 	public function testCount(): void
 	{
