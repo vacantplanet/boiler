@@ -6,23 +6,26 @@
 [![Psalm level](https://shepherd.dev/github/vacantplanet/boiler/level.svg?)](https://vacantplanet.dev/boiler)
 [![Psalm coverage](https://shepherd.dev/github/vacantplanet/boiler/coverage.svg?)](https://shepherd.dev/github/vacantplanet/boiler)
 
-Boiler is a native >=PHP 8.2 template engine in the vein of [Plates](https://platesphp.com/), which
-uses PHP itself instead of a custom template language.
+Boiler is a native >=PHP 8.2 template engine in the vein of
+[Plates](https://platesphp.com/), which uses PHP itself instead of a custom
+template language.
 
-> :warning: **Note**: This template engine is under active development, some of the listed features are still experimental and subject to change. Large parts of the documentation are missing. 
+> :warning: **Note**: This template engine is under active development, some of
+> the listed features are still experimental and subject to change. Large parts
+> of the documentation are missing.
 
 Notable differences:
 
-* It auto escapes strings and [Stringable](https://www.php.net/manual/en/class.stringable.php) values.
-* The template context, i. e. all variables available in the template, is global.
-
+* It auto escapes strings and
+  [Stringable](https://www.php.net/manual/en/class.stringable.php) values.
+* The template context, i. e. all variables available in the template, is
+  global.
 
 ## Installation
 
 ```console
 composer require vacantplanet/boiler
 ```
-
 
 ## Quick start
 
@@ -36,7 +39,7 @@ path
 ```
 
 ... and the content of the file `/path/to/templates/page.php` to be:
-	
+
 ```php
 <p>ID <?= $id ?></p>
 ```
@@ -59,7 +62,6 @@ phpunit --testdox && \
 	psalm --no-cache --show-info=true && \
 	phpcs -s -p --ignore=tests/templates src tests
 ```
-
 
 ## License
 
