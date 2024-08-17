@@ -1,5 +1,4 @@
-Boiler
-======
+# Boiler
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cd2e266bcfb14b21b8ce11ddaafe4f06)](https://app.codacy.com/gh/vacantplanet/boiler/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
@@ -20,40 +19,50 @@ Notable differences:
 
 ## Installation
 
-	composer require vacantplanet/boiler
+```console
+composer require vacantplanet/boiler
+```
 
 
 ## Quick start
 
 Assuming the following directory structure ...
 
-	path
-	`-- to
-		`-- templates
-		   `-- page.php
+```text
+path
+`-- to
+	`-- templates
+		`-- page.php
+```
 
 ... and the content of the file `/path/to/templates/page.php` to be:
 	
-	<p>ID <?= $id ?></p>
+```php
+<p>ID <?= $id ?></p>
+```
 
 Now create a `Engine` instance and render the template:
 
-	use VacantPlanet\Boiler\Engine;
+```php
+use VacantPlanet\Boiler\Engine;
 
-	$engine = new Engine('/path/to/templates');
-	$html = $engine->render('page', ['id' => 13]);
+$engine = new Engine('/path/to/templates');
+$html = $engine->render('page', ['id' => 13]);
 
-	assert($html == '<p>ID 13</p>');
+assert($html == '<p>ID 13</p>');
+```
 
 ## Run the tests
 
-	phpunit --testdox && \
-		psalm --no-cache --show-info=true && \
-		phpcs -s -p --ignore=tests/templates src tests
+```console
+phpunit --testdox && \
+	psalm --no-cache --show-info=true && \
+	phpcs -s -p --ignore=tests/templates src tests
+```
 
 
 ## License
 
 Boiler is released under the MIT [license](LICENSE.md).
 
-Copyright © 2022 ebene fünf GmbH. All rights reserved.
+Copyright © 2022-2024 ebene fünf GmbH. All rights reserved.
