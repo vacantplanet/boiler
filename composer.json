@@ -30,7 +30,7 @@
 	},
 	"require": {
 		"php": ">=8.2",
-		"symfony/html-sanitizer": "^6.1",
+		"symfony/html-sanitizer": "^7.1",
 		"ernst/coverlyzer": "^0.1.1"
 	},
 	"require-dev": {
