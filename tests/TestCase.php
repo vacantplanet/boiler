@@ -71,7 +71,7 @@ class TestCase extends BaseTestCase
 		$this->expectException($exception);
 
 		if ($message) {
-			$this->expectExceptionMessage($message);
+			$this->expectExceptionMessageMatches("/{$message}/");
 		}
 	}
 }

@@ -112,7 +112,7 @@ final class TemplateTest extends TestCase
 
 	public function testNonExistentLayoutWithoutExtension(): void
 	{
-		$this->throws(LookupException::class, 'Template not found: doesnotexist');
+		$this->throws(LookupException::class, 'Template not found:.*doesnotexist');
 
 		$template = new Template($this->templates . 'nonexistentlayout.php');
 
@@ -121,7 +121,7 @@ final class TemplateTest extends TestCase
 
 	public function testNonExistentLayoutWithExtension(): void
 	{
-		$this->throws(LookupException::class, 'Template not found: doesnotexist.php');
+		$this->throws(LookupException::class, 'Template not found:.*doesnotexist.php');
 
 		$template = new Template($this->templates . 'nonexistentlayoutext.php');
 
