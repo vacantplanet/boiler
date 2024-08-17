@@ -1,6 +1,1 @@
----
-title: Layouts
----
-Layouts
-=======
-
+# Layouts

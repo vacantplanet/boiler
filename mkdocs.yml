@@ -1,7 +1,7 @@
 site_name: VacantPlanet Boiler
 copyright: © 2022-2024 ebene fünf GmbH
 nav:
-  - index.md
+  - 'Introduction': index.md
   - quickstart.md
   - engine.md
   - rendering.md

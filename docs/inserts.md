@@ -1,6 +1,1 @@
----
-title: Inserts
----
-Inserts 
-=======
-
+# Inserts

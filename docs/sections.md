@@ -1,6 +1,1 @@
----
-title: Sections
----
-Sections
-========
-
+# Sections
