@@ -18,8 +18,7 @@
 			<property name="exceptions">
 				<value>
 					\VacantPlanet\Boiler\Wrapper,
-					\VacantPlanet\Boiler\Sanitizer,
-					\VacantPlanet\Boiler\Url
+					\VacantPlanet\Boiler\Sanitizer
 				</value>
 			</property>
 		</properties>

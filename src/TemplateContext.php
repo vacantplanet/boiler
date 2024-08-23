@@ -74,11 +74,6 @@ class TemplateContext
 		return Sanitizer::clean($value, $config, $removeEmptyLines);
 	}
 
-	public function url(Proxy|string $value): string
-	{
-		return Url::clean($value instanceof Proxy ? (string) $value->unwrap() : $value);
-	}
-
 	/**
 	 * @psalm-param non-empty-string $path
 	 */
