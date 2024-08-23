@@ -27,7 +27,7 @@ class TemplatePath
 		$dir = realpath($this->dir);
 
 		if ($dir === false) {
-			$this->error = "Template directory not found: {$dir}";
+			$this->error = "Template directory not found: '{$this->dir}'";
 
 			return;
 		}
@@ -42,7 +42,7 @@ class TemplatePath
 	public function path(): string
 	{
 		if (!$this->isValid || $this->path === '') {
-			throw new LookupException("Trying to access path of invalid template: `{$this->path}`");
+			throw new LookupException("Error while accessing path of invalid template: `{$this->path}`");
 		}
 
 		return $this->path;
@@ -97,5 +97,6 @@ class TemplatePath
 
 		$this->isValid = true;
 		$this->path = $realpath;
+		$this->error = '';
 	}
 }
