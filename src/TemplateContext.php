@@ -8,7 +8,20 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Proxy\ProxyInterface;
 
-/** @psalm-api */
+/**
+ * @psalm-api
+ *
+ * This class contains all methods which are accessible in template
+ * on $this. For example `$this->esc`, or `$this->layout`. So
+ * we have to suppress the phpmd warning as we exceed the default
+ * max value of 10 public methods.
+ *
+ * The methods that can be used in the template with $this are included
+ * in this class. `$this->esc` or `$this->layout`, for example.
+ * Hence, it is necessary to suppress the phpmd warning because we have
+ * exceeded the default maximum of 10 public methods.
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class TemplateContext
 {
 	private const ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace VacantPlanet\Boiler;
 
-use ErrorException;
 use Throwable;
 use VacantPlanet\Boiler\Exception\LookupException;
 use VacantPlanet\Boiler\Exception\RuntimeException;
 
-/** @psalm-api */
+/**
+ * @psalm-api
+ */
 class Template
 {
 	use RegistersMethod;
@@ -101,6 +102,7 @@ class Template
 	/**
 	 * @psalm-param list<class-string> $whitelist
 	 * @SuppressWarnings(PHPMD.LongVariable)
+	 * @SuppressWarnings(PHPMD.CamelCaseVariableName)
 	 */
 	protected function getContent(array $context, array $whitelist, bool $autoescape): Content
 	{

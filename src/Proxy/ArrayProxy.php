@@ -20,6 +20,11 @@ use VacantPlanet\Boiler\Wrapper;
  *
  * @template-implements ArrayAccess<array-key, mixed>
  * @template-implements Iterator<mixed>
+ *
+ * To implement ArrayAccess, Iterator and Countable alone you
+ * have to add 10 methods. Together with the custom methods,
+ * it exceeds phpmd's max value of 10 public methods.
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 {
