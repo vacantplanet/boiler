@@ -3,14 +3,14 @@
 <body>
     <h1><?= $headline; ?></h1>
     <table>
-        <?php foreach ($array as $key => $value) { ?>
+        <?php foreach ($array as $key => $value): ?>
             <tr>
-                <td><?= $this->e($key); ?></td>
-                <?php foreach ($value as $item) { ?>
+                <td><?= $this->esc($key); ?></td>
+                <?php foreach ($value as $item): ?>
                     <td><?= $item; ?></td>
-                <?php } ?>
+                <?php endforeach ?>
             </tr>
-        <?php } ?>
+        <?php endforeach ?>
     </table><?= $html->unwrap(); ?>
 </body>
 

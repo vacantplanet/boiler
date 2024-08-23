@@ -46,7 +46,7 @@ class TemplateContext
 		return Wrapper::wrap($value);
 	}
 
-	public function e(
+	public function esc(
 		Proxy|string $value,
 		int $flags = self::ESCAPE_FLAGS,
 		string $encoding = self::ESCAPE_ENCODING,
@@ -56,14 +56,6 @@ class TemplateContext
 		}
 
 		return htmlspecialchars($value, $flags, $encoding);
-	}
-
-	public function escape(
-		Proxy|string $value,
-		int $flags = self::ESCAPE_FLAGS,
-		string $encoding = self::ESCAPE_ENCODING,
-	): string {
-		return $this->e($value, $flags, $encoding);
 	}
 
 	public function clean(

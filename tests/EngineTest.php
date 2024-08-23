@@ -180,7 +180,7 @@ final class EngineTest extends TestCase
 		$engine = new Engine($this->templates(), ['obj' => $this->obj()]);
 
 		$this->assertSame(
-			'&lt;script&gt;&lt;script&gt;<b>clean</b>',
+			'&lt;script&gt;<b>clean</b>',
 			$this->fullTrim($engine->render('helper')),
 		);
 	}
