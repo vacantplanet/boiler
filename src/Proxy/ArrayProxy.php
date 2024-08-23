@@ -20,14 +20,17 @@ use VacantPlanet\Boiler\Wrapper;
  *
  * @template-implements ArrayAccess<array-key, mixed>
  * @template-implements Iterator<mixed>
- *
- * @psalm-suppress MixedArrayOffset -- ArrayValue is meant to hold mixed values accessed by mixed keys
  */
 class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 {
 	private int $position;
+
+	/** @psalm-var list<array-key> */
 	private array $keys;
 
+	/**
+	 * @psalm-param array<array-key, mixed> $array
+	 */
 	public function __construct(private array $array)
 	{
 		$this->array = $array;
@@ -50,6 +53,9 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 		return Wrapper::wrap($this->array[$this->key()]);
 	}
 
+	/**
+	 * @psalm-return array-key
+	 */
 	public function key(): mixed
 	{
 		return $this->keys[$this->position];
