@@ -98,7 +98,10 @@ class Template
 		return new TemplateContext($this, $context, $whitelist, $autoescape);
 	}
 
-	/** @psalm-param list<class-string> $whitelist */
+	/**
+	 * @psalm-param list<class-string> $whitelist
+	 * @SuppressWarnings(PHPMD.LongVariable)
+	 */
 	protected function getContent(array $context, array $whitelist, bool $autoescape): Content
 	{
 		$templateContext = $this->templateContext($context, $whitelist, $autoescape);

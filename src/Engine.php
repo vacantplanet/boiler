@@ -159,7 +159,7 @@ class Engine
 			return [null, $path];
 		}
 
-		$segments = array_map(fn($s) => trim($s), explode(':', $path));
+		$segments = array_map(fn($seg) => trim($seg), explode(':', $path));
 
 		if (count($segments) == 2) {
 			if (($segments[0] ?? '') && ($segments[1] ?? '')) {
