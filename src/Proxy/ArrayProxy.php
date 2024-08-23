@@ -80,11 +80,7 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 			return Wrapper::wrap($this->array[$offset]);
 		}
 
-		if (is_numeric($offset)) {
-			$key = (string) $offset;
-		} else {
-			$key = "'{$offset}'";
-		}
+		$key  = is_numeric($offset) ? (string) $offset : "'{$offset}'";
 
 		throw new OutOfBoundsException("Undefined array key {$key}");
 	}
@@ -93,9 +89,11 @@ class ArrayProxy implements ArrayAccess, Iterator, Countable, ProxyInterface
 	{
 		if (is_int($offset)) {
 			$this->array[$offset] = $value;
-		} else {
-			$this->array[] = $value;
+
+			return;
 		}
+
+		$this->array[] = $value;
 	}
 
 	public function offsetUnset(mixed $offset): void

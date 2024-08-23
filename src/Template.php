@@ -39,9 +39,11 @@ class Template
 			if (!is_file($path)) {
 				throw new LookupException('Template not found: ' . $path);
 			}
-		} else {
-			$this->engine = $engine;
+
+			return;
 		}
+
+		$this->engine = $engine;
 	}
 
 	/**
