@@ -130,7 +130,6 @@ class Engine
 				throw new LookupException(
 					'Template directory does not exist ' . $dir,
 				);
-
 			}
 
 			assert(!empty($realpath));

@@ -542,6 +542,15 @@ final class EngineTest extends TestCase
 		$engine->render('nonexistent');
 	}
 
+	public function testNamespaceDoesNotExist(): void
+	{
+		$this->throws(LookupException::class, 'Template namespace');
+
+		$engine = new Engine($this->namespaced());
+
+		$engine->render('doesnotexist:sub/home');
+	}
+
 	#[TestDox('Render error template outside root directory I')]
 	public function testRenderErrorTemplateOutsideRootDirectoryI(): void
 	{
