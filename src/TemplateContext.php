@@ -75,7 +75,7 @@ class TemplateContext
 		string $value,
 		?HtmlSanitizerConfig $config = null,
 	): string {
-		return Sanitizer::clean($value, $config);
+		return (new Sanitizer($config))->clean($value);
 	}
 
 	/**

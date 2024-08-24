@@ -76,9 +76,8 @@ class Proxy implements ProxyInterface
 
 	public function clean(
 		?HtmlSanitizerConfig $config = null,
-		bool $removeEmptyLines = true,
 	): string {
-		return Sanitizer::clean((string) $this->value, $config, $removeEmptyLines);
+		return (new Sanitizer($config))->clean((string) $this->value);
 	}
 
 	public function empty(): bool

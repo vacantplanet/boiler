@@ -9,16 +9,20 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Sanitizer
 {
-	public static function clean(
-		string $html,
-		?HtmlSanitizerConfig $config = null,
-	): string {
+	protected HtmlSanitizer $sanitizer;
+
+	public function __construct(?HtmlSanitizerConfig $config = null)
+	{
 		$config = $config ?: (new HtmlSanitizerConfig())
 			// Allow "safe" elements and attributes. All scripts will be removed
 			// as well as other dangerous behaviors like CSS injection
 			->allowSafeElements();
-		$sanitizer = new HtmlSanitizer($config);
 
-		return $sanitizer->sanitize($html);
+		$this->sanitizer = new HtmlSanitizer($config);
+	}
+
+	public function clean(string $html): string
+	{
+		return $this->sanitizer->sanitize($html);
 	}
 }
