@@ -18,9 +18,12 @@
 		<properties>
 			<property name="exceptions">
 				<value>
+					\VacantPlanet\Boiler\Engine,
 					\VacantPlanet\Boiler\Wrapper
 				</value>
 			</property>
 		</properties>
 	</rule>
+
+	<exclude-pattern>tests/templates/default/failing.php</exclude-pattern>
 </ruleset>
