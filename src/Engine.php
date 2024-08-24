@@ -26,12 +26,28 @@ class Engine
 	 */
 	public function __construct(
 		array|string $dirs,
-		protected readonly array $defaults = [],
-		protected readonly array $whitelist = [],
-		protected readonly bool $autoescape = true,
+		protected readonly bool $autoescape,
+		protected readonly array $defaults,
+		protected readonly array $whitelist,
 	) {
 		$this->dirs = $this->prepareDirs($dirs);
 		$this->customMethods = new CustomMethods();
+	}
+
+	public static function create(
+		array|string $dirs,
+		array $defaults = [],
+		array $whitelist = [],
+	): static {
+		return new self($dirs, true, $defaults, $whitelist);
+	}
+
+	public static function unescaped(
+		array|string $dirs,
+		array $defaults = [],
+		array $whitelist = [],
+	): static {
+		return new self($dirs, false, $defaults, $whitelist);
 	}
 
 	/** @psalm-param non-empty-string $path */
@@ -51,13 +67,30 @@ class Engine
 	public function render(
 		string $path,
 		array $context = [],
-		?bool $autoescape = null,
 	): string {
-		if (is_null($autoescape)) {
-			// Use the engine's default value if nothing is passed
-			$autoescape = $this->autoescape;
-		}
+		return $this->renderTemplate($path, $context, $this->autoescape);
+	}
 
+	/** @psalm-param non-empty-string $path */
+	public function renderEscaped(
+		string $path,
+		array $context = [],
+	): string {
+		return $this->renderTemplate($path, $context, true);
+	}
+
+	public function renderUnescaped(
+		string $path,
+		array $context = [],
+	): string {
+		return $this->renderTemplate($path, $context, false);
+	}
+
+	protected function renderTemplate(
+		string $path,
+		array $context,
+		bool $autoescape,
+	): string {
 		$template = $this->template($path);
 
 		return $template->render(array_merge($this->defaults, $context), $this->whitelist, $autoescape);

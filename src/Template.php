@@ -35,7 +35,7 @@ class Template
 				throw new LookupException('No directory given or empty path');
 			}
 
-			$this->engine = new Engine($dir);
+			$this->engine = new Engine($dir, true, [], []);
 
 			if (!is_file($path)) {
 				throw new LookupException('Template not found: ' . $path);

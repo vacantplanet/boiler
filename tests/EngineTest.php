@@ -21,7 +21,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'doesnotexist');
 
-		new Engine('./doesnotexist');
+		Engine::create('./doesnotexist');
 	}
 
 	#[TestDox('Directory does not exist II')]
@@ -29,12 +29,12 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'doesnotexist');
 
-		new Engine([TestCase::DEFAULT_DIR, './doesnotexist']);
+		Engine::create([TestCase::DEFAULT_DIR, './doesnotexist']);
 	}
 
 	public function testSimpleRendering(): void
 	{
-		$engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
+		$engine = Engine::create(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
 		$this->assertSame(
 			'<h1>boiler</h1><p>rocks</p>',
@@ -44,7 +44,7 @@ final class EngineTest extends TestCase
 
 	public function testSimpleScalarValueRendering(): void
 	{
-		$engine = new Engine(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
+		$engine = Engine::create(TestCase::DEFAULT_DIR, ['obj' => $this->obj()]);
 
 		$this->assertSame(
 			'<p>13</p><p>1</p><p>13.73</p><p></p><p>&lt;script&gt;&lt;/script&gt;</p>',
@@ -60,7 +60,7 @@ final class EngineTest extends TestCase
 
 	public function testSimpleRenderingNamespaced(): void
 	{
-		$engine = new Engine($this->namespaced(), ['obj' => $this->obj()]);
+		$engine = Engine::create($this->namespaced(), ['obj' => $this->obj()]);
 
 		$this->assertSame(
 			'<h1>boiler</h1><p>rocks</p>',
@@ -70,14 +70,14 @@ final class EngineTest extends TestCase
 
 	public function testExtensionGiven(): void
 	{
-		$engine = new Engine(self::DEFAULT_DIR, ['obj' => $this->obj()]);
+		$engine = Engine::create(self::DEFAULT_DIR, ['obj' => $this->obj()]);
 
 		$this->assertSame('<p></p>', $this->fullTrim($engine->render('extension.tpl')));
 	}
 
 	public function testUnwrapRendering(): void
 	{
-		$engine = new Engine(self::DEFAULT_DIR);
+		$engine = Engine::create(self::DEFAULT_DIR);
 
 		$this->assertSame(
 			'&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>',
@@ -87,7 +87,7 @@ final class EngineTest extends TestCase
 
 	public function testSwitchOffAutoescapingByDefault(): void
 	{
-		$engine = new Engine(self::DEFAULT_DIR, autoescape: false);
+		$engine = Engine::unescaped(self::DEFAULT_DIR);
 
 		$this->assertSame(
 			'<b>noautoescape</b>',
@@ -95,23 +95,35 @@ final class EngineTest extends TestCase
 		);
 	}
 
-	public function testSwitchOffAutoescapingWhenCallingRender(): void
+	public function testForceUnescapedRenderingWhenAutoEscapeIsDefault(): void
 	{
-		$engine = new Engine(self::DEFAULT_DIR, autoescape: true);
+		$engine = Engine::create(self::DEFAULT_DIR);
 
 		$this->assertSame(
 			'<b>nodefaultautoescape</b>',
-			$engine->render(
+			$engine->renderUnescaped(
 				'noautoescape',
 				['html' => '<b>nodefaultautoescape</b>'],
-				autoescape: false,
+			),
+		);
+	}
+
+	public function testForceEscapedRenderingWhenUnescapedIsDefault(): void
+	{
+		$engine = Engine::unescaped(self::DEFAULT_DIR);
+
+		$this->assertSame(
+			'&lt;b&gt;nodefaultautoescape&lt;/b&gt;',
+			$engine->renderEscaped(
+				'noautoescape',
+				['html' => '<b>nodefaultautoescape</b>'],
 			),
 		);
 	}
 
 	public function testUnwrapRenderingWithStringable(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;<b>boiler</b>', $engine->render(
 			'unwrap',
@@ -126,7 +138,7 @@ final class EngineTest extends TestCase
 
 	public function testRenderingWithStringable(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 		$stringable = new class {
 			public string $test = 'test';
 
@@ -151,7 +163,7 @@ final class EngineTest extends TestCase
 
 	public function testCleanRendering(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<b>boiler</b>',
@@ -164,7 +176,7 @@ final class EngineTest extends TestCase
 
 	public function testArrayRendering(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;',
@@ -177,7 +189,7 @@ final class EngineTest extends TestCase
 
 	public function testHelperFunctionRendering(): void
 	{
-		$engine = new Engine($this->templates(), ['obj' => $this->obj()]);
+		$engine = Engine::create($this->templates(), ['obj' => $this->obj()]);
 
 		$this->assertSame(
 			'&lt;script&gt;<b>clean</b>',
@@ -187,7 +199,7 @@ final class EngineTest extends TestCase
 
 	public function testEmptyHelperMethod(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'&lt;b&gt;not empty&lt;/b&gt;',
@@ -200,7 +212,7 @@ final class EngineTest extends TestCase
 
 	public function testEscapeAlreadyWrappedProxy(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<p>&lt;b&gt;wrapped&lt;/b&gt;</p>',
@@ -213,7 +225,7 @@ final class EngineTest extends TestCase
 
 	public function testIteratorRendering(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$iter = function () {
 			$a = ['<b>2</b>', '<b>3</b>', '<b>4</b>'];
@@ -234,7 +246,7 @@ final class EngineTest extends TestCase
 
 	public function testComplexNestedRendering(): void
 	{
-		$engine = new Engine(
+		$engine = Engine::create(
 			$this->templates(),
 			['obj' => $this->obj()],
 		);
@@ -275,7 +287,7 @@ final class EngineTest extends TestCase
 
 	public function testSingleLayout(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<body><p>boiler</p><p>boiler</p></body>',
@@ -290,7 +302,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'doesnotexist');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('nonexistentlayout');
 	}
@@ -299,14 +311,14 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'doesnotexist');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('nonexistentlayoutext');
 	}
 
 	public function testStackedLayout(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<body><div class="stackedsecond"><div class="stackedfirst">' .
@@ -322,12 +334,12 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(RuntimeException::class, 'layout already set');
 
-		(new Engine($this->templates()))->render('multilayout');
+		Engine::create($this->templates())->render('multilayout');
 	}
 
 	public function testSectionRendering(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<div><p>boiler</p>boiler</div><ul><li>boiler</li></ul>',
@@ -337,7 +349,7 @@ final class EngineTest extends TestCase
 
 	public function testRenderSectionWithDefaultValue(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<p>default value</p>',
@@ -347,7 +359,7 @@ final class EngineTest extends TestCase
 
 	public function testAppendPrependToSection(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<script src="/prepend.js"></script>' .
@@ -359,7 +371,7 @@ final class EngineTest extends TestCase
 
 	public function testAppendPrependToSectionWithDefaultValueAndOrder(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<prepend-first><prepend><default><append><append-last>',
@@ -374,7 +386,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LogicException::class);
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('nestedsections');
 	}
@@ -383,14 +395,14 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LogicException::class);
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('closeunopened');
 	}
 
 	public function testMissingSectionRendering(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<div><p>boiler</p>boiler</div><p>no list</p>',
@@ -400,7 +412,7 @@ final class EngineTest extends TestCase
 
 	public function testInsertRendering(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p>Overwrite</p><p>13</p>',
@@ -410,7 +422,7 @@ final class EngineTest extends TestCase
 
 	public function testTemplateInSubDirectory(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
 			'<h2>Boiler</h2>',
@@ -420,7 +432,7 @@ final class EngineTest extends TestCase
 
 	public function testAdditionalTemplateDirectories(): void
 	{
-		$engine = new Engine(
+		$engine = Engine::create(
 			$this->templates($this->additional()),
 			['obj' => $this->obj()],
 		);
@@ -437,7 +449,7 @@ final class EngineTest extends TestCase
 
 	public function testAdditionalTemplateDirectoriesNamespaced(): void
 	{
-		$engine = new Engine($this->namespaced($this->additional()));
+		$engine = Engine::create($this->namespaced($this->additional()));
 
 		$this->assertSame(
 			'<h2>Boiler</h2>',
@@ -451,14 +463,14 @@ final class EngineTest extends TestCase
 
 	public function testAdditionalTemplateDirectoriesShadowing(): void
 	{
-		$engine = new Engine($this->namespaced());
+		$engine = Engine::create($this->namespaced());
 
 		$this->assertSame(
 			'<h2>Boiler</h2>',
 			$this->fullTrim($engine->render('sub/home', ['text' => 'Boiler'])),
 		);
 
-		$engine = new Engine($this->namespaced($this->additional()));
+		$engine = Engine::create($this->namespaced($this->additional()));
 
 		$this->assertSame(
 			'<h1>Sub Boiler</h1>',
@@ -476,7 +488,7 @@ final class EngineTest extends TestCase
 
 	public function testExistsHelper(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$this->assertSame(true, $engine->exists('simple'));
 		$this->assertSame(false, $engine->exists('wrongindex'));
@@ -487,7 +499,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'Invalid template format');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('default:sub:index');
 	}
@@ -497,7 +509,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'Invalid template format');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render(':default.php');
 	}
@@ -507,7 +519,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'Invalid template format');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('default.php:');
 	}
@@ -517,7 +529,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(UnexpectedValueException::class, 'invalid or empty');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('');
 	}
@@ -527,7 +539,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(UnexpectedValueException::class, 'invalid or empty');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render("\0");
 	}
@@ -536,7 +548,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'not found');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('nonexistent');
 	}
@@ -545,7 +557,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'Template namespace');
 
-		$engine = new Engine($this->namespaced());
+		$engine = Engine::create($this->namespaced());
 
 		$engine->render('doesnotexist:sub/home');
 	}
@@ -555,7 +567,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'not found');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('.././../.././../etc/passwd');
 	}
@@ -565,7 +577,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(LookupException::class, 'outside');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('../unreachable');
 	}
@@ -574,14 +586,14 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(ParseError::class);
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('failing');
 	}
 
 	public function testCustomTemplateMethod(): void
 	{
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 		$engine->registerMethod('upper', function (Proxy $value): Proxy {
 			return new Proxy(strtoupper($value->unwrap()));
 		});
@@ -596,7 +608,7 @@ final class EngineTest extends TestCase
 	{
 		$this->throws(UnexpectedValueException::class, 'upper');
 
-		$engine = new Engine($this->templates());
+		$engine = Engine::create($this->templates());
 
 		$engine->render('unknownmethod');
 	}
