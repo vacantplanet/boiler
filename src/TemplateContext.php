@@ -74,9 +74,8 @@ class TemplateContext
 	public function clean(
 		string $value,
 		?HtmlSanitizerConfig $config = null,
-		bool $removeEmptyLines = true,
 	): string {
-		return Sanitizer::clean($value, $config, $removeEmptyLines);
+		return Sanitizer::clean($value, $config);
 	}
 
 	/**
