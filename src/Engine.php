@@ -34,19 +34,27 @@ class Engine
 		$this->customMethods = new CustomMethods();
 	}
 
+	/**
+	 * @psalm-param DirsInput $dirs
+	 * @psalm-param list<class-string> $whitelist
+	 */
 	public static function create(
 		array|string $dirs,
 		array $defaults = [],
 		array $whitelist = [],
-	): static {
+	): self {
 		return new self($dirs, true, $defaults, $whitelist);
 	}
 
+	/**
+	 * @psalm-param DirsInput $dirs
+	 * @psalm-param list<class-string> $whitelist
+	 */
 	public static function unescaped(
 		array|string $dirs,
 		array $defaults = [],
 		array $whitelist = [],
-	): static {
+	): self {
 		return new self($dirs, false, $defaults, $whitelist);
 	}
 
@@ -79,6 +87,7 @@ class Engine
 		return $this->renderTemplate($path, $context, true);
 	}
 
+	/** @psalm-param non-empty-string $path */
 	public function renderUnescaped(
 		string $path,
 		array $context = [],
@@ -86,6 +95,7 @@ class Engine
 		return $this->renderTemplate($path, $context, false);
 	}
 
+	/** @psalm-param non-empty-string $path */
 	protected function renderTemplate(
 		string $path,
 		array $context,
