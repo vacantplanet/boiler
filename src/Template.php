@@ -50,21 +50,17 @@ class Template
 	/**
 	 * @psalm-param list<class-string> $whitelist
 	 */
-	public function render(array $context = [], array $whitelist = [], bool $autoescape = true): string
+	public function render(array $context = [], array $whitelist = []): string
 	{
-		$content = $this->getContent($context, $whitelist, $autoescape);
+		return $this->renderTemplate($context, $whitelist, autoescape: true);
+	}
 
-		if ($this instanceof Layout) {
-			return $content->content;
-		}
-
-		return $this->renderLayouts(
-			$this,
-			$content->templateContext,
-			$whitelist,
-			$content->content,
-			$autoescape,
-		);
+	/**
+	 * @psalm-param list<class-string> $whitelist
+	 */
+	public function renderUnescaped(array $context = [], array $whitelist = []): string
+	{
+		return $this->renderTemplate($context, $whitelist, autoescape: false);
 	}
 
 	/**
@@ -91,6 +87,26 @@ class Template
 	public function setCustomMethods(CustomMethods $customMethods): void
 	{
 		$this->customMethods = $customMethods;
+	}
+
+	/**
+	 * @psalm-param list<class-string> $whitelist
+	 */
+	protected function renderTemplate(array $context, array $whitelist, bool $autoescape): string
+	{
+		$content = $this->getContent($context, $whitelist, $autoescape);
+
+		if ($this instanceof Layout) {
+			return $content->content;
+		}
+
+		return $this->renderLayouts(
+			$this,
+			$content->templateContext,
+			$whitelist,
+			$content->content,
+			$autoescape,
+		);
 	}
 
 	/** @psalm-param list<class-string> $whitelist */
@@ -169,7 +185,7 @@ class Template
 				? $context->context()
 				: $context->context($layout->context);
 
-			$content = $template->render($layoutContext, $whitelist, $autoescape);
+			$content = $template->renderTemplate($layoutContext, $whitelist, $autoescape);
 		}
 
 		return $content;

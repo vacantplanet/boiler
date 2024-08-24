@@ -103,11 +103,9 @@ class TemplateContext
 			engine: $this->template->engine,
 		);
 
-		echo $template->render(
-			$this->context($context),
-			$this->whitelist,
-			$this->autoescape,
-		);
+		echo $this->autoescape ?
+			$template->render($this->context($context), $this->whitelist) :
+			$template->renderUnescaped($this->context($context), $this->whitelist);
 	}
 
 	public function begin(string $name): void

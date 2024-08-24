@@ -93,7 +93,9 @@ class Engine
 	): string {
 		$template = $this->template($path);
 
-		return $template->render(array_merge($this->defaults, $context), $this->whitelist, $autoescape);
+		return $autoescape ?
+			$template->render(array_merge($this->defaults, $context), $this->whitelist) :
+			$template->renderUnescaped(array_merge($this->defaults, $context), $this->whitelist);
 	}
 
 	/**
