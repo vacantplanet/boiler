@@ -103,7 +103,7 @@ class TemplateContext
 		);
 
 		echo $this->autoescape ?
-			$template->render($this->context($context), $this->whitelist) :
+			$template->renderEscaped($this->context($context), $this->whitelist) :
 			$template->renderUnescaped($this->context($context), $this->whitelist);
 	}
 
@@ -143,6 +143,10 @@ class TemplateContext
 
 	protected function wrapIf(mixed $value): mixed
 	{
+		if (!$this->autoescape) {
+			return $value;
+		}
+
 		if ($value instanceof ProxyInterface) {
 			return $value;
 		}

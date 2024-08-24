@@ -30,8 +30,6 @@ class Section
 
 	public function empty(): bool
 	{
-		error_log(print_r($this->value, true));
-
 		return empty($this->value);
 	}
 

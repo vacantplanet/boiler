@@ -52,6 +52,14 @@ class Template
 	 */
 	public function render(array $context = [], array $whitelist = []): string
 	{
+		return $this->renderTemplate($context, $whitelist, autoescape: $this->engine->autoescape);
+	}
+
+	/**
+	 * @psalm-param list<class-string> $whitelist
+	 */
+	public function renderEscaped(array $context = [], array $whitelist = []): string
+	{
 		return $this->renderTemplate($context, $whitelist, autoescape: true);
 	}
 

@@ -26,7 +26,7 @@ class Engine
 	 */
 	public function __construct(
 		array|string $dirs,
-		protected readonly bool $autoescape,
+		public readonly bool $autoescape,
 		protected readonly array $defaults,
 		protected readonly array $whitelist,
 	) {
@@ -104,7 +104,7 @@ class Engine
 		$template = $this->template($path);
 
 		return $autoescape ?
-			$template->render(array_merge($this->defaults, $context), $this->whitelist) :
+			$template->renderEscaped(array_merge($this->defaults, $context), $this->whitelist) :
 			$template->renderUnescaped(array_merge($this->defaults, $context), $this->whitelist);
 	}
 

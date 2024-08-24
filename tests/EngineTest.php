@@ -415,7 +415,17 @@ final class EngineTest extends TestCase
 		$engine = Engine::create($this->templates());
 
 		$this->assertSame(
-			'<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p>Overwrite</p><p>13</p>',
+			'<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p>&lt;b&gt;Overwrite&lt;/b&gt;</p><p>13</p>',
+			$this->fullTrim($engine->render('insert', ['text' => 'Boiler', 'int' => 73])),
+		);
+	}
+
+	public function testInsertUnescapedRendering(): void
+	{
+		$engine = Engine::unescaped($this->templates());
+
+		$this->assertSame(
+			'<p>Boiler</p><p>73</p><p>Boiler</p><p>23</p><p><b>Overwrite</b></p><p>13</p>',
 			$this->fullTrim($engine->render('insert', ['text' => 'Boiler', 'int' => 73])),
 		);
 	}
