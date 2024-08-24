@@ -18,8 +18,7 @@ final class TemplateTest extends TestCase
 
 	protected function setUp(): void
 	{
-		$ds = DIRECTORY_SEPARATOR;
-		$this->templates = __DIR__ . $ds . 'templates' . $ds . 'default' . $ds;
+		$this->templates = __DIR__ . '/templates/default/';
 	}
 
 	public function testStandaloneRendering(): void

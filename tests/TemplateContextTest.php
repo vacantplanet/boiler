@@ -16,8 +16,7 @@ final class TemplateContextTest extends TestCase
 
 	protected function setUp(): void
 	{
-		$ds = DIRECTORY_SEPARATOR;
-		$this->templates = __DIR__ . $ds . 'templates' . $ds . 'default' . $ds;
+		$this->templates = __DIR__ . '/templates/default/';
 		$path = $this->templates . 'simple.php';
 		$this->template = new Template($path);
 	}

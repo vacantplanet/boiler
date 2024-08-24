@@ -228,10 +228,10 @@ final class EngineTest extends TestCase
 		$engine = Engine::create($this->templates());
 
 		$iter = function () {
-			$a = ['<b>2</b>', '<b>3</b>', '<b>4</b>'];
+			$array = ['<b>2</b>', '<b>3</b>', '<b>4</b>'];
 
-			foreach ($a as $i) {
-				yield $i;
+			foreach ($array as $item) {
+				yield $item;
 			}
 		};
 
@@ -252,10 +252,10 @@ final class EngineTest extends TestCase
 		);
 
 		$iter = function () {
-			$a = [13.73, 'String II', 1];
+			$array = [13.73, 'String II', 1];
 
-			foreach ($a as $i) {
-				yield $i;
+			foreach ($array as $item) {
+				yield $item;
 			}
 		};
 

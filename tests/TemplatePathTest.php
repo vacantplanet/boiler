@@ -12,61 +12,61 @@ final class TemplatePathTest extends TestCase
 {
 	public function testInitialization(): void
 	{
-		$tp = new TemplatePath($this::DEFAULT_DIR, 'simple');
+		$tplp = new TemplatePath($this::DEFAULT_DIR, 'simple');
 
-		$this->assertSame(true, $tp->isValid());
-		$this->assertStringEndsWith('tests/templates/default/simple.php', $tp->path());
-		$this->assertSame('', $tp->error());
+		$this->assertSame(true, $tplp->isValid());
+		$this->assertStringEndsWith('tests/templates/default/simple.php', $tplp->path());
+		$this->assertSame('', $tplp->error());
 	}
 
 	#[TestDox('Initialization with PHP extension')]
 	public function testInitializationWithPhpExtension(): void
 	{
-		$tp = new TemplatePath($this::DEFAULT_DIR, 'simple.php');
+		$tplp = new TemplatePath($this::DEFAULT_DIR, 'simple.php');
 
-		$this->assertSame(true, $tp->isValid());
-		$this->assertStringEndsWith('tests/templates/default/simple.php', $tp->path());
-		$this->assertSame('', $tp->error());
+		$this->assertSame(true, $tplp->isValid());
+		$this->assertStringEndsWith('tests/templates/default/simple.php', $tplp->path());
+		$this->assertSame('', $tplp->error());
 	}
 
 	public function testInitializationWithCustomExtension(): void
 	{
-		$tp = new TemplatePath($this::DEFAULT_DIR, 'extension.tpl');
+		$tplp = new TemplatePath($this::DEFAULT_DIR, 'extension.tpl');
 
-		$this->assertSame(true, $tp->isValid());
-		$this->assertStringEndsWith('tests/templates/default/extension.tpl', $tp->path());
-		$this->assertSame('', $tp->error());
+		$this->assertSame(true, $tplp->isValid());
+		$this->assertStringEndsWith('tests/templates/default/extension.tpl', $tplp->path());
+		$this->assertSame('', $tplp->error());
 	}
 
 	public function testFailingInitializationEmptyDirectoryString(): void
 	{
-		$tp = new TemplatePath('', 'simple');
+		$tplp = new TemplatePath('', 'simple');
 
-		$this->assertSame(false, $tp->isValid());
-		$this->assertSame('Template directory must not be an empty string', $tp->error());
+		$this->assertSame(false, $tplp->isValid());
+		$this->assertSame('Template directory must not be an empty string', $tplp->error());
 	}
 
 	public function testFailingInitializationNonExistentDirectory(): void
 	{
-		$tp = new TemplatePath('doesnotexist', 'simple');
+		$tplp = new TemplatePath('doesnotexist', 'simple');
 
-		$this->assertSame(false, $tp->isValid());
-		$this->assertSame("Template directory not found: 'doesnotexist'", $tp->error());
+		$this->assertSame(false, $tplp->isValid());
+		$this->assertSame("Template directory not found: 'doesnotexist'", $tplp->error());
 	}
 
 	public function testFailingOutsideOfTemplateDirectory(): void
 	{
-		$tp = new TemplatePath($this::DEFAULT_DIR, '../unreachable');
+		$tplp = new TemplatePath($this::DEFAULT_DIR, '../unreachable');
 
-		$this->assertSame(false, $tp->isValid());
-		$this->assertStringStartsWith('Template resides outside of root directory', $tp->error());
+		$this->assertSame(false, $tplp->isValid());
+		$this->assertStringStartsWith('Template resides outside of root directory', $tplp->error());
 	}
 
 	public function testErrorWhenAccessingInvalidPath(): void
 	{
 		$this->throws(LookupException::class, 'Error while accessing path');
 
-		$tp = new TemplatePath('', 'simple');
-		$tp->path();
+		$tplp = new TemplatePath('', 'simple');
+		$tplp->path();
 	}
 }

@@ -75,9 +75,9 @@ final class ProxyTest extends TestCase
 	public function testObjectValid(): void
 	{
 		$object = new class {
-			public function __invoke(string $s): string
+			public function __invoke(string $str): string
 			{
-				return '<i>' . $s . '</i>';
+				return '<i>' . $str . '</i>';
 			}
 
 			public function html(): string
@@ -147,9 +147,9 @@ final class ProxyTest extends TestCase
 		$this->throws(RuntimeException::class, 'No such property');
 
 		$obj = new class {
-			public function __set(string $n, mixed $v): void
+			public function __set(string $name, mixed $value): void
 			{
-				if ($n && $v === null) {
+				if ($name && $value === null) {
 					throw new ValueError();
 				}
 			}
