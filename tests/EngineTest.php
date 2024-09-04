@@ -11,7 +11,7 @@ use VacantPlanet\Boiler\Exception\LogicException;
 use VacantPlanet\Boiler\Exception\LookupException;
 use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Exception\UnexpectedValueException;
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 use VacantPlanet\Boiler\Tests\TestCase;
 
 final class EngineTest extends TestCase
@@ -604,8 +604,8 @@ final class EngineTest extends TestCase
 	public function testCustomTemplateMethod(): void
 	{
 		$engine = Engine::create($this->templates());
-		$engine->registerMethod('upper', function (Proxy $value): Proxy {
-			return new Proxy(strtoupper($value->unwrap()));
+		$engine->registerMethod('upper', function (ValueProxy $value): ValueProxy {
+			return new ValueProxy(strtoupper($value->unwrap()));
 		});
 
 		$this->assertSame(

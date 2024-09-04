@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace VacantPlanet\Boiler;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
-use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Proxy\ProxyInterface;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 
 /**
  * @psalm-api
@@ -60,11 +60,11 @@ class TemplateContext
 	}
 
 	public function esc(
-		Proxy|string $value,
+		ValueProxy|string $value,
 		int $flags = self::ESCAPE_FLAGS,
 		string $encoding = self::ESCAPE_ENCODING,
 	): string {
-		if ($value instanceof Proxy) {
+		if ($value instanceof ValueProxy) {
 			return htmlspecialchars((string) $value->unwrap(), $flags, $encoding);
 		}
 

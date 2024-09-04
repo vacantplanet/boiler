@@ -9,7 +9,7 @@ use VacantPlanet\Boiler\Exception\RuntimeException;
 use VacantPlanet\Boiler\Exception\UnexpectedValueException;
 use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 
 final class ArrayProxyTest extends TestCase
 {
@@ -52,7 +52,7 @@ final class ArrayProxyTest extends TestCase
 		$this->assertSame([1, 2, 3, 4], $arrval1->merge($arrval2)->unwrap());
 		$this->assertSame([1, 2, 5, 6], $arrval1->merge([5, 6])->unwrap());
 		$this->assertSame(6, $arrval1->merge([5, 6])[3]);
-		$this->assertInstanceOf(Proxy::class, $arrval1->merge([5, 'string'])[3]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval1->merge([5, 'string'])[3]);
 	}
 
 	public function testHelperMap(): void
@@ -223,9 +223,9 @@ final class ArrayProxyTest extends TestCase
 		})();
 		$arrval = new ArrayProxy(['string', $obj, $stringable, [1, 2], $iterator]);
 
-		$this->assertInstanceOf(Proxy::class, $arrval[0]);
-		$this->assertInstanceOf(Proxy::class, $arrval[1]);
-		$this->assertInstanceOf(Proxy::class, $arrval[2]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval[0]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval[1]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval[2]);
 		$this->assertInstanceOf(ArrayProxy::class, $arrval[3]);
 		$this->assertInstanceOf(IteratorProxy::class, $arrval[4]);
 	}
@@ -250,7 +250,13 @@ final class ArrayProxyTest extends TestCase
 			$new[] = $val::class;
 		}
 
-		$this->assertSame([ Proxy::class, Proxy::class, Proxy::class, ArrayProxy::class, IteratorProxy::class, ], $new);
+		$this->assertSame([
+			ValueProxy::class,
+			ValueProxy::class,
+			ValueProxy::class,
+			ArrayProxy::class,
+			IteratorProxy::class,
+		], $new);
 	}
 
 	public function testNestedHahns(): void
@@ -258,10 +264,10 @@ final class ArrayProxyTest extends TestCase
 		$arrval = new ArrayProxy([['first'], ['second', 'third']]);
 
 		$this->assertInstanceOf(ArrayProxy::class, $arrval[0]);
-		$this->assertInstanceOf(Proxy::class, $arrval[0][0]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval[0][0]);
 		$this->assertInstanceOf(ArrayProxy::class, $arrval[1]);
-		$this->assertInstanceOf(Proxy::class, $arrval[1][0]);
-		$this->assertInstanceOf(Proxy::class, $arrval[1][1]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval[1][0]);
+		$this->assertInstanceOf(ValueProxy::class, $arrval[1][1]);
 	}
 
 	public function testUndefinedNumericKey(): void

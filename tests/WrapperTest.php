@@ -7,7 +7,7 @@ namespace VacantPlanet\Boiler\Tests;
 use Traversable;
 use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 use VacantPlanet\Boiler\Wrapper;
 
 final class WrapperTest extends TestCase
@@ -20,7 +20,7 @@ final class WrapperTest extends TestCase
 
 	public function testWrapString(): void
 	{
-		$this->assertInstanceOf(Proxy::class, Wrapper::wrap('string'));
+		$this->assertInstanceOf(ValueProxy::class, Wrapper::wrap('string'));
 	}
 
 	public function testWrapArray(): void
@@ -49,7 +49,7 @@ final class WrapperTest extends TestCase
 	{
 		$obj = new class {};
 
-		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($obj));
+		$this->assertInstanceOf(ValueProxy::class, Wrapper::wrap($obj));
 	}
 
 	public function testWrapStringable(): void
@@ -61,16 +61,16 @@ final class WrapperTest extends TestCase
 			}
 		};
 
-		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($obj));
+		$this->assertInstanceOf(ValueProxy::class, Wrapper::wrap($obj));
 	}
 
 	public function testNestingWrapping(): void
 	{
-		$value = new Proxy('string');
+		$value = new ValueProxy('string');
 
-		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($value));
+		$this->assertInstanceOf(ValueProxy::class, Wrapper::wrap($value));
 		$this->assertSame('string', Wrapper::wrap($value)->unwrap());
 		$this->assertSame(true, is_string(Wrapper::wrap($value)->unwrap()));
-		$this->assertInstanceOf(Proxy::class, Wrapper::wrap($value));
+		$this->assertInstanceOf(ValueProxy::class, Wrapper::wrap($value));
 	}
 }

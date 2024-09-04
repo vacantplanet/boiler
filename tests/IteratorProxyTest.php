@@ -6,7 +6,7 @@ namespace VacantPlanet\Boiler\Tests;
 
 use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 
 final class IteratorProxyTest extends TestCase
 {
@@ -32,7 +32,7 @@ final class IteratorProxyTest extends TestCase
 		}
 
 		$this->assertSame(1, $new[0]);
-		$this->assertInstanceOf(Proxy::class, $new[1]);
+		$this->assertInstanceOf(ValueProxy::class, $new[1]);
 		$this->assertInstanceOf(ArrayProxy::class, $new[2]);
 		$this->assertInstanceOf(IteratorProxy::class, $new[3]);
 	}

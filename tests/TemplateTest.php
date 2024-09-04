@@ -6,7 +6,7 @@ namespace VacantPlanet\Boiler\Tests;
 
 use ParseError;
 use VacantPlanet\Boiler\Exception\LookupException;
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\Tests\TestCase;
 use VacantPlanet\Boiler\Tests\WhitelistBase;
@@ -130,8 +130,8 @@ final class TemplateTest extends TestCase
 	public function testCustomTemplateMethod(): void
 	{
 		$template = new Template($this->templates . 'method.php');
-		$template->registerMethod('upper', function (Proxy $value): Proxy {
-			return new Proxy(strtoupper($value->unwrap()));
+		$template->registerMethod('upper', function (ValueProxy $value): ValueProxy {
+			return new ValueProxy(strtoupper($value->unwrap()));
 		});
 
 		$this->assertSame('<h2>BOILER</h2>', $this->fullTrim($template->render([ 'text' => 'Boiler', ])));

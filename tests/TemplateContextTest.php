@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace VacantPlanet\Boiler\Tests;
 
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 use VacantPlanet\Boiler\Template;
 use VacantPlanet\Boiler\TemplateContext;
 use VacantPlanet\Boiler\Tests\TestCase;
@@ -28,9 +28,9 @@ final class TemplateContextTest extends TestCase
 		], [], true);
 		$context = $tmplContext->context();
 
-		$this->assertInstanceOf(Proxy::class, $context['value1']);
+		$this->assertInstanceOf(ValueProxy::class, $context['value1']);
 		$this->assertSame('Value 1', (string) $context['value1']);
-		$this->assertInstanceOf(Proxy::class, $context['value2']);
+		$this->assertInstanceOf(ValueProxy::class, $context['value2']);
 		$this->assertSame('&lt;i&gt;Value 2&lt;/i&gt;', (string) $context['value2']);
 		$this->assertSame(3, $context['value3']);
 	}
@@ -41,11 +41,11 @@ final class TemplateContextTest extends TestCase
 		$value2 = $tmplContext->add('value2', '<i>Value 2</i>');
 		$context = $tmplContext->context();
 
-		$this->assertInstanceOf(Proxy::class, $context['value1']);
+		$this->assertInstanceOf(ValueProxy::class, $context['value1']);
 		$this->assertSame('Value 1', (string) $context['value1']);
-		$this->assertInstanceOf(Proxy::class, $context['value2']);
+		$this->assertInstanceOf(ValueProxy::class, $context['value2']);
 		$this->assertSame('&lt;i&gt;Value 2&lt;/i&gt;', (string) $context['value2']);
-		$this->assertInstanceOf(Proxy::class, $value2);
+		$this->assertInstanceOf(ValueProxy::class, $value2);
 		$this->assertSame('&lt;i&gt;Value 2&lt;/i&gt;', (string) $value2);
 	}
 }

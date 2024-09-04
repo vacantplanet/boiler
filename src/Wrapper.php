@@ -7,8 +7,8 @@ namespace VacantPlanet\Boiler;
 use Traversable;
 use VacantPlanet\Boiler\Proxy\ArrayProxy;
 use VacantPlanet\Boiler\Proxy\IteratorProxy;
-use VacantPlanet\Boiler\Proxy\Proxy;
 use VacantPlanet\Boiler\Proxy\ProxyInterface;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 
 class Wrapper
 {
@@ -16,7 +16,7 @@ class Wrapper
 	{
 		if (is_scalar($value)) {
 			if (is_string($value)) {
-				return new Proxy($value);
+				return new ValueProxy($value);
 			}
 
 			return $value;
@@ -39,6 +39,6 @@ class Wrapper
 			return null;
 		}
 
-		return new Proxy($value);
+		return new ValueProxy($value);
 	}
 }

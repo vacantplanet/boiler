@@ -10,7 +10,7 @@ use VacantPlanet\Boiler\Sanitizer;
 use VacantPlanet\Boiler\Wrapper;
 
 /** @psalm-api */
-class Proxy implements ProxyInterface
+class ValueProxy implements ProxyInterface
 {
 	public function __construct(protected readonly mixed $value) {}
 

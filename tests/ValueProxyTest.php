@@ -6,41 +6,41 @@ namespace VacantPlanet\Boiler\Tests;
 
 use PHPUnit\Framework\Attributes\TestDox;
 use VacantPlanet\Boiler\Exception\RuntimeException;
-use VacantPlanet\Boiler\Proxy\Proxy;
+use VacantPlanet\Boiler\Proxy\ValueProxy;
 use ValueError;
 
-final class ProxyTest extends TestCase
+final class ValueProxyTest extends TestCase
 {
 	public function testProxyUnwrap(): void
 	{
-		$this->assertSame('<b>boiler</b>', (new Proxy('<b>boiler</b>'))->unwrap());
+		$this->assertSame('<b>boiler</b>', (new ValueProxy('<b>boiler</b>'))->unwrap());
 	}
 
 	public function testProxyStrip(): void
 	{
-		$this->assertSame('boiler<br>plate', (new Proxy('<b>boiler<br>plate</b>'))->strip('<br>'));
-		$this->assertSame('boiler<br>plate', (new Proxy('<b>boiler<br>plate</b>'))->strip(['br']));
-		$this->assertSame('boiler<br>plate', (new Proxy('<b>boiler<br>plate</b>'))->strip(['<br>']));
-		$this->assertSame('boilerplate', (new Proxy('<b>boiler<br>plate</b>'))->strip(null));
-		$this->assertSame('boilerplate', (new Proxy('<b>boiler<br>plate</b>'))->strip());
+		$this->assertSame('boiler<br>plate', (new ValueProxy('<b>boiler<br>plate</b>'))->strip('<br>'));
+		$this->assertSame('boiler<br>plate', (new ValueProxy('<b>boiler<br>plate</b>'))->strip(['br']));
+		$this->assertSame('boiler<br>plate', (new ValueProxy('<b>boiler<br>plate</b>'))->strip(['<br>']));
+		$this->assertSame('boilerplate', (new ValueProxy('<b>boiler<br>plate</b>'))->strip(null));
+		$this->assertSame('boilerplate', (new ValueProxy('<b>boiler<br>plate</b>'))->strip());
 	}
 
 	public function testProxyClean(): void
 	{
-		$this->assertSame('<b>boiler</b>', (new Proxy('<b onclick="function()">boiler</b>'))->clean());
+		$this->assertSame('<b>boiler</b>', (new ValueProxy('<b onclick="function()">boiler</b>'))->clean());
 	}
 
 	public function testProxyEmpty(): void
 	{
-		$this->assertSame(true, (new Proxy(''))->empty());
-		$this->assertSame(false, (new Proxy('test'))->empty());
-		$this->assertSame(true, (new Proxy(null))->empty());
+		$this->assertSame(true, (new ValueProxy(''))->empty());
+		$this->assertSame(false, (new ValueProxy('test'))->empty());
+		$this->assertSame(true, (new ValueProxy(null))->empty());
 	}
 
 	public function testStringValue(): void
 	{
 		$html = '<b onclick="func()">boiler</b>';
-		$value = new Proxy($html);
+		$value = new ValueProxy($html);
 
 		$this->assertSame('&lt;b onclick=&quot;func()&quot;&gt;boiler&lt;/b&gt;', (string) $value);
 	}
@@ -60,15 +60,15 @@ final class ProxyTest extends TestCase
 				return $this->value . $this->value;
 			}
 		};
-		$value = new Proxy($stringable);
+		$value = new ValueProxy($stringable);
 
 		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;', (string) $value);
 		$this->assertSame($stringable, $value->unwrap());
-		$this->assertInstanceOf(Proxy::class, $value->value);
+		$this->assertInstanceOf(ValueProxy::class, $value->value);
 		$this->assertSame('test', (string) $value->value);
 		$value->value = 'boiler';
 		$this->assertSame('boiler', (string) $value->value);
-		$this->assertInstanceOf(Proxy::class, $value->testMethod());
+		$this->assertInstanceOf(ValueProxy::class, $value->testMethod());
 		$this->assertSame('boilerboiler', (string) $value->testMethod());
 	}
 
@@ -85,7 +85,7 @@ final class ProxyTest extends TestCase
 				return '<b>boiler</b><script></script>';
 			}
 		};
-		$value = new Proxy($object);
+		$value = new ValueProxy($object);
 
 		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;&lt;script&gt;&lt;/script&gt;', (string) $value->html());
 		$this->assertSame('<b>boiler</b>', $value->html()->clean());
@@ -97,7 +97,7 @@ final class ProxyTest extends TestCase
 		$this->throws(RuntimeException::class, 'No such method');
 
 		$object = new class {};
-		$value = new Proxy($object);
+		$value = new ValueProxy($object);
 
 		$value();
 	}
@@ -107,7 +107,7 @@ final class ProxyTest extends TestCase
 		$closure = function (): string {
 			return '<b>boiler</b><script></script>';
 		};
-		$value = new Proxy($closure);
+		$value = new ValueProxy($closure);
 
 		$this->assertSame('&lt;b&gt;boiler&lt;/b&gt;&lt;script&gt;&lt;/script&gt;', (string) $value());
 		$this->assertSame('<b>boiler</b>', $value()->clean());
@@ -118,7 +118,7 @@ final class ProxyTest extends TestCase
 	{
 		$this->throws(RuntimeException::class, 'No such property');
 
-		$value = new Proxy('test');
+		$value = new ValueProxy('test');
 		$value->test;
 	}
 
@@ -128,7 +128,7 @@ final class ProxyTest extends TestCase
 		$this->throws(RuntimeException::class, 'No such property');
 
 		$obj = new class {};
-		$value = new Proxy($obj);
+		$value = new ValueProxy($obj);
 		$value->test;
 	}
 
@@ -137,7 +137,7 @@ final class ProxyTest extends TestCase
 	{
 		$this->throws(RuntimeException::class, 'No such property');
 
-		$value = new Proxy('test');
+		$value = new ValueProxy('test');
 		$value->test = null;
 	}
 
@@ -154,7 +154,7 @@ final class ProxyTest extends TestCase
 				}
 			}
 		};
-		$value = new Proxy($obj);
+		$value = new ValueProxy($obj);
 		$value->test = null;
 	}
 
@@ -162,7 +162,7 @@ final class ProxyTest extends TestCase
 	{
 		$this->throws(RuntimeException::class, 'No such method');
 
-		$value = new Proxy('test');
+		$value = new ValueProxy('test');
 		$value->test();
 	}
 }
