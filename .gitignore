@@ -13,3 +13,6 @@ __pycache__
 clover.xml
 composer.lock
 mutants.log
+/bench/cache
+/bench/composer.lock
+/bench/vendor

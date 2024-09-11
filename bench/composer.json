@@ -1,0 +1,11 @@
+{
+	"name": "vacantplanet/boiler-bench",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"conia/boiler": "dev-main",
+		"league/plates": "^3.5",
+		"twig/twig": "^3.5",
+		"eftec/bladeone": "^4.8"
+	}
+}

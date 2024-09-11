@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+
+<ul>
+    {% for item in array %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+
+{{ htmlval|raw }}
+
+{{ include('insert.html') }}
+{% endblock %}
+
+{% block script %}
+<script>
+    console.log('templates');
+</script>
+{% endblock %}
