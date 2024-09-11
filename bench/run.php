@@ -11,86 +11,95 @@ if (!is_dir('./cache/bladeone')) {
     mkdir('./cache/bladeone', 0755, true);
 }
 
+const SHOWTEXT = false;
 const RUNS = 10000;
-$context = [
+const CONTEXT = [
     'title' => 'Engine',
     'array' => ['string1', 'string2', '<b>string3</b>'],
     'htmlval' => '<p>lorem ipsum</p>'
 ];
 
 
+function benchTwig(): string
+{
+    $start = microtime(true);
 
-$start = microtime(true);
-for ($i = 0; $i < RUNS; $i++) {
-    $engine = new League\Plates\Engine('./plates');
-    $p = $engine->render('page', $context);
+    for ($i = 0; $i < RUNS; $i++) {
+        $loader = new \Twig\Loader\FilesystemLoader('./twig');
+        $engine = new \Twig\Environment($loader, [
+            'cache' => './cache/twig',
+        ]);
+        $t = $engine->render('page.html', CONTEXT);
+    }
+
+    $end = microtime(true);
+    print "Twig:      " . (string)($end - $start) . "\n";
+
+    return fulltrim($t);
 }
-$end = microtime(true);
-print "Plates:          " . (string)($end - $start) . "\n";
 
 
-$start = microtime(true);
-for ($i = 0; $i < RUNS; $i++) {
-    $loader = new \Twig\Loader\FilesystemLoader('./twig');
-    $engine = new \Twig\Environment($loader, [
-        'cache' => './cache/twig',
-    ]);
-    $t = $engine->render('page.html', $context);
+function benchBladeOne(): string
+{
+    $start = microtime(true);
+
+    for ($i = 0; $i < RUNS; $i++) {
+        $engine = new \eftec\bladeone\BladeOne('./bladeone', './cache/bladeone');
+        $t = $engine->run('page', CONTEXT);
+    }
+
+    $end = microtime(true);
+    print "BladeOne:  " . (string)($end - $start) . "\n";
+
+    return fulltrim($t);
 }
-$end = microtime(true);
-print "Twig:            " . (string)($end - $start) . "\n";
 
 
-$start = microtime(true);
-for ($i = 0; $i < RUNS; $i++) {
-    $engine = new \eftec\bladeone\BladeOne('./bladeone', './cache/bladeone');
-    $l = $engine->run('page', $context);
+function benchBoiler(): string
+{
+    $start = microtime(true);
+
+    for ($i = 0; $i < RUNS; $i++) {
+        $engine = VacantPlanet\Boiler\Engine::create('./boiler');
+        $t = $engine->render('page', CONTEXT);
+    }
+
+    $end = microtime(true);
+    print "Boiler:    " . (string)($end - $start) . "\n";
+
+    return fulltrim($t);
 }
-$end = microtime(true);
-print "BladeOne:        " . (string)($end - $start) . "\n";
 
+function benchPlates(): string
+{
+    $start = microtime(true);
 
-$start = microtime(true);
-for ($i = 0; $i < RUNS; $i++) {
-    $engine = VacantPlanet\Boiler\Engine::unescaped('./boiler');
-    $e = $engine->render('pagenoescape', $context);
+    for ($i = 0; $i < RUNS; $i++) {
+        $engine = new League\Plates\Engine('./plates');
+        $t = $engine->render('page', CONTEXT);
+    }
+
+    $end = microtime(true);
+    print "Plates:    " . (string)($end - $start) . "\n";
+
+    return fulltrim($t);
 }
-$end = microtime(true);
-print "Boiler noescape: " . (string)($end - $start) . "\n";
 
 
-$start = microtime(true);
-for ($i = 0; $i < RUNS; $i++) {
-    $engine = VacantPlanet\Boiler\Engine::create('./boiler');
-    $b = $engine->render('page', $context);
+function benchBoilerUnescaped(): string
+{
+    $start = microtime(true);
+
+    for ($i = 0; $i < RUNS; $i++) {
+        $engine = VacantPlanet\Boiler\Engine::unescaped('./boiler');
+        $t = $engine->render('pagenoescape', CONTEXT);
+    }
+
+    $end = microtime(true);
+    print "Boiler:    " . (string)($end - $start) . "\n";
+
+    return fulltrim($t);
 }
-$end = microtime(true);
-print "Boiler:          " . (string)($end - $start) . "\n";
-
-$b = fulltrim($b);
-$l = fulltrim($l);
-$e = fulltrim($e);
-$p = fulltrim($p);
-$t = fulltrim($t);
-assert($b === $p);
-assert($b === $t);
-assert($b === $e);
-assert($b === $l);
-// echo ('' . PHP_EOL);
-// echo ('---- BladeOne' . PHP_EOL);
-// echo ($l . PHP_EOL);
-// echo ('' . PHP_EOL);
-// echo ('---- Plates' . PHP_EOL);
-// echo ($p . PHP_EOL);
-// echo ('' . PHP_EOL);
-// echo ('---- Twig' . PHP_EOL);
-// echo ($t . PHP_EOL);
-// echo ('' . PHP_EOL);
-// echo ('---- Boiler (noescape)' . PHP_EOL);
-// echo ($e . PHP_EOL);
-// echo ('' . PHP_EOL);
-// echo ('---- Boiler' . PHP_EOL);
-// echo ($b . PHP_EOL);
 
 function fulltrim(string $text): string
 {
@@ -106,3 +115,39 @@ function fulltrim(string $text): string
         )
     );
 }
+
+function main()
+{
+    echo '---- ESCAPED ----' . PHP_EOL;
+    $e = benchTwig();
+    $p = benchBladeOne();
+    $t = benchBoiler();
+
+    echo "\n--- UNESCAPED ---\n";
+    $b = benchPlates();
+    $l = benchBoilerUnescaped();
+    assert($b === $p);
+    assert($b === $t);
+    assert($b === $e);
+    assert($b === $l);
+
+    if (SHOWTEXT) {
+        echo('' . PHP_EOL);
+        echo('---- BladeOne' . PHP_EOL);
+        echo($l . PHP_EOL);
+        echo('' . PHP_EOL);
+        echo('---- Plates' . PHP_EOL);
+        echo($p . PHP_EOL);
+        echo('' . PHP_EOL);
+        echo('---- Twig' . PHP_EOL);
+        echo($t . PHP_EOL);
+        echo('' . PHP_EOL);
+        echo('---- Boiler (noescape)' . PHP_EOL);
+        echo($e . PHP_EOL);
+        echo('' . PHP_EOL);
+        echo('---- Boiler' . PHP_EOL);
+        echo($b . PHP_EOL);
+    }
+}
+
+main();
