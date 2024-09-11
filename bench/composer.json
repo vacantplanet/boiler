@@ -3,9 +3,15 @@
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"require": {
-		"conia/boiler": "dev-main",
+		"vacantplanet/boiler": "@dev",
 		"league/plates": "^3.5",
 		"twig/twig": "^3.5",
 		"eftec/bladeone": "^4.8"
-	}
+	},
+	"repositories": [
+		{
+			"type": "path",
+			"url": ".."
+		}
+	]
 }
