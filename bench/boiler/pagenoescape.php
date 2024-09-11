@@ -4,7 +4,7 @@
 
 <ul>
     <?php foreach ($array as $item) : ?>
-        <li><?= $this->e($item) ?></li>
+        <li><?= $this->esc($item) ?></li>
     <?php endforeach ?>
 </ul>
 

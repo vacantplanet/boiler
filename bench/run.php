@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-if (!is_dir('./cache')) mkdir('./cache', 0755, true);
+if (!is_dir('./cache')) {
+    mkdir('./cache', 0755, true);
+}
+if (!is_dir('./cache/bladeone')) {
+    mkdir('./cache/bladeone', 0755, true);
+}
 
 const RUNS = 10000;
 $context = [
@@ -47,7 +52,7 @@ print "BladeOne:        " . (string)($end - $start) . "\n";
 
 $start = microtime(true);
 for ($i = 0; $i < RUNS; $i++) {
-    $engine = new Conia\Boiler\Engine('./boiler', autoescape: false);
+    $engine = VacantPlanet\Boiler\Engine::unescaped('./boiler');
     $e = $engine->render('pagenoescape', $context);
 }
 $end = microtime(true);
@@ -56,7 +61,7 @@ print "Boiler noescape: " . (string)($end - $start) . "\n";
 
 $start = microtime(true);
 for ($i = 0; $i < RUNS; $i++) {
-    $engine = new Conia\Boiler\Engine('./boiler');
+    $engine = VacantPlanet\Boiler\Engine::create('./boiler');
     $b = $engine->render('page', $context);
 }
 $end = microtime(true);
